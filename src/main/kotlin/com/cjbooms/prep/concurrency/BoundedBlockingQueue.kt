@@ -16,7 +16,10 @@ import kotlin.concurrent.withLock
  *  - signal() (not signalAll()) is safe here ONLY because each wakeup can make
  *    progress and we re-signal transitively... actually here we use signalAll-style
  *    reasoning: after take() the buffer is notFull; after put() it is notEmpty.
- *    signal() suffices since waiters on each condition are homogeneous.
+ *    signalIntelliJ IDEA is now a single, unified product.
+Core Java and Kotlin features remain free, with even more functionality available at no cost. When you need advanced tools, simply unlock them with an Ultimate subscription – no switching editions, no extra setup.
+
+Existing Ultimate users keep full access to all advanced features.() suffices since waiters on each condition are homogeneous.
  *
  * Follow-up mutations interviewers impose (practice all):
  *  - "now make put() offer a timeout"      -> notFull.awaitNanos(...)
