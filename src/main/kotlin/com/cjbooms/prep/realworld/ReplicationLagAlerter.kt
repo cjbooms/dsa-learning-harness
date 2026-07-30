@@ -1,54 +1,91 @@
 package com.cjbooms.prep.realworld
 
+import java.util.PriorityQueue
+
 /**
  * Reported MongoDB "real-world problem" round (2026): data-migration lag verifier.
  *
  * Events fire when a record leaves the primary and when it arrives at the
- * secondary. Raise an alert if any record's replication lag exceeds [maxLagSeconds].
+ * secondary. Raise an alert if any record's replication lag exceeds maxLagSeconds.
  *
- * Model:
- *  - onPrimaryLeave(recordId, timestampSeconds)
- *  - onSecondaryArrive(recordId, timestampSeconds)
- *  - poll(nowSeconds): returns recordIds that left more than maxLagSeconds ago
- *    and have not yet arrived (and have not already been alerted).
+ * Data structures and why:
  *
- * Approach: HashMap<recordId, leaveTs> for in-flight records + a min-heap ordered
- * by leaveTs so poll() only inspects records old enough to possibly breach.
- * Events may arrive out of order; an arrival for an unknown record is tolerated
- * (e.g., leave event was missed) and ignored.
+ *   inFlight: HashMap<recordId, leaveTimestamp>
+ *     Source of truth for "still waiting for this record". O(1) pairing when
+ *     the arrival event shows up.
+ *
+ *   byAge: min-heap of (recordId, leaveTimestamp), ordered by leave time
+ *     Lets poll() look ONLY at the oldest in-flight record: if the oldest
+ *     hasn't breached the lag limit, no younger record has either. This turns
+ *     poll() from "scan everything" into "pop until the head is young enough".
+ *
+ *   alerted: HashSet<recordId>
+ *     Exactly-once alerting — a breaching record alerts at the first poll that
+ *     notices it, and never again.
+ *
+ * Out-of-order / messy events (interviewers always probe this):
+ *   - Arrival for a record we never saw leave: ignored (returns null).
+ *   - Arrival BEFORE we process the (late) leave event: tolerated — pairing is
+ *     by recordId, not by event order.
+ *   - Stale heap entries: when a record arrives, its heap entry is left behind
+ *     as a lazy tombstone (removing it from the heap would be O(n)); poll()
+ *     detects tombstones by cross-checking inFlight and silently drops them.
  */
 class ReplicationLagAlerter(private val maxLagSeconds: Long) {
 
-    private data class InFlight(val recordId: String, val leaveTs: Long)
+    private data class InFlightRecord(val recordId: String, val leaveTimestamp: Long)
 
+    // recordId -> when it left the primary. Only records still awaiting arrival.
     private val inFlight = HashMap<String, Long>()
-    private val byAge = java.util.PriorityQueue<InFlight>(compareBy { it.leaveTs })
+
+    // Same records, ordered oldest-first so poll() can stop at the first
+    // "young enough" entry. May contain stale entries for arrived records.
+    private val byAge = PriorityQueue<InFlightRecord>(compareBy { it.leaveTimestamp })
+
+    // Records we've already raised an alert for.
     private val alerted = HashSet<String>()
 
     fun onPrimaryLeave(recordId: String, timestampSeconds: Long) {
         inFlight[recordId] = timestampSeconds
-        byAge.add(InFlight(recordId, timestampSeconds))
+        byAge.add(InFlightRecord(recordId, timestampSeconds))
     }
 
+    /** Pairs the arrival with its leave event. Returns the observed lag,
+     *  or null if we have no matching leave (missed/lost event). */
     fun onSecondaryArrive(recordId: String, timestampSeconds: Long): Long? {
-        val leaveTs = inFlight.remove(recordId) ?: return null
-        return timestampSeconds - leaveTs // observed lag; heap entry left as lazy tombstone
+        val leaveTimestamp = inFlight.remove(recordId) ?: return null
+        // The heap entry for this record is now stale; poll() will skip it.
+        return timestampSeconds - leaveTimestamp
     }
 
-    /** Records in flight longer than maxLagSeconds (alerted once each). */
+    /** All records that have now been in flight longer than maxLagSeconds.
+     *  Each breaching record appears in exactly one poll, ever. */
     fun poll(nowSeconds: Long): List<String> {
-        val alerts = mutableListOf<String>()
+        val breachingRecordIds = mutableListOf<String>()
+
         while (true) {
-            val head = byAge.peek() ?: break
-            if (nowSeconds - head.leaveTs <= maxLagSeconds) break
+            val oldest = byAge.peek() ?: break
+
+            val ageOfOldest = nowSeconds - oldest.leaveTimestamp
+            if (ageOfOldest <= maxLagSeconds) break // heap order: nothing younger breaches either
+
             byAge.poll()
-            // stale heap entries (already arrived) are silently dropped
-            if (inFlight[head.recordId] == head.leaveTs && alerted.add(head.recordId)) {
-                alerts.add(head.recordId)
+
+            // Skip stale tombstones: entry left over from a record that
+            // already arrived (no longer in inFlight) or was re-put with a
+            // newer timestamp.
+            val stillInFlight = inFlight[oldest.recordId] == oldest.leaveTimestamp
+            if (!stillInFlight) continue
+
+            val firstAlertForRecord = alerted.add(oldest.recordId)
+            if (firstAlertForRecord) {
+                breachingRecordIds.add(oldest.recordId)
             }
         }
-        return alerts
+
+        return breachingRecordIds
     }
 
-    val inFlightCount: Int get() = inFlight.size
+    val inFlightCount: Int
+        get() = inFlight.size
 }

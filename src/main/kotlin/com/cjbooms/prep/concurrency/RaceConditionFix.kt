@@ -5,66 +5,106 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * "Find and fix the race condition" — a MongoDB-style round where you're shown
- * broken code and must (a) spot the race, (b) explain the interleaving that breaks
- * it, (c) fix it, (d) discuss alternatives and their trade-offs.
+ * "Find and fix the race condition" — you're shown broken code and must:
+ *   (a) spot the race,
+ *   (b) name the exact interleaving that breaks it,
+ *   (c) fix it,
+ *   (d) discuss alternatives and their trade-offs.
+ *
+ * Two bug archetypes below: lost update (atomicity) and check-then-act.
  */
 
-/** BROKEN: read-modify-write is not atomic. Two threads can both read 5, both
- *  write 6 — a lost update. Also `count` is not volatile, so visibility across
- *  threads is not guaranteed by the JMM even without the atomicity bug. */
+// ---------------------------------------------------------------------------
+// Bug 1: the lost update
+// ---------------------------------------------------------------------------
+
+/** BROKEN. count++ looks like one operation but is three:
+ *
+ *     read count -> add 1 -> write count
+ *
+ *  Broken interleaving (both threads start at count = 5):
+ *     T1: read 5
+ *     T2: read 5
+ *     T1: write 6
+ *     T2: write 6          <- one increment is LOST
+ *
+ *  There's a second, subtler bug: `count` is not volatile and there's no
+ *  synchronization, so the JMM doesn't even guarantee one thread ever SEES
+ *  another's write (visibility). Atomicity and visibility are separate
+ *  problems — name both.
+ */
 class BrokenCounter {
     var count = 0
         private set
 
     fun increment() {
-        count++ // count = count + 1 — NOT atomic
+        count++
     }
 }
 
-/** Fix option 1: AtomicInteger — lock-free CAS, best for a single counter. */
+/** Fix option 1: AtomicInteger — hardware CAS (compare-and-swap), lock-free.
+ *  Best choice for a single independent counter: no blocking, no contention
+ *  bottleneck beyond the CAS retry loop. */
 class AtomicCounter {
     private val count = AtomicInteger(0)
 
     fun increment() {
-        count.incrementAndGet()
+        count.incrementAndGet() // CAS loop: retries until the write wins
     }
 
     fun count(): Int = count.get()
 }
 
-/** Fix option 2: explicit lock — generalizes to multi-field invariants. */
+/** Fix option 2: explicit lock. Right choice when the invariant spans MULTIPLE
+ *  fields (e.g. count plus a max-value tracker) — atomics compose poorly. */
 class LockedCounter {
     private val lock = ReentrantLock()
     private var count = 0
 
-    fun increment() = lock.withLock { count++ }
+    fun increment() {
+        lock.withLock { count++ }
+    }
 
     fun count(): Int = lock.withLock { count }
 }
 
-/** BROKEN: check-then-act race. Two threads can both observe sufficient balance
- *  and both withdraw, overdrawing the account. */
+// ---------------------------------------------------------------------------
+// Bug 2: check-then-act
+// ---------------------------------------------------------------------------
+
+/** BROKEN. The balance check and the withdrawal are separate steps:
+ *
+ *     T1: check balance(100) >= 60  -> true
+ *     T2: check balance(100) >= 60  -> true
+ *     T1: balance = 40
+ *     T2: balance = -20             <- overdrawn!
+ *
+ *  The check's result is STALE by the time the act happens. The fix is not
+ *  a faster check — it's making check+act one atomic unit.
+ */
 class BrokenBankAccount(var balance: Long) {
     fun withdraw(amount: Long): Boolean {
-        if (balance >= amount) {     // check
-            balance -= amount        // act — another thread may have withdrawn in between
+        if (balance >= amount) {
+            balance -= amount
             return true
         }
         return false
     }
 }
 
-/** Fixed: the whole check-then-act must be inside the critical section. */
+/** Fixed: the entire check-then-act lives inside the critical section.
+ *  Note the reader ALSO takes the lock — reading a mutable field without
+ *  synchronization is itself a visibility bug. */
 class LockedBankAccount(private var balance: Long) {
     private val lock = ReentrantLock()
 
-    fun withdraw(amount: Long): Boolean = lock.withLock {
-        if (balance >= amount) {
-            balance -= amount
-            true
-        } else {
-            false
+    fun withdraw(amount: Long): Boolean {
+        return lock.withLock {
+            val hasSufficientFunds = balance >= amount
+            if (hasSufficientFunds) {
+                balance -= amount
+            }
+            hasSufficientFunds
         }
     }
 

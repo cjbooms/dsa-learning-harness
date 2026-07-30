@@ -37,4 +37,10 @@ class GroupAnagramsTest {
     fun `empty strings group together`() {
         assertEquals(setOf(setOf("", "")), normalize(groupAnagrams(listOf("", ""))))
     }
+
+    @Test
+    fun `count-based variant matches sort-based results`() {
+        val words = listOf("eat", "tea", "tan", "ate", "nat", "bat", "aab", "aba", "baa")
+        assertEquals(normalize(groupAnagrams(words)), normalize(groupAnagramsByCount(words)))
+    }
 }

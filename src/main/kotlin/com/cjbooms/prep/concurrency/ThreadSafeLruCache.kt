@@ -7,32 +7,59 @@ import kotlin.concurrent.write
 /**
  * Thread-safe LRU cache — the classic "implement a thread-safe data structure" prompt.
  *
- * LinkedHashMap(accessOrder = true) gives O(1) LRU ordering; a lock guards all access.
+ * Building blocks:
+ *   LinkedHashMap with accessOrder = true gives us LRU ordering for free:
+ *   every get() moves the entry to the "most recent" end, and the head is
+ *   always the least-recently-used entry. removeEldestEntry() is the eviction hook.
  *
- * Talking points for follow-ups:
- *  - Single lock vs lock striping (ConcurrentHashMap-style) vs StampedLock.
- *  - Why a plain ConcurrentHashMap alone is NOT enough (atomicity of the
- *    get-and-move-to-front composite operation; eviction must be atomic w.r.t. puts).
- *  - ReadWriteLock shown here: reads still mutate recency order, so get() needs the
- *    WRITE lock with accessOrder=true — a great "gotcha" to mention proactively.
+ * THE INTERVIEW TRAP (say this unprompted, it lands well):
+ *   get() is NOT a read-only operation here — it mutates the recency order.
+ *   So even with a ReadWriteLock, get() must take the WRITE lock. Taking the
+ *   read lock "because it's a getter" would corrupt the linked list under
+ *   concurrent access. This is why the RWLock buys us nothing in this design;
+ *   it's shown to make that exact point.
+ *
+ * Follow-ups to expect:
+ *   - "Why not just ConcurrentHashMap?" -> it can't atomically do
+ *     get-and-move-to-front, and eviction must be atomic w.r.t. concurrent puts.
+ *   - "How would you scale it?" -> lock striping: N independent segments each
+ *     with its own small LRU (loses global LRU, wins throughput — name the trade).
+ *   - "Add per-entry TTL" -> store expiry beside the value; check on get,
+ *     sweep on put.
  */
 class ThreadSafeLruCache<K, V>(private val maxSize: Int) {
+
     init {
-        require(maxSize > 0) { "maxSize must be positive" }
+        require(maxSize > 0) { "maxSize must be positive, was $maxSize" }
     }
 
     private val lock = ReentrantReadWriteLock()
-    private val map = object : LinkedHashMap<K, V>(maxSize, 0.75f, true) {
+
+    private val entriesByKey = object : LinkedHashMap<K, V>(
+        /* initialCapacity = */ maxSize,
+        /* loadFactor = */ 0.75f,
+        /* accessOrder = */ true, // iteration/insertion order tracks ACCESS, not insertion
+    ) {
+        // Called after every put; returning true evicts the LRU (head) entry.
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<K, V>?): Boolean =
             size > maxSize
     }
 
-    fun get(key: K): V? = lock.write { map[key] } // write lock: access reorders entries
+    fun get(key: K): V? {
+        // WRITE lock on purpose: with accessOrder=true, a hit re-links the entry
+        // to the most-recently-used position — a structural mutation.
+        return lock.write { entriesByKey[key] }
+    }
 
     fun put(key: K, value: V) {
-        lock.write { map[key] = value }
+        lock.write {
+            // Assignment inserts or refreshes; if size now exceeds maxSize,
+            // removeEldestEntry above evicts the LRU entry within the same
+            // atomic section.
+            entriesByKey[key] = value
+        }
     }
 
     val size: Int
-        get() = lock.read { map.size }
+        get() = lock.read { entriesByKey.size } // size is a genuine read
 }
