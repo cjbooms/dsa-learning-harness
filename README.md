@@ -1,0 +1,30 @@
+# MongoDB Staff+ Interview Prep
+
+Kotlin practice workspace for MongoDB live-coding interviews (CoderPad, no AI
+assistance, 45–60 min rounds with executed code).
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `src/main/kotlin/com/cjbooms/prep/dsa/` | VersionedKVStore (reported MongoDB question), GroupAnagrams, WordBreak, KSum |
+| `src/main/kotlin/com/cjbooms/prep/concurrency/` | BoundedBlockingQueue (lock+conditions and synchronized variants), ThreadSafeLruCache, RaceConditionFix (broken/fixed pairs) |
+| `src/main/kotlin/com/cjbooms/prep/realworld/` | ReplicationLagAlerter (reported MongoDB real-world round) |
+| `docs/system-design.md` | Design-round talking points: sharded KV store, DB migration platform |
+| `docs/coderpad-drills.md` | Timed-drill protocol + follow-up mutations to self-impose |
+
+## Commands
+
+```bash
+./gradlew build          # compile + run all tests
+./gradlew test           # tests only
+./gradlew test --tests '*VersionedKVStoreTest*'   # single exercise
+```
+
+Open in IntelliJ IDEA — it will sync via the Gradle wrapper (no local Gradle
+install needed).
+
+## How to practice
+
+See `docs/coderpad-drills.md`. In short: 45-minute timer, blank buffer, narrate
+aloud, tests are your "run it" feedback loop, then redo with a follow-up mutation.
