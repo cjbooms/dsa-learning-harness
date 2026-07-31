@@ -11,6 +11,7 @@ assistance, 45–60 min rounds with executed code).
 | `src/main/kotlin/com/cjbooms/prep/concurrency/` | BoundedBlockingQueue (lock+conditions and synchronized variants), ThreadSafeLruCache, RaceConditionFix (broken/fixed pairs) |
 | `src/main/kotlin/com/cjbooms/prep/realworld/` | ReplicationLagAlerter (reported MongoDB real-world round) |
 | `docs/exercise-prompts.md` | Interview-style problem statements + starter signatures + follow-ups per exercise |
+| `docs/cheat-sheet.md` | Flash-card reference: data structures, algorithms, concurrency primitives |
 | `docs/system-design.md` | Design-round talking points: sharded KV store, DB migration platform |
 | `docs/coderpad-drills.md` | Timed-drill protocol + follow-up mutations to self-impose |
 
