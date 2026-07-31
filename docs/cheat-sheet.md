@@ -1,7 +1,7 @@
 # Interview Cheat Sheet — Kotlin/JVM Flash Cards
 
-Glance-level reminders. Kotlin stdlib first, then `java.util` / `java.util.concurrent`
-(what CoderPad Kotlin actually runs on).
+Glance-level reminders. Kotlin standard library first, then `java.util` /
+`java.util.concurrent` (what CoderPad Kotlin actually runs on).
 
 ---
 
@@ -9,13 +9,13 @@ Glance-level reminders. Kotlin stdlib first, then `java.util` / `java.util.concu
 
 | Structure | When to reach for it | Key ops (all on JVM) |
 |---|---|---|
-| `HashMap` / `HashSet` | Default lookup/dedup. O(1) avg. No order. | `getOrPut(k){...}`, `computeIfAbsent`, `contains` |
-| `LinkedHashMap` | Need insertion order — or **LRU** via `accessOrder=true` + `removeEldestEntry` | same as HashMap |
+| `HashMap` / `HashSet` | Default lookup / remove-duplicates. O(1) average. No order. | `getOrPut(k){...}`, `computeIfAbsent`, `contains` |
+| `LinkedHashMap` | Need insertion order — or **LRU (least-recently-used) cache** via `accessOrder=true` + `removeEldestEntry` | same as HashMap |
 | `TreeMap` / `TreeSet` | Sorted keys, range queries, "greatest ≤ x". O(log n). | `floorEntry(x)`, `ceilingEntry(x)`, `headMap(k)`, `tailMap(k)`, `firstKey()` |
-| `PriorityQueue` | "Smallest/largest first" — top-K, merge K sorted, schedulers. O(log n) push/pop. | `add`, `peek` (min), `poll`. Max-heap: `PriorityQueue(compareByDescending{it})` |
+| `PriorityQueue` | "Smallest/largest first" — top-K (the K largest/smallest items), merge K sorted lists, schedulers. O(log n) push/pop. | `add`, `peek` (min), `poll`. Max-heap: `PriorityQueue(compareByDescending{it})` |
 | `ArrayDeque` | Stack AND queue AND circular buffer. Never `Stack`/`LinkedList`. | `addLast/removeFirst` (queue), `addLast/removeLast` (stack) |
 | `ArrayList` | Random access, two-pointer walks | `list[i]`, amortized O(1) append |
-| `IntArray`/`BooleanArray` | DP tables, letter counts — primitives, no boxing | `IntArray(26)`, `BooleanArray(n+1)` |
+| `IntArray`/`BooleanArray` | DP (dynamic programming) tables, letter counts — primitives, no boxing | `IntArray(26)`, `BooleanArray(n+1)` |
 
 **Complexity anchors:** HashMap O(1) · TreeMap O(log n) · heap push/pop O(log n) ·
 deque ends O(1) · binary search O(log n) · sort O(n log n).
@@ -36,17 +36,17 @@ TWO POINTERS (sorted array, pairs/triples, palindromes)
 SLIDING WINDOW ("longest/shortest subarray with property P")
   expand right; while(windowInvalid) shrink left; record best
 
-BFS (shortest path unweighted, level order)     -> ArrayDeque as queue
-DFS (exhaustive, backtracking, cycles)          -> recursion + visited set
+BFS = breadth-first search (shortest path unweighted, level order) -> ArrayDeque as queue
+DFS = depth-first search (exhaustive, backtracking, cycles)        -> recursion + visited set
 
 BACKTRACKING template
   fun bt(state) { if (done) record; for (choice in choices) { choose; bt; unchoose } }
 
-DP — say the recurrence BEFORE coding:
+DP (dynamic programming) — say the recurrence BEFORE coding:
   1. define state  2. base case  3. transition  4. answer location
   prefix DP: dp[i] = "answer for first i elements", dp[0] = empty = true/0
 
-TOP-K  -> min-heap of size K (keep K largest): offer, if size>K poll. O(n log k)
+TOP-K (the K largest) -> min-heap of size K: offer, if size>K poll. O(n log k)
 MERGE K SORTED -> heap of (value, listIdx); poll min, advance that list
 ```
 
@@ -63,7 +63,8 @@ lock.withLock { /* critical section */ }          // always withLock — auto-un
 // ReadWriteLock: many readers OR one writer.
 val rw = ReentrantReadWriteLock()
 rw.read { }  /  rw.write { }
-// TRAP: if your "read" mutates (LRU access-order get), it needs WRITE.
+// TRAP: if your "read" mutates (LRU access-order get reorders entries),
+// it needs the WRITE lock.
 
 // Conditions — the producer/consumer tool. One lock, MULTIPLE wait-sets.
 val notFull = lock.newCondition(); val notEmpty = lock.newCondition()
@@ -89,7 +90,9 @@ lock.withLock {
 ```kotlin
 val count = AtomicInteger(0)
 count.incrementAndGet()                          // CAS loop, atomic read-modify-write
-count.compareAndSet(expect, update)              // the primitive everything builds on
+count.compareAndSet(expect, update)              // CAS = compare-and-swap: "set to
+                                                 // `update` only if current == expect";
+                                                 // the primitive everything builds on
 count.getAndAdd(delta)
 val flag = AtomicBoolean(); val ref = AtomicReference<T>()
 // Use when: ONE independent value. Multiple related fields -> lock instead.
@@ -104,7 +107,7 @@ try { /* use resource */ } finally { sem.release() }
 sem.tryAcquire()                                 // non-blocking -> Boolean
 sem.tryAcquire(100, MILLISECONDS)                // timed -> Boolean
 // acquire = take a permit (blocks), release = give it back (always in finally)
-// Semaphore(1) ≈ a lock, but NOT reentrant and has no owner.
+// Semaphore(1) is roughly a lock, but NOT reentrant and has no owner.
 ```
 
 ### CountDownLatch — one-shot "wait for N things to finish"
@@ -134,7 +137,7 @@ pool.shutdown(); pool.awaitTermination(10, SECONDS)
 | `CopyOnWriteArrayList` | read-heavy listener lists; writes copy the array |
 | `LinkedBlockingQueue` | ready-made blocking queue (but interviews want YOU to build one) |
 
-**CHM trap:** `get` + `put` as two calls is NOT atomic — use `compute`/`merge`.
+**ConcurrentHashMap trap:** `get` + `put` as two calls is NOT atomic — use `compute`/`merge`.
 
 ---
 
@@ -143,8 +146,9 @@ pool.shutdown(); pool.awaitTermination(10, SECONDS)
 ```
 LOST UPDATE:  x++  is read/add/write. Two threads read 5, both write 6.
 CHECK-THEN-ACT: if (balance >= amt) balance -= amt  — check is stale by act time.
-VISIBILITY: without sync/volatile/atomic, thread B may never see thread A's write.
-Fixes: AtomicXxx (single value) | lock (multi-field invariant) | volatile (flag only)
+VISIBILITY: without synchronization/volatile/atomic, thread B may never see
+            thread A's write (the Java Memory Model allows caching per thread).
+Fixes: AtomicInteger & friends (single value) | lock (multi-field invariant) | volatile (flag only)
 ```
 
 ## Kotlin notes for CoderPad
@@ -157,12 +161,12 @@ Fixes: AtomicXxx (single value) | lock (multi-field invariant) | volatile (flag 
 
 ## Complexity answers to have ready
 
-| Op | Cost |
+| Operation | Cost |
 |---|---|
-| hash get/put | O(1) avg |
+| hash get/put | O(1) average |
 | tree floor/insert | O(log n) |
 | heap offer/poll | O(log n), peek O(1) |
 | sort | O(n log n) |
-| BFS/DFS on graph | O(V + E) |
+| BFS/DFS on graph | O(V + E) — vertices + edges |
 | DP prefix (word break) | O(n²) |
 | k-sum | O(n^(k-1)) |
