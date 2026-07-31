@@ -63,24 +63,20 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
     fun poll(nowSeconds: Long): List<String> {
         val breachingRecordIds = mutableListOf<String>()
 
-        while (true) {
-            val oldest = byAge.peek() ?: break
-
-            val ageOfOldest = nowSeconds - oldest.leaveTimestamp
-            if (ageOfOldest <= maxLagSeconds) break // heap order: nothing younger breaches either
-
+        // Peek at the oldest entry; stop when it's young enough that nothing
+        // breaches (heap order guarantees nothing younger breaches either).
+        var oldest = byAge.peek()
+        while (oldest != null && nowSeconds - oldest.leaveTimestamp > maxLagSeconds) {
             byAge.poll()
 
-            // Skip stale tombstones: entry left over from a record that
-            // already arrived (no longer in inFlight) or was re-put with a
-            // newer timestamp.
+            // Skip stale tombstones: entries left over from records that
+            // already arrived (gone from inFlight) or were re-put newer.
             val stillInFlight = inFlight[oldest.recordId] == oldest.leaveTimestamp
-            if (!stillInFlight) continue
-
-            val firstAlertForRecord = alerted.add(oldest.recordId)
-            if (firstAlertForRecord) {
+            if (stillInFlight && alerted.add(oldest.recordId)) {
                 breachingRecordIds.add(oldest.recordId)
             }
+
+            oldest = byAge.peek()
         }
 
         return breachingRecordIds
