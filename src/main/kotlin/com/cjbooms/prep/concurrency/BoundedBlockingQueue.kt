@@ -131,3 +131,68 @@ class SynchronizedBoundedBlockingQueue<T>(private val capacity: Int) {
         return item
     }
 }
+
+/**
+ * Third variant: two semaphores + a lock. Offer this after the lock/condition
+ * version — comparing them aloud is exactly the Staff+ move.
+ *
+ * How it works:
+ *   slotsAvailable starts at `capacity`  -> producers acquire before putting
+ *   itemsAvailable starts at 0           -> consumers acquire before taking
+ *   The two permit counts always sum to `capacity`, so the buffer can never
+ *   overfill or overdrain. The lock is still required: semaphores COUNT,
+ *   they don't make the deque itself thread-safe.
+ *
+ * Trade-offs vs lock+conditions (say these out loud):
+ *   + Less code; no while-loop/signal placement to get wrong.
+ *   + Timed operations are just tryAcquire(timeout) — easy offer(item, timeout).
+ *   - Permits can only COUNT; conditions can express arbitrary predicates
+ *     ("not full AND priority lane open"). If the follow-up adds a predicate,
+ *     semaphores get awkward fast.
+ *   - THE semaphore-specific bug: release() unconditionally ADDS a permit.
+ *     A mismatched release silently grows capacity beyond the bound — the
+ *     while-loop re-check in the lock version catches logic errors; a
+ *     semaphore will not save you from yourself.
+ */
+class SemaphoreBoundedBlockingQueue<T>(private val capacity: Int) {
+
+    init {
+        require(capacity > 0) { "capacity must be positive, was $capacity" }
+    }
+
+    private val buffer = ArrayDeque<T>(capacity)
+
+    // Permits for empty slots. Producers spend one per put; consumers refund
+    // one per take. Starts at capacity = "all slots empty".
+    private val slotsAvailable = java.util.concurrent.Semaphore(capacity)
+
+    // Permits for filled slots. Consumers spend one per take; producers add
+    // one per put. Starts at 0 = "nothing to take yet".
+    private val itemsAvailable = java.util.concurrent.Semaphore(0)
+
+    // Guards the deque itself — semaphore permits order WHO may proceed,
+    // but concurrent addLast/removeFirst still need mutual exclusion.
+    private val bufferLock = ReentrantLock()
+
+    fun put(item: T) {
+        slotsAvailable.acquire() // blocks while full
+        bufferLock.withLock { buffer.addLast(item) }
+        itemsAvailable.release() // one more item for consumers
+    }
+
+    fun take(): T {
+        itemsAvailable.acquire() // blocks while empty
+        val item = bufferLock.withLock { buffer.removeFirst() }
+        slotsAvailable.release() // one more slot for producers
+        return item
+    }
+
+    /** The follow-up made trivial: timed offer. */
+    fun offer(item: T, timeoutMillis: Long): Boolean {
+        val gotSlot = slotsAvailable.tryAcquire(timeoutMillis, java.util.concurrent.TimeUnit.MILLISECONDS)
+        if (!gotSlot) return false
+        bufferLock.withLock { buffer.addLast(item) }
+        itemsAvailable.release()
+        return true
+    }
+}

@@ -89,4 +89,61 @@ class BoundedBlockingQueueTest {
         assertEquals(2, q.take())
         assertEquals(3, q.take())
     }
+
+    @Test
+    @Timeout(10)
+    fun `semaphore variant passes same smoke test`() {
+        val q = SemaphoreBoundedBlockingQueue<Int>(2)
+        q.put(1); q.put(2)
+        assertEquals(1, q.take())
+        q.put(3)
+        assertEquals(2, q.take())
+        assertEquals(3, q.take())
+    }
+
+    @Test
+    @Timeout(10)
+    fun `semaphore variant timed offer respects the bound`() {
+        val q = SemaphoreBoundedBlockingQueue<Int>(1)
+        q.put(1)
+        // queue is full and nobody takes -> offer must time out and return false
+        assertEquals(false, q.offer(2, timeoutMillis = 100))
+        assertEquals(1, q.take())
+        // slot now free -> offer succeeds
+        assertEquals(true, q.offer(2, timeoutMillis = 100))
+        assertEquals(2, q.take())
+    }
+
+    @Test
+    @Timeout(10)
+    fun `semaphore variant survives concurrent producers and consumers`() {
+        val q = SemaphoreBoundedBlockingQueue<Int>(4)
+        val producers = 4
+        val consumers = 4
+        val perProducer = 250
+        val total = producers * perProducer
+        val consumed = AtomicInteger(0)
+        val sum = AtomicInteger(0)
+        val done = CountDownLatch(consumers)
+
+        val pool = Executors.newFixedThreadPool(producers + consumers)
+        repeat(producers) { p ->
+            pool.submit {
+                for (i in 1..perProducer) q.put(p * perProducer + i)
+            }
+        }
+        repeat(consumers) {
+            pool.submit {
+                while (consumed.incrementAndGet() <= total) {
+                    sum.addAndGet(q.take())
+                }
+                done.countDown()
+            }
+        }
+
+        assertTrue(done.await(10, TimeUnit.SECONDS))
+        pool.shutdownNow()
+        val expected = (0 until producers).sumOf { p -> (1..perProducer).sumOf { p * perProducer + it } }
+        assertEquals(expected, sum.get())
+    }
 }

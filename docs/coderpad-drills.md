@@ -29,7 +29,7 @@ Interviewers change the rules mid-round. Redo each exercise with one mutation:
 | Exercise | Mutations to practice |
 |---|---|
 | VersionedKVStore | puts out of order; add `delete(docId, ts)`; bound memory (evict old versions); make it thread-safe |
-| BoundedBlockingQueue | add timed `offer(item, timeout)`; multiple consumer groups; fair (FIFO) wakeup; bounded executor with blocking `submit()` |
+| BoundedBlockingQueue | add timed `offer(item, timeout)`; multiple consumer groups; fair (FIFO) wakeup; bounded executor with blocking `submit()`; re-implement with **two semaphores + a lock** and compare trade-offs aloud |
 | ThreadSafeLruCache | lock striping; per-entry TTL; async loading (LoadingCache); weigh entries by size |
 | ReplicationLagAlerter | events stream in from multiple shards out of order; exactly-once alerting under retries; sliding-window *average* lag instead of per-record |
 | WordBreak / KSum | return all segmentations / all tuples; streaming input; memory bound |
