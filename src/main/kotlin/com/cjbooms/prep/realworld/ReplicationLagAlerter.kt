@@ -65,8 +65,11 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
 
         // Peek at the oldest entry; stop when it's young enough that nothing
         // breaches (heap order guarantees nothing younger breaches either).
+        // peek() = look at the min WITHOUT removing it; null if heap is empty.
         var oldest = byAge.peek()
         while (oldest != null && nowSeconds - oldest.leaveTimestamp > maxLagSeconds) {
+            // poll() = REMOVE and return the min. The entry is out of the heap;
+            // `oldest` still references it for the checks below.
             byAge.poll()
 
             // Skip stale tombstones: entries left over from records that
