@@ -1,6 +1,8 @@
 package com.cjbooms.prep.realworld
 
 import java.util.TreeMap
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * Reported MongoDB "real-world problem" round (2026): data-migration lag verifier.
@@ -22,6 +24,13 @@ import java.util.TreeMap
  * Arrival REMOVES the record from both indexes immediately (TreeMap removal
  * is O(log n)), so there is no deferred-cleanup bookkeeping anywhere.
  *
+ * THREAD SAFETY: one ReentrantLock guards ALL state. The two indexes plus the
+ * alerted set form a single composite invariant (a record is in both indexes
+ * or neither), so thread-safe individual collections would NOT be enough —
+ * e.g. ConcurrentHashMap + ConcurrentSkipListMap would still allow an arrival
+ * to remove from one index while poll() reads the other mid-update.
+ * Composite invariant -> single lock around every method.
+ *
  * Messy-event handling (interviewers always probe this):
  *   - Arrival for a record we never saw leave: ignored (returns null).
  *   - Events out of order: pairing is by recordId, not arrival sequence.
@@ -29,6 +38,8 @@ import java.util.TreeMap
  *     raised; a record alerts at the first poll that notices the breach, once.
  */
 class ReplicationLagAlerter(private val maxLagSeconds: Long) {
+
+    private val lock = ReentrantLock()
 
     // recordId -> when it left the primary. Every record not yet arrived,
     // INCLUDING ones already alerted (so late arrivals still pair up).
@@ -42,7 +53,7 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
     // Records we've already raised an alert for — exactly-once alerting.
     private val alerted = HashSet<String>()
 
-    fun onPrimaryLeave(recordId: String, timestampSeconds: Long) {
+    fun onPrimaryLeave(recordId: String, timestampSeconds: Long) = lock.withLock {
         leaveTimeByRecordId[recordId] = timestampSeconds
         recordIdByLeaveTime[timestampSeconds] = recordId
     }
@@ -50,15 +61,15 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
     /** Pairs the arrival with its leave event and takes the record out of
      *  both indexes. Returns the observed lag, or null if we have no matching
      *  leave (missed/lost event). */
-    fun onSecondaryArrive(recordId: String, timestampSeconds: Long): Long? {
-        val leaveTimestamp = leaveTimeByRecordId.remove(recordId) ?: return null
+    fun onSecondaryArrive(recordId: String, timestampSeconds: Long): Long? = lock.withLock {
+        val leaveTimestamp = leaveTimeByRecordId.remove(recordId) ?: return@withLock null
         recordIdByLeaveTime.remove(leaveTimestamp)
-        return timestampSeconds - leaveTimestamp
+        timestampSeconds - leaveTimestamp
     }
 
     /** All records that have now been in flight longer than maxLagSeconds.
      *  Each breaching record appears in exactly one poll, ever. */
-    fun poll(nowSeconds: Long): List<String> {
+    fun poll(nowSeconds: Long): List<String> = lock.withLock {
         // Anything that left at or before this moment has been in flight
         // longer than the allowed lag.
         val breachCutoff = nowSeconds - maxLagSeconds
@@ -79,9 +90,9 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
         // still be paired and its lag reported.
         breachedRecords.clear()
 
-        return breachingRecordIds
+        breachingRecordIds
     }
 
     val inFlightCount: Int
-        get() = leaveTimeByRecordId.size
+        get() = lock.withLock { leaveTimeByRecordId.size }
 }
