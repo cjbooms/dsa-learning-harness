@@ -1,0 +1,19 @@
+# Stage 4 lab: 3-node MongoDB replica set.
+# Usage:
+#   docker compose up -d
+#   docker exec mongo1 mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"mongo1:27017"},{_id:1,host:"mongo2:27017"},{_id:2,host:"mongo3:27017"}]})'
+# Connection string for the Kotlin lab:
+#   mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0
+services:
+  mongo1:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27017:27017"]
+  mongo2:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27018:27017"]
+  mongo3:
+    image: mongo:8.0
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27019:27017"]
