@@ -24,26 +24,7 @@ kotlin {
 
 tasks.test {
     useJUnitPlatform()
-    // Stage exercises are homework: their tests fail until you implement the
-    // TODOs. Run them explicitly with the stageTests task below.
-    exclude("com/cjbooms/prep/stages/**")
-}
-
-// Run the stage you're working on: ./gradlew stageTests -Pstage=1
-tasks.register<Test>("stageTests") {
-    val stage = (project.findProperty("stage") as String?).orEmpty()
-    val testTask = tasks.test.get()
-    testClassesDirs = testTask.testClassesDirs
-    classpath = testTask.classpath
-    shouldRunAfter(tasks.test)
-    useJUnitPlatform()
-    filter {
-        if (stage.isNotEmpty()) {
-            includeTestsMatching("com.cjbooms.prep.stages.stage$stage.*")
-        } else {
-            includeTestsMatching("com.cjbooms.prep.stages.*")
-        }
-    }
-    // Homework may be unfinished — report failures without failing the build.
-    ignoreFailures = true
+    // Stage tests fail while exercises are TODO — that's expected.
+    // Run one stage: ./gradlew test --tests '*stages.stage1*'
+    // Or click the gutter arrow in IntelliJ.
 }

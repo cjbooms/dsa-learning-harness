@@ -1,5 +1,10 @@
 package com.cjbooms.prep.stages.stage0
 
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+import kotlin.math.min
+
+
 /**
  * Stage 0.1 — Rebuild your screen solution from memory.
  *
@@ -12,7 +17,7 @@ package com.cjbooms.prep.stages.stage0
  *   - nowMillis is non-decreasing within a single limiter instance
  *   - target: O(1) amortized per call
  *
- * Ritual before coding: name 2 candidate structures, defend your pick aloud.
+ * Ritual before coding: name 2 candidate structures, defeand your pick aloud.
  * (You solved this with a deque + map in the screen — can you rebuild it cold?)
  *
  * Rung follow-ups (same file, new classes — see stage doc 00):
@@ -23,8 +28,24 @@ package com.cjbooms.prep.stages.stage0
  */
 class RateLimiter(private val maxRequests: Int, private val perMillis: Long) {
 
+    //val timeOfRequest = HashMap<String, Long>()
+    val inflightRequests = ArrayDeque<Pair<String, Long>>(maxRequests)
+
     fun allow(requestId: String, nowMillis: Long): Boolean {
-        TODO("Rebuild your screen solution: drop expired, check window, admit")
+        var isInflightAccurate = false
+        while (!isInflightAccurate) {
+            val oldest = inflightRequests.firstOrNull()
+
+            if (oldest != null && (nowMillis - oldest.second) >= perMillis) {
+                inflightRequests.removeFirstOrNull()
+            } else {
+                isInflightAccurate = true
+            }
+        }
+        return if (inflightRequests.size < maxRequests) {
+            inflightRequests.add(requestId to nowMillis)
+            true
+        } else false
     }
 }
 
@@ -34,8 +55,26 @@ class RateLimiter(private val maxRequests: Int, private val perMillis: Long) {
  */
 class ConcurrentRateLimiter(private val maxRequests: Int, private val perMillis: Long) {
 
+    val inflightRequests = ArrayDeque<Pair<String, Long>>(maxRequests)
+    val lock = ReentrantLock()
+
     fun allow(requestId: String, nowMillis: Long): Boolean {
-        TODO("Guard the window state. What is the minimal critical section?")
+        lock.withLock {
+            var isInflightAccurate = false
+            while (!isInflightAccurate) {
+                val oldest = inflightRequests.firstOrNull()
+
+                if (oldest != null && (nowMillis - oldest.second) >= perMillis) {
+                    inflightRequests.removeFirstOrNull()
+                } else {
+                    isInflightAccurate = true
+                }
+            }
+            return if (inflightRequests.size < maxRequests) {
+                inflightRequests.add(requestId to nowMillis)
+                true
+            } else false
+        }
     }
 }
 
@@ -48,9 +87,61 @@ class PerUserRateLimiter(
     private val maxRequests: Int,
     private val perMillis: Long,
 ) {
+
+    val inflightUserRequests: MutableMap<String, ArrayDeque<Pair<String, Long>>> = mutableMapOf()
+
+    val cleanupInterval = 1_000L  // 1 second
+    var nextCleanup: Long = cleanupInterval
+
+
+    val lock = ReentrantLock()
+
     fun allow(userId: String, requestId: String, nowMillis: Long): Boolean {
-        TODO("Per-user window. And: when do idle users get evicted?")
+        lock.withLock {
+
+            val currentUserInflightRequests = inflightUserRequests.getOrPut(userId) { ArrayDeque() }
+            var isInflightAccurate = false
+
+            while (!isInflightAccurate) {
+                val oldestRequest = currentUserInflightRequests.firstOrNull()
+
+                if (oldestRequest != null && (nowMillis - oldestRequest.second) >= perMillis) {
+                    currentUserInflightRequests.removeFirstOrNull()
+                } else {
+                    isInflightAccurate = true
+                }
+            }
+            if (nowMillis > nextCleanup) {
+                periodicCleanup(nowMillis)
+                nextCleanup = nowMillis + cleanupInterval
+            }
+
+            return if (currentUserInflightRequests.size < maxRequests) {
+                currentUserInflightRequests.add(requestId to nowMillis)
+                true
+            } else false
+        }
     }
+
+    private fun periodicCleanup(nowMillis: Long) {
+        val usersForRemoval = mutableSetOf<String>()
+        inflightUserRequests.map { current ->
+            val currentUserInflightRequests = current.value
+            var isInflightAccurate = false
+            while (!isInflightAccurate) {
+                val oldestRequest = currentUserInflightRequests.firstOrNull()
+
+                if (oldestRequest != null && (nowMillis - oldestRequest.second) >= perMillis) {
+                    currentUserInflightRequests.removeFirstOrNull()
+                } else {
+                    isInflightAccurate = true
+                }
+            }
+            if (currentUserInflightRequests.isEmpty()) usersForRemoval.add(current.key)
+        }
+        usersForRemoval.forEach { inflightUserRequests.remove(it) }
+    }
+
 }
 
 /**
@@ -62,7 +153,26 @@ class TokenBucketRateLimiter(
     private val capacity: Int,
     private val refillPerMillis: Double,
 ) {
+
+    var tokens = capacity.toDouble()
+    val NOT_INITIALIZED = -1L
+    var lastRefillTime = NOT_INITIALIZED
+
+    val lock = ReentrantLock()
+
     fun allow(nowMillis: Long): Boolean {
-        TODO("tokens = min(capacity, tokens + elapsed * refillPerMillis); spend 1 if >= 1")
+        lock.withLock {
+            val tokensIncrease = if (lastRefillTime != NOT_INITIALIZED) {
+                (nowMillis - lastRefillTime) * refillPerMillis
+            } else 0.0
+            lastRefillTime = nowMillis
+
+            tokens = min((tokens + tokensIncrease), capacity.toDouble())
+
+            return if (tokens >= 1.0) {
+                tokens -= 1
+                true
+            } else false
+        }
     }
 }
