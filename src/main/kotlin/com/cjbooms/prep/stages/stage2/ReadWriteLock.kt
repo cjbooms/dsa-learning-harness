@@ -1,5 +1,8 @@
 package com.cjbooms.prep.stages.stage2
 
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+
 /**
  * Stage 2 — Implement a read-write lock (VERIFIED MongoDB onsite question,
  * Aug 2025 — candidate solved it in ~30 min with follow-ups).
@@ -20,19 +23,43 @@ package com.cjbooms.prep.stages.stage2
  */
 class SimpleReadWriteLock {
 
+    val lock = ReentrantLock()
+    var readers = 0
+    var activeWriter = false
+    var waitingWriters = 0
+    val condition = lock.newCondition()
+
     fun readLock() {
-        TODO("block while a writer is active — and while a writer WAITS? (policy!)")
+        lock.withLock {
+            while (activeWriter || waitingWriters > 0) {
+                condition.await()
+            }
+            readers++
+        }
     }
 
     fun readUnlock() {
-        TODO("who do you signal, and when?")
+        lock.withLock {
+            readers--
+            if (readers == 0) condition.signalAll()
+        }
     }
 
     fun writeLock() {
-        TODO("block until no active readers AND no active writer")
+        lock.withLock {
+            waitingWriters++
+            while (readers > 0 || activeWriter) {
+                condition.await()
+            }
+            waitingWriters--
+            activeWriter = true
+        }
     }
 
     fun writeUnlock() {
-        TODO("who do you signal, and in what order?")
+        lock.withLock {
+            activeWriter = false
+            condition.signalAll()
+        }
     }
 }
