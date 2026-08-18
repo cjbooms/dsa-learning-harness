@@ -1,7 +1,5 @@
 package com.cjbooms.prep.stages.stage3
 
-import javax.swing.plaf.basic.BasicViewportUI
-
 /**
  * Stage 3.1 + 3.2 — sorted-stream union and k-way merge.
  * VERIFIED shape (1P3A 2026): "union iterator over sorted inputs,
