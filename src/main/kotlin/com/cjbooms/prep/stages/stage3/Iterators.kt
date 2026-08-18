@@ -1,5 +1,7 @@
 package com.cjbooms.prep.stages.stage3
 
+import javax.swing.plaf.basic.BasicViewportUI
+
 /**
  * Stage 3.1 + 3.2 — sorted-stream union and k-way merge.
  * VERIFIED shape (1P3A 2026): "union iterator over sorted inputs,
@@ -16,7 +18,34 @@ package com.cjbooms.prep.stages.stage3
  * unionSorted(iter(1,3,5), iter(1,2,3)) yields 1,2,3,5
  */
 fun unionSorted(a: Iterator<Int>, b: Iterator<Int>): Iterator<Int> {
-    TODO("peek both heads, emit the smaller; on tie, emit once and advance BOTH")
+    return object : Iterator<Int> {
+        var headA: Int? =  if (a.hasNext()) a.next() else null
+        var headB: Int? = if (b.hasNext()) b.next() else null
+        override fun next(): Int {
+            var value: Int?
+            if (headA != null) {
+                if (headB == null || headA!! < headB!!) {
+                    value = headA
+                    headA = if (a.hasNext()) a.next() else null
+                } else if (headA == headB) {
+                    value = headA
+                    headA = if (a.hasNext()) a.next() else null
+                    headB = if (b.hasNext()) b.next() else null
+                } else {
+                    value = headB
+                    headB = if (b.hasNext()) b.next() else null
+                }
+            } else {
+                value = headB
+                headB = if (b.hasNext()) b.next() else null
+            }
+            return value ?: throw NoSuchElementException()
+        }
+
+        override fun hasNext(): Boolean {
+            return headA != null || headB != null
+        }
+    }
 }
 
 /**
