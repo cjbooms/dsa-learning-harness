@@ -1,5 +1,7 @@
 package com.cjbooms.prep.stages.stage3
 
+import java.util.PriorityQueue
+
 /**
  * Stage 3.1 + 3.2 — sorted-stream union and k-way merge.
  * VERIFIED shape (1P3A 2026): "union iterator over sorted inputs,
@@ -52,7 +54,71 @@ fun unionSorted(a: Iterator<Int>, b: Iterator<Int>): Iterator<Int> {
  * (You've used this structure before — ReplicationLagAlerter's age index.)
  */
 fun mergeKSorted(iterators: List<Iterator<Int>>): Iterator<Int> {
-    TODO("min-structure of (head, sourceIterator); pop -> emit -> advance that source")
+    val currentHeads = mutableMapOf<Int, Int?>()
+    iterators.forEachIndexed { index, iterator ->
+       currentHeads[index] = if (iterator.hasNext()) iterator.next() else null
+    }
+    return object : Iterator<Int> {
+
+        override fun next(): Int {
+            var lowest: Int = Int.MAX_VALUE
+            var lowestTracking = mutableSetOf<Int>()
+            currentHeads.forEach { index, value ->
+                if (value != null) {
+                    if (value < lowest) {
+                        lowest = value
+                        lowestTracking.clear()
+                        lowestTracking.add(index)
+                    } else if (value == lowest) {
+                        lowestTracking.add(index)
+                    }
+                }
+            }
+            lowestTracking.forEach {
+                currentHeads[it] = if (iterators[it].hasNext()) iterators[it].next() else null
+            }
+            lowestTracking.clear()
+
+            return if (lowest != Int.MAX_VALUE) lowest else throw NoSuchElementException()
+        }
+
+        override fun hasNext(): Boolean {
+            return currentHeads.filter { it.value != null }.isNotEmpty()
+        }
+    }
+}
+
+fun mergeKSortedPriorityQ(iterators: List<Iterator<Int>>): Iterator<Int> {
+    val queue = PriorityQueue<Pair<Int, Int>>( compareBy { it.second })
+    iterators.forEachIndexed { index, iterator ->
+        if (iterator.hasNext()) queue.add(index to iterator.next())
+    }
+
+    return object : Iterator<Int> {
+
+        override fun next(): Int {
+            val (index, value) = queue.poll() ?: throw NoSuchElementException()
+            if (iterators[index].hasNext()) queue.add(index to iterators[index].next())
+            // Check for duplicates
+            var dupeChecked = false
+            while (!dupeChecked) {
+                if (queue.size > 0) {
+                    val (nextIndex, nextValue) = queue.peek()
+                    if (value == nextValue) {
+                        queue.poll()
+                        if (iterators[nextIndex].hasNext()) queue.add(nextIndex to iterators[nextIndex].next())
+                    } else {
+                        dupeChecked = true
+                    }
+                } else  dupeChecked = true
+            }
+            return value
+        }
+
+        override fun hasNext(): Boolean {
+            return queue.isNotEmpty()
+        }
+    }
 }
 
 /** Tiny helper if you want it: iterator from varargs. */

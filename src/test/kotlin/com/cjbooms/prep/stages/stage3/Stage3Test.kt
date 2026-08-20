@@ -19,6 +19,16 @@ class IteratorsTest {
         ))
         assertEquals((1..9).toList(), result.asSequence().toList())
     }
+
+    @Test
+    fun `merge k sorted streams with priority q`() {
+        val result = mergeKSortedPriorityQ(listOf(
+            listOf(1, 4, 7).iterator(),
+            listOf(2, 5, 8).iterator(),
+            listOf(3, 6, 9).iterator(),
+        ))
+        assertEquals((1..9).toList(), result.asSequence().toList())
+    }
 }
 
 class JsonParserTest {

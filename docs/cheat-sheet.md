@@ -17,6 +17,32 @@ Glance-level reminders. Kotlin standard library first, then `java.util` /
 | `ArrayList` | Random access, two-pointer walks | `list[i]`, amortized O(1) append |
 | `IntArray`/`BooleanArray` | Dynamic programming tables, letter counts — primitives, no boxing | `IntArray(26)`, `BooleanArray(n+1)` |
 
+### Choosing between the maps (the interview question behind the question)
+
+- **HashMap — hash table.** Key → bucket via hashCode. O(1) average get/put, O(n)
+  worst (hash collisions). No order at all. Reach for it by DEFAULT.
+- **LinkedHashMap — hash table + doubly-linked list threading the entries.**
+  Same O(1), but iterates in insertion order (or access order). Costs: more
+  memory per entry, slightly slower writes. Reach for it when ORDER = arrival
+  order matters (least-recently-used cache, "first inserted wins", deterministic iteration).
+- **TreeMap — red-black tree** (a self-balancing binary SEARCH tree). Keys kept
+  SORTED, always. O(log n) everything — no O(1) anywhere. Reach for it when you
+  need order by KEY VALUE: range queries, "greatest ≤ x" (`floorEntry`),
+  "smallest ≥ x" (`ceilingEntry`), head/tail splits.
+
+**Red-black tree vs plain binary search tree:** a plain binary search tree degrades to a linked
+list on sorted input (O(n) operations). Red-black adds rebalancing rules
+(recoloring + rotations on insert/delete) that keep height ≈ log n — that's how
+TreeMap guarantees O(log n) worst case. You will never implement one; you say
+"self-balancing binary search tree, rotations keep it O(log n)" and move on.
+**Binary search tree vs binary heap:** the search tree = total order (in-order traversal yields sorted),
+supports floor/ceiling. Heap = partial order (parent ≤ children only), supports
+min/max in O(1) peek — but no search, no ranges, no floor.
+
+**The pattern that keeps recurring:** sorted map + binary-search-to-a-neighborhood
++ linear scan within it. floorEntry/ceilingEntry/headMap — versioned reads,
+streaming interval merge, lag alerter. Recognize the shape, name it aloud.
+
 **Complexity anchors:** HashMap O(1) · TreeMap O(log n) · heap push/pop O(log n) ·
 deque ends O(1) · binary search O(log n) · sort O(n log n).
 
@@ -169,7 +195,7 @@ lock.withLock { /* critical section */ }          // always withLock — auto-un
 // ReadWriteLock: many readers OR one writer.
 val rw = ReentrantReadWriteLock()
 rw.read { }  /  rw.write { }
-// TRAP: if your "read" mutates (LRU access-order get reorders entries),
+// TRAP: if your "read" mutates (least-recently-used access-order get reorders entries),
 // it needs the WRITE lock.
 
 // Conditions — the producer/consumer tool. One lock, MULTIPLE wait-sets.

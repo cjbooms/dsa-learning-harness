@@ -12,21 +12,18 @@ package com.cjbooms.prep.stages.stage1
  * (Hint: what if edges ARRIVE one at a time and you re-query repeatedly?)
  */
 fun countComponents(n: Int, edges: List<Pair<Int, Int>>): Int {
-    val componentConnections = hashMapOf<Int, MutableSet<Int>>()
+    val graph = hashMapOf<Int, MutableSet<Int>>()
 
-    edges.forEach() {
-        if (componentConnections[it.first] == null) componentConnections[it.first] = mutableSetOf(it.second)
-        else componentConnections[it.first]!!.add(it.second)
-        if (componentConnections[it.second] == null) componentConnections[it.second] = mutableSetOf(it.first)
-        else componentConnections[it.second]!!.add(it.first)
+    edges.forEach {
+        graph.getOrPut(it.first) {mutableSetOf()}.add(it.second)
+        graph.getOrPut(it.second) {mutableSetOf()}.add(it.first)
     }
     val visited = mutableSetOf<Int>()
     var uniqueComponenets = 0
-    for (candidate in 0..<n) {
-        if (!visited.contains(candidate)) {
-            //visited.add(candidate)
+    for (current in 0..<n) {
+        if (!visited.contains(current)) {
             uniqueComponenets++
-            countNeighbours(candidate, componentConnections, visited)
+            countNeighbours(current, graph, visited)
         }
     }
 

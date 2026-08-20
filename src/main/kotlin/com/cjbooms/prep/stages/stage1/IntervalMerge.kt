@@ -22,18 +22,60 @@ fun mergeIntervals(intervals: List<IntRange>): List<IntRange> {
     val outputIntervals = mutableListOf<IntRange>()
     val sortedIntervals = intervals.map { it.start to (it.endInclusive + 1) }.sortedBy { it.first }
 
-    var activeIntervalStart = sortedIntervals[0].first
-    var activeIntervalEnd = sortedIntervals[0].second
-    sortedIntervals.forEach { new ->
-        if (new.first <= activeIntervalEnd) {
-            activeIntervalEnd = max(activeIntervalEnd, new.second)
+    var currentIntervalStart = sortedIntervals[0].first
+    var currentIntervalEnd = sortedIntervals[0].second
+    sortedIntervals.forEach { next ->
+        if (next.first <= currentIntervalEnd) {
+            currentIntervalEnd = max(currentIntervalEnd, next.second)
 
         } else {
-            outputIntervals.add(activeIntervalStart until activeIntervalEnd)
-            activeIntervalStart = new.first
-            activeIntervalEnd = new.second
+            outputIntervals.add(currentIntervalStart until currentIntervalEnd)
+            currentIntervalStart = next.first
+            currentIntervalEnd = next.second
         }
     }
-    outputIntervals.add(activeIntervalStart until activeIntervalEnd)
+    outputIntervals.add(currentIntervalStart until currentIntervalEnd)
     return outputIntervals
+}
+
+/**
+ * Streaming variant: intervals arrive one at a time via add(); merged() returns
+ * the current merged set at any moment. No re-sorting the world per add.
+ *
+ * Structure: TreeMap<start, end> holding the MERGED intervals, sorted by start.
+ * floorEntry(newStart) finds the one interval that could overlap from the left;
+ * from there we walk forward absorbing every entry whose start <= newEnd.
+ * Same floorEntry + range-scan shape as VersionedKVStore / ReplicationLagAlerter.
+ */
+class StreamingIntervalMerger {
+
+    // merged intervals keyed by start, sorted by start (half-open [start, end))
+    private val mergedByStart = java.util.TreeMap<Int, Int>()
+
+    fun add(interval: IntRange) {
+        var currentIntervalStart = interval.start
+        var currentIntervalEnd = interval.endInclusive + 1 // half-open, like mergeIntervals
+
+        // The one interval that could overlap from the left: greatest start <= ours.
+        val leftNeighbor = mergedByStart.floorEntry(currentIntervalStart)
+        if (leftNeighbor != null && leftNeighbor.value >= currentIntervalStart) {
+            // It reaches into us: absorb it, extend if it ends beyond us.
+            currentIntervalStart = leftNeighbor.key
+            currentIntervalEnd = max(currentIntervalEnd, leftNeighbor.value)
+            mergedByStart.remove(leftNeighbor.key)
+        }
+
+        // Absorb every following interval that starts before we end.
+        while (true) {
+            val next = mergedByStart.ceilingEntry(currentIntervalStart) ?: break
+            if (next.key > currentIntervalEnd) break // starts beyond us: no overlap
+            currentIntervalEnd = max(currentIntervalEnd, next.value)
+            mergedByStart.remove(next.key)
+        }
+
+        mergedByStart[currentIntervalStart] = currentIntervalEnd
+    }
+
+    fun merged(): List<IntRange> =
+        mergedByStart.entries.map { (start, end) -> start until end }
 }
