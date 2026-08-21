@@ -22,7 +22,7 @@ public class BackupService {
     /** Creates a backup: persist the record, then start the snapshot. */
     public Backup createBackup(String clusterId) throws Exception {
         Backup backup = new Backup(UUID.randomUUID().toString(), clusterId);
-        store.insert(backup);
+        store.insert(backup); // TODO Needs exception handling
 
         String snapshotId = snapshotClient.startSnapshot(clusterId);
         backup.setSnapshotId(snapshotId);

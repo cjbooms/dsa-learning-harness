@@ -9,7 +9,8 @@ public class Backup {
 
     private final String id;
     private final String clusterId;
-    private String status;        // REQUESTED, RUNNING, COMPLETE, FAILED, CANCELLED
+    // TODO: SHould be anb enum
+    private String status;        // REQUESTED, RUNNING, COMPLETE, FAILED, CANCELLED /
     private String snapshotId;    // set once the snapshot service accepts the job
     private Date requestedAt;
     private Date completedAt;

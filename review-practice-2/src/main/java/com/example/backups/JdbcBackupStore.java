@@ -22,6 +22,8 @@ public class JdbcBackupStore implements BackupStore {
         this.jdbcPassword = jdbcPassword;
     }
 
+    // TODO Needs connection pooling
+
     @Override
     public void insert(Backup backup) throws Exception {
         Connection conn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
@@ -71,6 +73,9 @@ public class JdbcBackupStore implements BackupStore {
     public List<Backup> findByCluster(String clusterId, String statusFilter) throws Exception {
         Connection conn = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPassword);
         Statement stmt = conn.createStatement();
+
+        // TODO We have a risk of SQL injection here
+
         String sql = "SELECT * FROM backups WHERE cluster_id = '" + clusterId + "'";
         if (statusFilter != null && !statusFilter.isEmpty()) {
             sql += " AND status = '" + statusFilter + "'";

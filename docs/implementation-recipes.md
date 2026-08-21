@@ -138,3 +138,92 @@ pool.submit {
 done.await()                       // block until 0
 pool.shutdown()
 ```
+
+## Futures / CompletableFuture (async execution)
+
+```kotlin
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+```
+
+### The traps first (what interviewers probe)
+
+- `Future.get()` **blocks** — calling it immediately defeats async. Gather at the END.
+- `CompletableFuture` without an executor runs on the **commonPool** — shared,
+  unbounded-ish, and dangerous to block in. Say "I'd pass an explicit executor
+  in production" — one sentence, big signal.
+- Exceptions **vanish into the future** — an async task that throws doesn't
+  crash anything; the exception surfaces only when you `get`/`join`. Unjoined
+  futures = silent failure.
+
+### Submit + gather (the basic shape)
+
+```kotlin
+val pool: ExecutorService = Executors.newFixedThreadPool(4)
+
+// submit work -> get a handle back immediately
+val future: CompletableFuture<String> = CompletableFuture.supplyAsync({
+    doWork()                                  // runs on pool
+}, pool)
+
+val result = future.get(5, TimeUnit.SECONDS)  // bounded wait, not bare get()
+```
+
+### Fan-out + gather all (the interview shape: N tasks, one combined result)
+
+```kotlin
+val futures = items.map { item ->
+    CompletableFuture.supplyAsync({ process(item) }, pool)
+}
+
+// Wait for ALL to finish, then collect — gather at the end, not per-task
+CompletableFuture.allOf(*futures.toTypedArray()).join()
+val results = futures.map { it.join() }       // all done now, join is instant
+```
+
+### Dependent stages (chaining)
+
+```kotlin
+val result = CompletableFuture
+    .supplyAsync({ fetchUser(id) }, pool)                       // stage 1
+    .thenApply { user -> user.orderCount }                      // transform (sync)
+    .thenCompose { count -> CompletableFuture.supplyAsync({     // flatten async-in-async
+        fetchOrders(count) }, pool) }
+    .exceptionally { ex -> fallbackValue }                      // one catch for the chain
+    .get(5, TimeUnit.SECONDS)
+```
+
+### Race / first-success
+
+```kotlin
+val fastest = CompletableFuture.anyOf(futureA, futureB, futureC).join()
+```
+
+### Fire-and-forget with error handling (the refreshStatus fix)
+
+```kotlin
+CompletableFuture
+    .runAsync({ verifySnapshotReadable(snapshotId) }, pool)
+    .exceptionally { ex ->
+        log.error("verification failed for $snapshotId", ex)    // NOT swallowed
+        null
+    }
+// NOT raw new Thread(...) — pooled, and the exception has somewhere to go
+```
+
+### Shutting down
+
+```kotlin
+pool.shutdown()
+if (!pool.awaitTermination(10, TimeUnit.SECONDS)) {
+    pool.shutdownNow()        // interrupt stragglers after the grace period
+}
+```
+
+### Vocabulary one-liners
+
+- `thenApply` = map (sync transform) · `thenCompose` = flatMap (async next stage)
+- `allOf` = barrier · `anyOf` = race
+- `join()` = unchecked exceptions, `get()` = checked + timeout-capable

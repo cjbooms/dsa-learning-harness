@@ -23,6 +23,7 @@ public class BackupController {
             Backup backup = service.createBackup(clusterId);
             return json(201, "{\"id\":\"" + backup.getId() + "\",\"status\":\"" + backup.getStatus() + "\"}");
         } catch (Exception e) {
+            // TODO: We can't return a 200! Split between 4XX and 5XX
             return json(200, "{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
@@ -38,12 +39,13 @@ public class BackupController {
                   .append("\",\"status\":\"").append(b.getStatus())
                   .append("\"}");
                 if (i < backups.size() - 1) {
-                    sb.append(",");
+                    sb.append(","); // this looks correct, but should be tested
                 }
             }
             sb.append("]");
             return json(200, sb.toString());
         } catch (Exception e) {
+            /// same issue
             return json(200, "{\"error\":\"" + e.getMessage() + "\"}");
         }
     }
@@ -56,6 +58,7 @@ public class BackupController {
         } catch (IllegalArgumentException e) {
             return json(404, "{\"error\":\"" + e.getMessage() + "\"}");
         } catch (Exception e) {
+            //sa,e
             return json(200, "{\"error\":\"" + e.getMessage() + "\"}");
         }
     }

@@ -17,6 +17,9 @@ public class SnapshotClient {
         this.config = config;
     }
 
+
+    // TODO - Are we closing connections?
+
     /** Starts a snapshot. Returns the snapshot id assigned by the service. */
     public String startSnapshot(String clusterId) throws Exception {
         HttpURLConnection conn = openConnection("/v1/snapshots");
@@ -25,7 +28,7 @@ public class SnapshotClient {
         String body = "{\"clusterId\":\"" + clusterId + "\"}";
         try (OutputStream os = conn.getOutputStream()) {
             os.write(body.getBytes("UTF-8"));
-        }
+        } // TODO - WHere is the catch
         return readJsonField(conn, "snapshotId");
     }
 
@@ -43,6 +46,9 @@ public class SnapshotClient {
         conn.getResponseCode();
     }
 
+
+    // TODO Needs proper connection pooling
+    // Also needs proper HTTP timeouts and reslience4j or Failsafe
     private HttpURLConnection openConnection(String path) throws Exception {
         URL url = new URL(config.getSnapshotApiUrl() + path);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -52,6 +58,7 @@ public class SnapshotClient {
     }
 
     private String readJsonField(HttpURLConnection conn, String field) throws Exception {
+        // TODO Needs try with resources so no leaks
         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder body = new StringBuilder();
         String line;
