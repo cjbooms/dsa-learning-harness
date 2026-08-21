@@ -227,3 +227,33 @@ if (!pool.awaitTermination(10, TimeUnit.SECONDS)) {
 - `thenApply` = map (sync transform) · `thenCompose` = flatMap (async next stage)
 - `allOf` = barrier · `anyOf` = race
 - `join()` = unchecked exceptions, `get()` = checked + timeout-capable
+
+### Virtual threads (Java 21+) — what changes
+
+```kotlin
+// One virtual thread per task — no pool sizing, no fan-out gymnastics
+val executor = Executors.newVirtualThreadPerTaskExecutor()
+
+val futures = items.map { item ->
+    executor.submit<String> { process(item) }   // plain Callable, cheap to block
+}
+val results = futures.map { it.get(5, TimeUnit.SECONDS) }
+executor.close()  // close() waits for all tasks — structured shutdown for free
+```
+
+- **The mindset flip:** platform threads are expensive → pool them, share them,
+  never block them. Virtual threads are ~free → one per task, blocking is FINE.
+  The whole CompletableFuture chaining machinery (thenApply/thenCompose)
+  exists to avoid blocking expensive threads — with virtual threads you can
+  just... write sequential code that blocks.
+- **What you still need:** timeouts (`get(n, SECONDS)`), error handling
+  (exceptions still hide in the future until gathered), and backpressure for
+  bounded resources (a Semaphore — "1M virtual threads" doesn't mean your DB
+  pool or the downstream API can take 1M concurrent calls).
+- **The pinning gotcha:** a virtual thread holding a `synchronized` monitor
+  (or in native code) while blocking PINNS its carrier platform thread —
+  under heavy load that silently reintroduces platform-thread exhaustion.
+  ReentrantLock doesn't pin. Worth one sentence if asked.
+- **Interview one-liner:** "virtual threads trade pool-management complexity
+  for backpressure-management — the bottleneck moves from our threads to
+  whatever we're calling."
