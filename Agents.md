@@ -76,6 +76,8 @@ The test files in `src/test/kotlin/com/cjbooms/prep/stages/` contain **corrected
 ./gradlew test --tests '*stages.stage8.TaskSchedulerTest*'  # one class
 ```
 
+The user self-times exercises — no mock-drill apparatus; just run the tests.
+
 ## Stage time budgets
 
 | Stage | Topic | Budget |

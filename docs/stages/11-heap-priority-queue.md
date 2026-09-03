@@ -1,6 +1,6 @@
 # Stage 11 — Heap / Priority Queue
 
-**Time budget: 45 min** · Package: `stages/stage11`
+**Time budget: 100 min** · Package: `stages/stage11`
 
 ## The meta-skill
 
@@ -29,9 +29,23 @@ why is it exactly the answer?
 - [ ] Closed form: (maxCount - 1) * (cooldown + 1) + numMaxTasks, floored at n
 - [ ] MongoDB framing: rate-shaped writes, throttled retries
 
+### 11.4 Median from a stream (30 min)
+`addNum(n)` / `findMedian()` in `MedianFinder.kt`
+- [ ] Max-heap for the lower half, min-heap for the upper half
+- [ ] Rebalance so their sizes differ by at most one
+- [ ] Median = top of larger heap, or average of both tops
+- [ ] Aloud: the invariant IS the answer
+
+### 11.5 Sliding window maximum (25 min)
+`maxSlidingWindow(nums, k)` in `SlidingWindowMaximum.kt`
+- [ ] Monotonic deque of indices, values decreasing front to back
+- [ ] Pop back while smaller than incoming; pop front when out of window
+- [ ] O(n) total; contrast with heap O(n log k)
+
 ## Done when
 - [ ] Tests green (`./gradlew test --tests '*stages.stage11*'`); each exercise committed separately
 - [ ] You can state the heap invariant for each exercise in one sentence
+- [ ] You can state the deque invariant for sliding-window maximum and why it beats a heap
 
 ## Commit points
 After each exercise.
