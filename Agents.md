@@ -2,14 +2,13 @@
 
 ## What this repo is
 
-Kotlin practice workspace for MongoDB Staff+ onsite interviews. The user is preparing for a retake after failing a topological-sort DSA round. The repo contains:
-
-- **Practice drills** (`src/main/kotlin/com/cjbooms/prep/stages/`) — TODO-body skeletons with KDoc. The user implements these; JUnit5 tests tell them when they're right.
-- **Solved reference** (`src/main/kotlin/com/cjbooms/prep/solutions/`) — complete working implementations. For checking answers after the user has solved (or attempted) a drill.
+Kotlin practice workspace for MongoDB Staff+ onsite interviews. Practice drills live in `stages/` as TODO-body skeletons with KDoc; the user implements them and JUnit5 tests provide the feedback loop. Solved reference implementations live in `solutions/` for post-exercise comparison.
 
 ## The homework rule
 
-**Never implement the drills for the user.** The learning value is in the user writing the code and getting test feedback. Your job is to:
+**Never implement the drills for the user.** The learning value is in the user writing the code and getting test feedback. "Implement stage N" in any plan means **guide the user to implement it** — never copy bodies from `solutions/` into `stages/`.
+
+Your job:
 
 1. Point them to the right stage file and its KDoc.
 2. Help them run the tests (`./gradlew test --tests '*stages.stageN*'`).
@@ -21,30 +20,37 @@ Kotlin practice workspace for MongoDB Staff+ onsite interviews. The user is prep
 ```
 src/main/kotlin/com/cjbooms/prep/
   stages/          # TODO stubs — user implements these
-    stage0/        # Rate limiter ladder (done)
+    stage0/        # Rate limiter ladder
     stage1/        # DSA structures: interval merge, tree serialize, connected components, KV+TTL, topo sort
-    stage2/        # Read-write lock (done)
-    stage3/        # Iterators, JSON parser, inverted index (done except InvertedIndex stub)
-    stage4/        # MongoDB internals lab (skeleton)
-    stage5/        # Code review practice (done)
-    stage8/        # Graph algorithms: topo sort (Kahn + DFS), cycle detect, BFS shortest path, union-find, course schedule, alien dict
-    stage9/        # Tree algorithms: BST validate, LCA, Trie, BST serialize
-    stage10/       # Array/string: two pointers, sliding window, binary search, prefix sums
-    stage11/       # Heap: kth largest, merge k lists, task scheduler w/ cooldown
-    stage12/       # Concurrency: bounded blocking queue, connection pool, lock-free counter
-    stage13/       # System DSA: LRU cache, hit counter, consistent hashing
-    stage14/       # Dynamic programming: basic, string, interval
-    stage15/       # Cold-recall refreshers: rate limiter, interval merge, tree serialize, RW lock
+    stage2/        # Read-write lock
+    stage3/        # Iterators, JSON parser, inverted index
+    stage4/        # MongoDB internals lab
+    stage5/        # Code review practice
+    stage8/        # Graph algorithms (incl. 8.5 practice: CourseSchedule, AlienDictionary)
+    stage9/        # Tree algorithms
+    stage10/       # Array/string patterns
+    stage11/       # Heap / priority queue
+    stage12/       # Concurrency primitives
+    stage13/       # System-adjacent DSA
+    stage14/       # Dynamic programming
+    stage15/       # Cold-recall refreshers
   solutions/       # Solved reference implementations (same stage structure)
-  dsa/             # Older solved exercises (VersionedKVStore, WordBreak, KSum, GroupAnagrams)
-  concurrency/     # Older solved exercises (BoundedBlockingQueue, ThreadSafeLruCache, RaceConditionFix)
-  realworld/       # Older solved exercises (ReplicationLagAlerter)
+  dsa/             # Older solved exercises
+  concurrency/     # Older solved exercises
+  realworld/       # Older solved exercises
 src/test/kotlin/com/cjbooms/prep/stages/   # Tests — fail with NotImplementedError until user implements
+docs/stages/       # Stage docs with time budgets, rituals, and "Done when" checklists
 ```
+
+## How progress is tracked
+
+- **Stage docs** (`docs/stages/*.md`) have "Done when" checklists and "Commit points" — the user checks items off as they go.
+- **Tests** are the ground truth: a stage is done when `./gradlew test --tests '*stages.stageN*'` is green.
+- **Commit history** shows which exercises have been completed.
 
 ## How to guide a study session
 
-1. **Pick a stage** based on the user's time budget and weak areas. The priority gap is stage 8 (graph algorithms).
+1. **Pick a stage** based on the user's time budget and weak areas.
 2. **Point to the file**: "Open `src/main/kotlin/com/cjbooms/prep/stages/stage8/TaskScheduler.kt` and read the KDoc."
 3. **Let them implement**. Do not write the body for them.
 4. **Run tests**: `./gradlew test --tests '*stages.stage8*'`
@@ -53,12 +59,12 @@ src/test/kotlin/com/cjbooms/prep/stages/   # Tests — fail with NotImplementedE
 
 ## Important: test expectations are correct
 
-The test files in `src/test/kotlin/com/cjbooms/prep/stages/` contain **corrected** expectations. During initial creation, ~11 skeleton tests had mathematically wrong expected values; those were fixed. Do not change test assertions unless you find a genuine bug — and if you do, verify by hand before editing.
+The test files in `src/test/kotlin/com/cjbooms/prep/stages/` contain **corrected** expectations. During initial creation, several skeleton tests had mathematically wrong expected values; those were fixed. Do not change test assertions unless you find a genuine bug — and if you do, verify by hand before editing.
 
 ## Commands
 
 ```bash
-./gradlew test                                    # full suite (stages 0-7 pass, 8-15 fail on stubs)
+./gradlew test                                    # full suite
 ./gradlew test --tests '*stages.stage8*'          # one stage
 ./gradlew test --tests '*stages.stage8.TaskSchedulerTest*'  # one class
 ```
@@ -67,13 +73,12 @@ The test files in `src/test/kotlin/com/cjbooms/prep/stages/` contain **corrected
 
 | Stage | Topic | Budget |
 |-------|-------|--------|
-| 8 | Graph algorithms | 90 min |
-| 8.5 | Graph practice | 30 min |
+| 8 | Graph algorithms (incl. 8.5 practice) | 90 + 30 min |
 | 9 | Tree algorithms | 60 min |
-| 10 | Array/string | 60 min |
-| 11 | Heap | 45 min |
-| 12 | Concurrency | 45 min |
-| 13 | System DSA | 60 min |
+| 10 | Array/string patterns | 60 min |
+| 11 | Heap / priority queue | 45 min |
+| 12 | Concurrency primitives | 45 min |
+| 13 | System-adjacent DSA | 60 min |
 | 14 | Dynamic programming | 45 min |
 | 15 | Cold recall | 75 min |
 
