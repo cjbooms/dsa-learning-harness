@@ -41,6 +41,97 @@ don't peek before solving.
 | [14](docs/stages/14-dynamic-programming.md) | Dynamic programming: basic, string, word break | 45m |
 | [15](docs/stages/15-cold-recall.md) | Cold-recall refreshers of earlier stages | 75m |
 
+## Full drill inventory
+
+Each active stage below lists its stub files in `src/main/kotlin/com/cjbooms/prep/stages/`,
+matching tests in `src/test/kotlin/com/cjbooms/prep/stages/`, and reference solutions in
+`src/main/kotlin/com/cjbooms/prep/solutions/`. Stages 5-7 are already complete; Stage 0 is a
+retrospective of the passed screen.
+
+### Stage 0 — Rate Limiter Retrospective (30m)
+- `RateLimiter.kt` — `allow(requestId, nowMillis)`
+- `PerUserRateLimiterConventional.kt` — escalation rungs (thread-safe, per-user, memory-bound, token bucket)
+
+### Stage 1 — DSA Drill Set A (90m)
+- `IntervalMerge.kt` — `mergeIntervals`
+- `TreeSerialize.kt` — `serialize` / `deserialize`
+- `ConnectedComponents.kt` — `countComponents`
+- `KvWithTtl.kt` — `put` / `get` with TTL
+- `TopologicalSort.kt` — Kahn's topological sort
+
+### Stage 2 — Read-Write Lock (45m)
+- `ReadWriteLock.kt` — `SimpleReadWriteLock` with writer preference
+
+### Stage 3 — Iterators, Parsers, Indexes (90m)
+- `Iterators.kt` — `unionSorted`, `mergeKSorted`
+- `JsonParser.kt` — `parse(json): JsonValue`
+- `InvertedIndex.kt` — `insert`, `search`, `searchAll`
+
+### Stage 4 — MongoDB Internals + Docker Lab (75m)
+- `MongoLab.kt` — write concerns, change streams, primary-failover lab
+
+### Stage 8 — Graph Algorithms (185m)
+- `TaskScheduler.kt` — Kahn's BFS topological sort
+- `TaskSchedulerDfs.kt` — DFS post-order topological sort
+- `CycleDetector.kt` — cycle detection
+- `ShortestPath.kt` — grid BFS shortest path
+- `UnionFind.kt` — union-find
+- `CourseSchedule.kt` — course ordering
+- `AlienDictionary.kt` — alien dictionary order
+- `GridTraversal.kt` — `countIslands`, `rottingOranges`
+- `CloneGraph.kt` — `cloneGraph`
+
+### Stage 9 — Tree Algorithms (60m)
+- `BstValidator.kt` — `isValidBst`
+- `LowestCommonAncestor.kt` — BST and generic binary-tree LCA
+- `Trie.kt` — `insert`, `search`, `startsWith`
+- `BstSerializer.kt` — `serializeBst` / `deserializeBst`
+
+### Stage 10 — Array/String Patterns + Text Justification (75m)
+- `TwoPointers.kt` — pair sum, container with most water, remove duplicates
+- `SlidingWindow.kt` — `longestSubstringWithoutRepeats`, `minWindowSubstring`
+- `BinarySearchVariants.kt` — rotated search, peak element, 2D matrix search
+- `PrefixSums.kt` — range sum, subarray sum equals K
+- `TextJustification.kt` — `textJustify`
+
+### Stage 11 — Heap / Priority Queue (100m)
+- `KthLargest.kt` — `add` / `peek`
+- `MergeKLists.kt` — `mergeKLists`
+- `TaskSchedulerWithCooldown.kt` — `leastInterval`
+- `MedianFinder.kt` — `addNum` / `findMedian`
+- `SlidingWindowMaximum.kt` — `maxSlidingWindow`
+
+### Stage 12 — Concurrency Primitives + Multithreaded Crawler (45m)
+- `BoundedBlockingQueue.kt` — `put` / `take`
+- `WebCrawler.kt` — `crawl(startUrl)` (BFS + worker pool + poll-time visited set)
+- `LockFreeCounter.kt` — `incrementAndGet`, `get`, `getAndReset`
+
+### Stage 13 — System-Adjacent DSA (140m)
+- `LruCache.kt`
+- `HitCounter.kt`
+- `ConsistentHashing.kt`
+- `LfuCache.kt`
+- `RandomizedSet.kt`
+- `SnapshotArray.kt`
+- `VersionedKvRecall.kt`
+
+### Stage 14 — Dynamic Programming (45m)
+- `BasicDp.kt` — `climbStairs`, `houseRobber`
+- `StringDp.kt` — `longestCommonSubsequence`, `editDistance`
+- `WordBreak.kt` — `wordBreak`, `wordBreakIi`
+
+### Stage 15 — Cold Recall (75m)
+- `RateLimiterRecall.kt`
+- `IntervalMergeRecall.kt`
+- `TreeSerializeRecall.kt`
+- `RwLockRecall.kt`
+
+### Reference-only drills (solutions kept for spare-time reading)
+- `solutions/stage10/SlidingWindow.kt` — still contains `maxSumSubarrayK`
+- `solutions/stage12/ConnectionPool.kt`
+- `solutions/stage14/IntervalDp.kt`
+- `concurrency/ThreadSafeLruCache.kt` + `concurrency/ThreadSafeLruCacheTest.kt`
+
 ## Reference docs
 
 - `docs/cheat-sheet.md` — DS/algorithms/concurrency flash cards
