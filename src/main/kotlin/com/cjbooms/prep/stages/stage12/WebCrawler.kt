@@ -12,8 +12,8 @@ package com.cjbooms.prep.stages.stage12
  *   - A plain BFS queue + visited set works, but one thread cannot saturate
  *     I/O wait. Use a fixed worker pool.
  *   - Shared state: a work queue, a visited set, and an in-flight counter.
- *   - visited must be updated atomically BEFORE enqueue so the same URL is
- *     never fetched twice, even under races.
+ *   - Mark a URL visited when you DEQUEUE it; enqueue links freely and skip
+ *     duplicates on dequeue. Pre-marking before enqueue prevents fetching.
  *   - Termination: stop when the queue is empty AND no worker is currently
  *     fetching.
  *

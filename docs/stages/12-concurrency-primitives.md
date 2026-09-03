@@ -22,7 +22,7 @@ rule unprompted: spurious wakeup + re-check is the only safe form.
 ### 12.2 Multithreaded web crawler (15 min)
 `crawl(startUrl)` in `WebCrawler.kt`
 - [ ] Fixed worker pool + shared queue + visited set
-- [ ] Atomically mark a URL visited BEFORE enqueue so it is never fetched twice
+- [ ] Mark a URL visited when you DEQUEUE it; enqueue links freely and skip duplicates on dequeue
 - [ ] Termination: queue empty AND no in-flight fetches
 - [ ] Aloud: this is BFS (Stage 8) plus the shared-state rules from concurrency
 

@@ -3,7 +3,6 @@ package com.cjbooms.prep.solutions.stage12
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
@@ -18,8 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger
  *   - A plain BFS queue + visited set works, but one thread cannot saturate
  *     I/O wait. Use a fixed worker pool.
  *   - Shared state: a work queue, a visited set, and an in-flight counter.
- *   - visited must be updated atomically BEFORE enqueue so the same URL is
- *     never fetched twice, even under races.
+ *   - Mark a URL visited when you DEQUEUE it; enqueue links freely and skip
+ *     duplicates on dequeue. Pre-marking before enqueue prevents fetching.
  *   - Termination: stop when the queue is empty AND no worker is currently
  *     fetching.
  *
@@ -50,6 +49,10 @@ class WebCrawler(
                     // fetched twice, even if it was enqueued by multiple parents.
                     if (!visited.add(url)) continue
 
+                    // Increment immediately after claiming the URL. A worker
+                    // that sees an empty queue while inFlight==0 may exit early;
+                    // that only narrows parallelism — the active workers drain
+                    // the remaining graph before the call returns.
                     inFlight.incrementAndGet()
                     try {
                         val links = fetcher(url)
