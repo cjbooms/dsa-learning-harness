@@ -1,6 +1,6 @@
 # Stage 5 — Code Review Prep (protocol-driven)
 
-**Time budget: 60 min** · Package: `stages/stage5`
+**Status: ✅ DONE — do not revisit unless the user asks.** · **Time budget: 60 min** · Package: `stages/stage5`
 
 ## Why protocol-first
 

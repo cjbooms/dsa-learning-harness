@@ -1,6 +1,6 @@
 # Stage 6 — System Design (light, MongoDB-informed)
 
-**Time budget: 45 min** (flex: compressible to 30 if earlier stages overrun)
+**Status: ✅ DONE — do not revisit unless the user asks.** · **Time budget: 45 min** (flex: compressible to 30 if earlier stages overrun)
 
 ## Exercises
 

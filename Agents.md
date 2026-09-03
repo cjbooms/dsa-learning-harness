@@ -4,6 +4,10 @@
 
 Kotlin practice workspace for MongoDB Staff+ onsite interviews. Practice drills live in `stages/` as TODO-body skeletons with KDoc; the user implements them and JUnit5 tests provide the feedback loop. Solved reference implementations live in `solutions/` for post-exercise comparison.
 
+## Scope: DSA only
+
+**Complete — do not revisit:** technical screen, code review (stage 5), system design (stage 6), experience deep dive (stage 7). Future sessions focus exclusively on DSA exercises (stages 0–4 and 8–15). Only revisit a non-DSA stage if the user explicitly asks.
+
 ## The homework rule
 
 **Never implement the drills for the user.** The learning value is in the user writing the code and getting test feedback. "Implement stage N" in any plan means **guide the user to implement it** — never copy bodies from `solutions/` into `stages/`.

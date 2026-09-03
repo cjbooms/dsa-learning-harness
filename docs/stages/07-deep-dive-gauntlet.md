@@ -1,6 +1,6 @@
 # Stage 7 — Experience Deep Dive Checklist + Final Gauntlet
 
-**Time budget: 30 min**
+**Status: ✅ DONE — do not revisit unless the user asks.** · **Time budget: 30 min**
 
 ## Part A — Deep dive checklist (10 min)
 

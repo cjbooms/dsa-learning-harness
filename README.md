@@ -5,18 +5,22 @@ limiter, sliding-window deque + map, O(1) allow).
 
 ## The panel
 
-1. **Programming** — CoderPad, DS selection, complexity, mid-round mutations
-2. **System Design** — Atlas-scale, whiteboard via CoderPad
-3. **Code Review** — junior PR, planted issues, depth > breadth
-4. **Experience Deep Dive** — architecture scope, production impact
+1. **Programming** — CoderPad, DS selection, complexity, mid-round mutations *(in progress — current focus)*
+2. **System Design** ✅ done — Atlas-scale, whiteboard via CoderPad
+3. **Code Review** ✅ done — junior PR, planted issues, depth > breadth
+4. **Experience Deep Dive** ✅ done — architecture scope, production impact
+
+Screen ✅ done. Remaining work is DSA only.
 
 ## How this repo works
 
 16 stages. Each stage has a doc in `docs/stages/` (goals,
 exercises, time budget, homework, done-when checklist) and a matching package
 in `src/main/kotlin/com/cjbooms/prep/stages/` with skeletons — **signatures +
-KDoc only, no solutions** (homework rule: you write the code, tests tell you
-when it's right).
+KDoc only, no solutions in stages/** (homework rule: you write the code, tests
+tell you when it's right). Solved reference implementations live in
+`src/main/kotlin/com/cjbooms/prep/solutions/` for post-exercise comparison —
+don't peek before solving.
 
 | Stage | Content | Budget |
 |---|---|---|
@@ -25,9 +29,9 @@ when it's right).
 | [2](docs/stages/02-read-write-lock.md) | Read-Write Lock (verified onsite question) | 45m |
 | [3](docs/stages/03-iterators-parsers.md) ⭐ | DSA set B: iterators, JSON parser, inverted index | 90m |
 | [4](docs/stages/04-mongodb-fluency.md) ⭐ | MongoDB internals + Docker replica-set lab | 75m |
-| [5](docs/stages/05-code-review.md) | Code review: protocol + planted-bug PR | 60m |
-| [6](docs/stages/06-system-design.md) | System design (light, flex stage) | 45m |
-| [7](docs/stages/07-deep-dive-gauntlet.md) | Deep-dive checklist + final gauntlet | 30m |
+| [5](docs/stages/05-code-review.md) ✅ done | Code review: protocol + planted-bug PR | 60m |
+| [6](docs/stages/06-system-design.md) ✅ done | System design (light, flex stage) | 45m |
+| [7](docs/stages/07-deep-dive-gauntlet.md) ✅ done | Deep-dive checklist + final gauntlet | 30m |
 | [8](docs/stages/08-graph-algorithms.md) ⭐ | Graph algorithms: topo sort, cycle detect, shortest path, union-find (+8.5 practice) | 120m |
 | [9](docs/stages/09-tree-algorithms.md) | Tree algorithms: BST validate, LCA, Trie, BST serialize | 60m |
 | [10](docs/stages/10-array-string-patterns.md) | Array/string: two pointers, sliding window, binary search, prefix sums | 60m |
