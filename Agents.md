@@ -44,18 +44,21 @@ docs/stages/       # Stage docs with time budgets, rituals, and "Done when" chec
 
 ## How progress is tracked
 
-- **Stage docs** (`docs/stages/*.md`) have "Done when" checklists and "Commit points" — the user checks items off as they go.
+- **Stage docs** (`docs/stages/*.md`) — one per stage, each with per-exercise `- [ ]` checkboxes, a "Done when" section, and "Commit points". The user checks items off as they go.
+- **README stage table** — index of all stages with links, topics, and time budgets.
 - **Tests** are the ground truth: a stage is done when `./gradlew test --tests '*stages.stageN*'` is green.
-- **Commit history** shows which exercises have been completed.
+- **Commit history** shows which exercises have been completed (docs specify per-exercise commit points).
 
 ## How to guide a study session
 
 1. **Pick a stage** based on the user's time budget and weak areas.
-2. **Point to the file**: "Open `src/main/kotlin/com/cjbooms/prep/stages/stage8/TaskScheduler.kt` and read the KDoc."
-3. **Let them implement**. Do not write the body for them.
-4. **Run tests**: `./gradlew test --tests '*stages.stage8*'`
-5. **Debug failures**: read the test expectation, read their code, ask guiding questions. Do not paste the solution.
-6. **Compare with reference** (optional): after they pass, they can diff their implementation against `solutions/stageN/`.
+2. **Open the stage doc** (`docs/stages/NN-*.md`) — it has the exercises, rituals, and checkboxes for the session.
+3. **Point to the exercise file**: "Open `src/main/kotlin/com/cjbooms/prep/stages/stage8/TaskScheduler.kt` and read the KDoc."
+4. **Let them implement**. Do not write the body for them.
+5. **Run tests**: `./gradlew test --tests '*stages.stage8*'`
+6. **Debug failures**: read the test expectation, read their code, ask guiding questions. Do not paste the solution.
+7. **Check off the doc's checkbox** and commit at the doc's commit point.
+8. **Compare with reference** (optional): after they pass, they can diff their implementation against `solutions/stageN/`.
 
 ## Important: test expectations are correct
 

@@ -12,7 +12,7 @@ limiter, sliding-window deque + map, O(1) allow).
 
 ## How this repo works
 
-8 stages, ~8 hours total. Each stage has a doc in `docs/stages/` (goals,
+16 stages. Each stage has a doc in `docs/stages/` (goals,
 exercises, time budget, homework, done-when checklist) and a matching package
 in `src/main/kotlin/com/cjbooms/prep/stages/` with skeletons — **signatures +
 KDoc only, no solutions** (homework rule: you write the code, tests tell you
@@ -28,6 +28,14 @@ when it's right).
 | [5](docs/stages/05-code-review.md) | Code review: protocol + planted-bug PR | 60m |
 | [6](docs/stages/06-system-design.md) | System design (light, flex stage) | 45m |
 | [7](docs/stages/07-deep-dive-gauntlet.md) | Deep-dive checklist + final gauntlet | 30m |
+| [8](docs/stages/08-graph-algorithms.md) ⭐ | Graph algorithms: topo sort, cycle detect, shortest path, union-find (+8.5 practice) | 120m |
+| [9](docs/stages/09-tree-algorithms.md) | Tree algorithms: BST validate, LCA, Trie, BST serialize | 60m |
+| [10](docs/stages/10-array-string-patterns.md) | Array/string: two pointers, sliding window, binary search, prefix sums | 60m |
+| [11](docs/stages/11-heap-priority-queue.md) | Heap: kth largest, merge k lists, task scheduler | 45m |
+| [12](docs/stages/12-concurrency-primitives.md) | Concurrency: blocking queue, connection pool, lock-free counter | 45m |
+| [13](docs/stages/13-system-adjacent-dsa.md) | System DSA: LRU cache, hit counter, consistent hashing | 60m |
+| [14](docs/stages/14-dynamic-programming.md) | Dynamic programming: basic, string, interval | 45m |
+| [15](docs/stages/15-cold-recall.md) | Cold-recall refreshers of earlier stages | 75m |
 
 ## Reference docs
 
