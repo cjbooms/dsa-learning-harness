@@ -24,7 +24,7 @@ don't peek before solving.
 
 | Stage | Content | Budget |
 |---|---|---|
-| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder | 45m |
+| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder | 30m |
 | [1](docs/stages/01-dsa-structures.md) ⭐ | DSA set A: choosing the right structure | 90m |
 | [2](docs/stages/02-read-write-lock.md) | Read-Write Lock (verified onsite question) | 45m |
 | [3](docs/stages/03-iterators-parsers.md) ⭐ | DSA set B: iterators, JSON parser, inverted index | 90m |
@@ -34,11 +34,11 @@ don't peek before solving.
 | [7](docs/stages/07-deep-dive-gauntlet.md) ✅ done | Deep-dive checklist + final gauntlet | 30m |
 | [8](docs/stages/08-graph-algorithms.md) ⭐ | Graph algorithms: topo sort, cycle detect, shortest path, union-find, grid flood-fill / rotting oranges, clone graph (+8.5 practice) | 185m |
 | [9](docs/stages/09-tree-algorithms.md) | Tree algorithms: BST validate, LCA, Trie, BST serialize | 60m |
-| [10](docs/stages/10-array-string-patterns.md) | Array/string: two pointers, sliding window, binary search, prefix sums | 60m |
+| [10](docs/stages/10-array-string-patterns.md) | Array/string: two pointers, sliding window, binary search, prefix sums, text justification | 75m |
 | [11](docs/stages/11-heap-priority-queue.md) | Heap: kth largest, merge k lists, task scheduler, median stream, sliding window max | 100m |
-| [12](docs/stages/12-concurrency-primitives.md) | Concurrency: blocking queue, connection pool, lock-free counter | 45m |
+| [12](docs/stages/12-concurrency-primitives.md) | Concurrency: blocking queue, multithreaded web crawler, lock-free counter | 45m |
 | [13](docs/stages/13-system-adjacent-dsa.md) | System DSA: LRU cache, hit counter, consistent hashing, LFU cache, randomized set, snapshot array, versioned KV recall | 140m |
-| [14](docs/stages/14-dynamic-programming.md) | Dynamic programming: basic, string, interval | 45m |
+| [14](docs/stages/14-dynamic-programming.md) | Dynamic programming: basic, string, word break | 45m |
 | [15](docs/stages/15-cold-recall.md) | Cold-recall refreshers of earlier stages | 75m |
 
 ## Reference docs

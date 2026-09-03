@@ -1,6 +1,6 @@
 # Stage 10 — Array/String Patterns
 
-**Time budget: 60 min** · Package: `stages/stage10`
+**Time budget: 75 min** · Package: `stages/stage10`
 
 ## The meta-skill
 
@@ -17,9 +17,8 @@ The ritual: name the pattern BEFORE coding and say what makes it applicable.
 - [ ] Container with most water: move the SHORTER wall — defend why
 - [ ] Remove duplicates in place: slow/fast pointers, return new length
 
-### 10.2 Sliding window (20 min)
-`maxSumSubarrayK` / `longestSubstringWithoutRepeats` / `minWindowSubstring` in `SlidingWindow.kt`
-- [ ] Fixed window: running sum, add right / subtract left
+### 10.2 Sliding window (15 min)
+`longestSubstringWithoutRepeats` / `minWindowSubstring` in `SlidingWindow.kt`
 - [ ] Variable window: last-seen index map, jump the left edge
 - [ ] Min window: need/have counters — the two-phase expand/contract
 
@@ -34,9 +33,16 @@ The ritual: name the pattern BEFORE coding and say what makes it applicable.
 - [ ] prefix[i] = sum of nums[0..<i]; range query = difference
 - [ ] Sum-equals-k: prefix-sum frequency map — say why the map works
 
+### 10.5 Text justification (15 min)
+`textJustify(words, maxWidth)` in `TextJustification.kt`
+- [ ] Greedy line packing: pack as many words as fit, then distribute spaces
+- [ ] Last line and single-word lines are left-justified
+- [ ] Aloud: why this is greedy, not DP
+
 ## Done when
 - [ ] Tests green (`./gradlew test --tests '*stages.stage10*'`); each exercise committed separately
 - [ ] For each exercise you can name the pattern and the monotonicity/invariant that powers it
+- [ ] You can explain why text justification is greedy and why sliding-window questions are not
 
 ## Commit points
-After 10.2, after 10.4.
+After 10.2, after 10.4, after 10.5.

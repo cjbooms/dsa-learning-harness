@@ -17,22 +17,8 @@ package com.cjbooms.prep.stages.stage10
  * If the window size varies, you typically need two pointers with a
  * validity check and a "shrink until valid" inner loop.
  *
- * Time budget: 20 minutes. Three exercises.
+ * Time budget: 15 minutes. Two exercises.
  */
-
-/**
- * Maximum sum of any contiguous subarray of length `k`.
- *
- * Approach: compute the sum of the first k elements, then slide one position
- * at a time — subtract the element leaving the window, add the one entering.
- * Track the maximum observed sum.
- *
- * Time:  O(n).
- * Space: O(1).
- */
-fun maxSumSubarrayK(numbers: IntArray, k: Int): Int {
-    TODO("implement")
-}
 
 /**
  * Longest substring without repeating characters (LC 3).

@@ -24,12 +24,12 @@ if a local choice is provably safe, don't reach for the table.
 - [ ] Space optimization: two rows suffice — O(min(m, n))
 - [ ] MongoDB framing: schema migration, config diffing
 
-### 14.3 Interval DP (15 min)
-`matrixChainOrder(dimensions)` / `maxCoinsBurst(nums)` in `IntervalDp.kt`
-- [ ] dp[i][j] = best over split k of dp[i][k] + dp[k][j] + cost(i, k, j)
-- [ ] Fill by increasing interval length — say why (subproblems must be ready)
-- [ ] Burst balloons: think LAST balloon to burst, not first
-- [ ] Aloud: when intervals need DP vs greedy (no safe local choice)
+### 14.3 Word Break (15 min)
+`wordBreak(s, wordDict)` / `wordBreakIi(s, wordDict)` in `WordBreak.kt`
+- [ ] dp[i] over prefixes of s: can s[0..i) be segmented?
+- [ ] For each i, check every j < i where dp[j] is true and s[j..i) is in the dictionary
+- [ ] Word Break II: same DP shape, but each cell stores the valid sentences
+- [ ] Aloud: why brute-force backtracking is O(2^n) and where the DP memo saves it
 
 ## Done when
 - [ ] Tests green (`./gradlew test --tests '*stages.stage14*'`); each exercise committed separately

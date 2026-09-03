@@ -19,12 +19,12 @@ rule unprompted: spurious wakeup + re-check is the only safe form.
 - [ ] `signal()` not `signalAll()` — homogeneous waiters, one slot per change
 - [ ] Mutation drills: offer(item, timeoutMs); fair lock; synchronized variant
 
-### 12.2 Semaphore connection pool (15 min)
-`lease()` / `release(conn)` in `ConnectionPool.kt`
-- [ ] Semaphore(maxConnections) bounds concurrent holders
-- [ ] Idle deque for reuse — acquire permit, then poll idle or open new
-- [ ] Release order: return to idle, then release permit — why this order?
-- [ ] Aloud: semaphore vs lock (N vs 1); semaphore vs bounded queue (active vs waiting)
+### 12.2 Multithreaded web crawler (15 min)
+`crawl(startUrl)` in `WebCrawler.kt`
+- [ ] Fixed worker pool + shared queue + visited set
+- [ ] Atomically mark a URL visited BEFORE enqueue so it is never fetched twice
+- [ ] Termination: queue empty AND no in-flight fetches
+- [ ] Aloud: this is BFS (Stage 8) plus the shared-state rules from concurrency
 
 ### 12.3 Lock-free counter (10 min)
 `incrementAndGet(delta)` / `get()` / `getAndReset()` in `LockFreeCounter.kt`
