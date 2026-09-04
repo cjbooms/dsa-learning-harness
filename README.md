@@ -24,7 +24,7 @@ don't peek before solving.
 
 | Stage | Content | Budget |
 |---|---|---|
-| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder | 30m |
+| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder ✅ | 30m |
 | [1](docs/stages/01-dsa-structures.md) ⭐ | DSA set A: choosing the right structure | 90m |
 | [2](docs/stages/02-read-write-lock.md) | Read-Write Lock (verified onsite question) | 45m |
 | [3](docs/stages/03-iterators-parsers.md) ⭐ | DSA set B: iterators, JSON parser, inverted index | 90m |
@@ -48,7 +48,7 @@ matching tests in `src/test/kotlin/com/cjbooms/prep/stages/`, and reference solu
 `src/main/kotlin/com/cjbooms/prep/solutions/`. Stages 5-7 are already complete; Stage 0 is a
 retrospective of the passed screen.
 
-### Stage 0 — Rate Limiter Retrospective (30m)
+### Stage 0 — Rate Limiter Retrospective ✅ (30m)
 - `RateLimiter.kt` — `allow(requestId, nowMillis)`
 - `PerUserRateLimiterConventional.kt` — escalation rungs (thread-safe, per-user, memory-bound, token bucket)
 
