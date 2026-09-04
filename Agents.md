@@ -55,14 +55,24 @@ docs/stages/       # Stage docs with time budgets, rituals, and "Done when" chec
 
 ## How to guide a study session
 
-1. **Pick a stage** based on the user's time budget and weak areas.
-2. **Open the stage doc** (`docs/stages/NN-*.md`) — it has the exercises, rituals, and checkboxes for the session.
-3. **Point to the exercise file**: "Open `src/main/kotlin/com/cjbooms/prep/stages/stage8/TaskScheduler.kt` and read the KDoc."
-4. **Let them implement**. Do not write the body for them.
-5. **Run tests**: `./gradlew test --tests '*stages.stage8*'`
-6. **Debug failures**: read the test expectation, read their code, ask guiding questions. Do not paste the solution.
-7. **Check off the doc's checkbox** and commit at the doc's commit point.
-8. **Compare with reference** (optional): after they pass, they can diff their implementation against `solutions/stageN/`.
+1. **Don't assume a stage is undone.** Before picking work, check the repo state: `git status`, `git log --oneline`, and grep `src/main/kotlin/com/cjbooms/prep/stages` for `TODO`/`NotImplementedError` stubs. The user has completed many exercises already.
+2. **Be directive.** The user wants to be told where to start. Give a single exercise, not a menu of options.
+3. **Pick the next real gap** based on actual stubs, not the stage list order.
+4. **Open the stage doc** (`docs/stages/NN-*.md`) — it has the exercises, rituals, and checkboxes for the session.
+5. **Point to the exercise file**: "Open `src/main/kotlin/com/cjbooms/prep/stages/stage8/TaskSchedulerDfs.kt` and read the KDoc."
+6. **Let them implement**. Do not write the body for them.
+7. **Run tests with a forced rerun**: `./gradlew cleanTest test --tests '*stages.stage8*'`. Plain `./gradlew test` can report `UP-TO-DATE` and mislead you.
+8. **Be concise with feedback.** State verdict, one or two strengths, one or two risks, then move on.
+9. **Only evaluate the exercise the user is currently writing.** Do not preemptively evaluate other stages.
+10. **Always evaluate when the user says "done"** — forced test rerun first, then concise feedback.
+11. **Debug failures** with hints, not solutions.
+12. **Check off the doc's checkbox** and commit at the doc's commit point.
+13. **Compare with reference** (optional): after they pass, they can diff their implementation against `solutions/stageN/`.
+
+## Agent behavior rules
+
+- **Do not reply to system advisories** as if they were user turns. Advisories are guidance for you, not messages that need a response.
+- **Progress is the README stage table** (`README.md`). Mark stages `✅` only after the user confirms done and tests pass.
 
 ## Important: test expectations are correct
 
