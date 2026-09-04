@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * LFU (Least Frequently Used) cache with a fixed capacity.
  *
  * Supports `get` and `put` in O(1). Eviction removes the entry with the

@@ -2,6 +2,7 @@ package com.cjbooms.prep.stages.stage14
 
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Computes the length of the longest sequence of characters that appears in
  * both [a] and [b] in the same relative order (not necessarily contiguous).
  *

@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage9
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Stage 9.4 — Serialize / deserialize a BST using pre-order only.
  */
 

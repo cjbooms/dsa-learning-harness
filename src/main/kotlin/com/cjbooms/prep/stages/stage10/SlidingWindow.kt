@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage10
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Stage 10.2 — Sliding Window.
  */
 

@@ -2,6 +2,7 @@ package com.cjbooms.prep.stages.stage14
 
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Counts the number of distinct ways to reach the top of a staircase with [n]
  * steps when each move may take either 1 or 2 steps.
  *

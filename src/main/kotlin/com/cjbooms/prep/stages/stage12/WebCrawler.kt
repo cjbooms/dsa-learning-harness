@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage12
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Multithreaded web crawler.
  *
  * Given a starting URL and a fetcher that returns the outgoing links of a

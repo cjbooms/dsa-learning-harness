@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Find median from a data stream.
  *
  * Design a class that supports two operations on an integer stream:

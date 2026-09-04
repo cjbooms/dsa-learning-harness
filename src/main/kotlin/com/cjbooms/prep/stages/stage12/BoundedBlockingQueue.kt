@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage12
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Producer/consumer bounded blocking queue.
  *
  * Implement a FIFO queue with a fixed [capacity]. Producers block when the

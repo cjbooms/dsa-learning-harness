@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Time-based hit counter over a fixed sliding window of seconds.
  *
  * Records hit events at integer-second timestamps and answers queries for

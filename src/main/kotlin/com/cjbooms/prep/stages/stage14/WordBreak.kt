@@ -2,6 +2,7 @@ package com.cjbooms.prep.stages.stage14
 
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Determines whether [s] can be segmented into a sequence of one or more
  * dictionary words from [wordDict].
  *

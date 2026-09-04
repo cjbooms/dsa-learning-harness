@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Union-Find (Disjoint Set Union) over a fixed set of n elements.
  *
  * Maintains a partition of the elements 0..n - 1 into disjoint connected

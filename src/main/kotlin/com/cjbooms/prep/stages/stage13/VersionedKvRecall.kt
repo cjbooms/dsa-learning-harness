@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Versioned key-value store with point-in-time ("as of") recall.
  *
  * Each `put` records a version of a document at an associated timestamp.

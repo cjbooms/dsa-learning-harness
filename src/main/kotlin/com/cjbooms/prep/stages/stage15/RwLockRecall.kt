@@ -4,6 +4,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
+ * Learn first: see docs/learning-resources.md
  * A reader-writer lock built from `ReentrantLock` and one or more `Condition`s
  * (not from `ReentrantReadWriteLock`).
  *

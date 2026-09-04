@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Task scheduler with cooldown.
  *
  * Given a set of tasks represented by characters and a `cooldown` value,

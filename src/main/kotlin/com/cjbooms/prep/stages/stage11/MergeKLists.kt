@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Merge k sorted linked lists and return a single sorted list of values.
  *
  * Each input list is a singly linked list whose `next` pointers form a

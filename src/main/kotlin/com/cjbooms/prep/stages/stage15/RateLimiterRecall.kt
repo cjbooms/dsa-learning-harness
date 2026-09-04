@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage15
 
 /**
+ * Learn first: see docs/learning-resources.md
  * A fixed sliding-window rate limiter that admits at most [maxRequests] calls
  * within any trailing window of [perMillis] milliseconds.
  *

@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * LRU (Least Recently Used) cache with a fixed capacity.
  *
  * Supports `get` and `put` in O(1). A successful `get` marks the entry as

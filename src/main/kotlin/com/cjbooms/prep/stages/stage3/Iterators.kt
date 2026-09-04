@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage3
 import java.util.PriorityQueue
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Returns a sorted iterator that yields the elements of the sorted iterators
  * [a] and [b] in ascending order, with duplicates appearing only once.
  *

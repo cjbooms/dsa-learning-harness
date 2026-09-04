@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Kth largest element in a stream.
  *
  * Design a class to find the kth largest element in a stream of integers.

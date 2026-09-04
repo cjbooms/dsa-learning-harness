@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage3
 
 /**
+ * Learn first: see docs/learning-resources.md
  * An in-memory inverted index mapping terms to the documents that contain
  * them.
  *

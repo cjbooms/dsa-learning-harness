@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage12
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Lock-free counter.
  *
  * Implement a counter that supports concurrent updates without using locks.

@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage1
 
 /**
+ * Learn first: see docs/learning-resources.md
  * An in-memory key-value store where each entry expires after a caller-supplied
  * time-to-live.
  *

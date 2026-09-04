@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage13
 import java.util.Random
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Set that supports `insert`, `remove`, and uniform `getRandom` in O(1).
  *
  * Each value may appear at most once. `insert` of an existing value returns

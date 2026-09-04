@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Cycle detection in a directed graph.
  *
  * Given a directed graph defined by a count of nodes and a list of directed

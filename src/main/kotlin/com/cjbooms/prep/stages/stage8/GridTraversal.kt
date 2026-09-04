@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Number of islands.
  *
  * Given a 2D grid of characters where '1' represents land and '0' represents

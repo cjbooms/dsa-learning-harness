@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage15
 
 /**
+ * Learn first: see docs/learning-resources.md
  * A node of a binary tree carrying an integer value and optional left and
  * right children.
  *

@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage8
 import java.util.ArrayDeque
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Shortest path in a 0/1 grid.
  *
  * Given a grid of non-negative integers where each cell holds a movement

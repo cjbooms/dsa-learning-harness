@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage15
 import kotlin.math.max
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Merges a list of half-open intervals `[start, end)` into the minimal set of
  * non-overlapping intervals. Intervals that overlap or touch are combined into
  * a single interval.

@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage11
 import java.util.ArrayDeque
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Sliding window maximum.
  *
  * Given an integer array `nums` and a window size `k`, slide a fixed-size

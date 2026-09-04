@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Consistent hashing with virtual nodes.
  *
  * Maintains a hash ring over a set of nodes. Each real node is placed on the

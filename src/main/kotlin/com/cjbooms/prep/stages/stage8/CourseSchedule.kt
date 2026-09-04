@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage8
 import java.util.ArrayDeque
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Course Schedule II.
  *
  * Given a number of courses labelled 0..numCourses - 1 and a list of

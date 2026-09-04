@@ -3,6 +3,7 @@ package com.cjbooms.prep.stages.stage8
 import java.util.ArrayDeque
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Alien Dictionary.
  *
  * Given a list of words that is sorted according to an unknown alphabet,

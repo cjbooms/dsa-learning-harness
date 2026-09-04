@@ -1,6 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
+ * Learn first: see docs/learning-resources.md
  * Fixed-length integer array with snapshot-based point-in-time reads.
  *
  * `set` updates the value at an index for the current snapshot. `snap`
