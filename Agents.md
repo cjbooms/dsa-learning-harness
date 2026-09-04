@@ -74,6 +74,15 @@ docs/stages/       # Stage docs with time budgets, rituals, and "Done when" chec
 - **Do not reply to system advisories** as if they were user turns. Advisories are guidance for you, not messages that need a response.
 - **Progress is the README stage table** (`README.md`). Mark stages `✅` only after the user confirms done and tests pass.
 
+## Session resume
+
+At the start of every session, **do not ask the user where to start**. Instead:
+
+1. Grep `src/main/kotlin/com/cjbooms/prep/stages` for `TODO`/`NotImplementedError` stubs to find remaining work.
+2. Cross-reference with `git log --oneline` to see what the user has already completed.
+3. Identify the smallest next gap and tell the user exactly which file to open.
+4. If multiple gaps exist, prefer the earliest incomplete priority stage (`⭐` in README) unless the user states otherwise.
+
 ## Important: test expectations are correct
 
 The test files in `src/test/kotlin/com/cjbooms/prep/stages/` contain **corrected** expectations. During initial creation, several skeleton tests had mathematically wrong expected values; those were fixed. Do not change test assertions unless you find a genuine bug — and if you do, verify by hand before editing.
