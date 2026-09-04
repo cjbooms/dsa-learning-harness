@@ -1,5 +1,6 @@
 package com.cjbooms.prep.stages.stage0
 
+import java.util.Deque
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.math.min
@@ -88,58 +89,55 @@ class PerUserRateLimiter(
     private val perMillis: Long,
 ) {
 
-    val inflightUserRequests: MutableMap<String, ArrayDeque<Pair<String, Long>>> = mutableMapOf()
 
-    val cleanupInterval = 1_000L  // 1 second
-    var nextCleanup: Long = cleanupInterval
-
-
+    var nextCleanTime: Long? = null
+    val cleanIntervalMillis = 10_000
+    val userRequests = hashMapOf<String, ArrayDeque<Pair<String, Long>>>()
     val lock = ReentrantLock()
 
     fun allow(userId: String, requestId: String, nowMillis: Long): Boolean {
         lock.withLock {
-
-            val currentUserInflightRequests = inflightUserRequests.getOrPut(userId) { ArrayDeque() }
-            var isInflightAccurate = false
-
-            while (!isInflightAccurate) {
-                val oldestRequest = currentUserInflightRequests.firstOrNull()
-
-                if (oldestRequest != null && (nowMillis - oldestRequest.second) >= perMillis) {
-                    currentUserInflightRequests.removeFirstOrNull()
+            val userContext = userRequests.getOrPut(userId) { ArrayDeque(maxRequests) }
+            var clean = false
+            val expiredMillis = nowMillis - perMillis
+            while (!clean) {
+                if (userContext.isNotEmpty() && userContext.first().second <= expiredMillis) {
+                    userContext.removeFirstOrNull()
                 } else {
-                    isInflightAccurate = true
+                    clean = true
                 }
             }
-            if (nowMillis > nextCleanup) {
-                periodicCleanup(nowMillis)
-                nextCleanup = nowMillis + cleanupInterval
+            if (nextCleanTime == null) nextCleanTime = nowMillis + cleanIntervalMillis
+            if (nowMillis >= nextCleanTime!!) {
+                periodicCleanup(expiredMillis)
+                nextCleanTime = nowMillis + cleanIntervalMillis
+            }
+            if (userContext.size >= maxRequests) {
+                return false
+            }
+            else {
+                userContext.add(Pair(requestId, nowMillis))
+                return true
             }
 
-            return if (currentUserInflightRequests.size < maxRequests) {
-                currentUserInflightRequests.add(requestId to nowMillis)
-                true
-            } else false
+
+
         }
     }
 
-    private fun periodicCleanup(nowMillis: Long) {
-        val usersForRemoval = mutableSetOf<String>()
-        inflightUserRequests.map { current ->
-            val currentUserInflightRequests = current.value
-            var isInflightAccurate = false
-            while (!isInflightAccurate) {
-                val oldestRequest = currentUserInflightRequests.firstOrNull()
-
-                if (oldestRequest != null && (nowMillis - oldestRequest.second) >= perMillis) {
-                    currentUserInflightRequests.removeFirstOrNull()
-                } else {
-                    isInflightAccurate = true
+    private fun periodicCleanup(expiredMillis: Long) {
+        val userForRemoval = mutableSetOf<String>()
+        userRequests.forEach { userId, requests ->
+            requests.lastOrNull().let {
+                if (it == null || it.second <= expiredMillis) {
+                    userForRemoval.add(userId)
                 }
             }
-            if (currentUserInflightRequests.isEmpty()) usersForRemoval.add(current.key)
         }
-        usersForRemoval.forEach { inflightUserRequests.remove(it) }
+        userForRemoval.forEach {
+            userRequests.remove(it)
+        }
+
     }
 
 }
