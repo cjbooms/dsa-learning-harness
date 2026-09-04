@@ -32,7 +32,7 @@ class LruCache<K, V>(private val capacity: Int) {
      * Inserts or refreshes the mapping [key] = [value]. If the cache is
      * at capacity afterwards, the least-recently-used entry is evicted.
      */
-    fun put(key: V, value: V) {
+    fun put(key: K, value: V) {
         TODO("implement")
     }
 
