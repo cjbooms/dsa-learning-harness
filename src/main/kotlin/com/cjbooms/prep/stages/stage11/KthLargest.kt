@@ -45,6 +45,4 @@ class KthLargest(private val k: Int) {
     fun peek(): Int {
         TODO("implement")
     }
-
-    private val minHeap: java.util.PriorityQueue<Int> = java.util.PriorityQueue()
 }

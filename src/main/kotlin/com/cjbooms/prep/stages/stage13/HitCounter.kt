@@ -37,10 +37,6 @@ class HitCounter(private val windowSeconds: Int = 300) {
         require(windowSeconds > 0) { "windowSeconds must be positive, was $windowSeconds" }
     }
 
-    private data class Bucket(var timestamp: Int, var count: Int)
-
-    private val buckets = arrayOfNulls<Bucket>(windowSeconds)
-
     /**
      * Records a hit at wall-clock time [timestampSeconds]. O(1) amortized.
      */
@@ -54,11 +50,6 @@ class HitCounter(private val windowSeconds: Int = 300) {
      * O(windowSeconds) is acceptable.
      */
     fun getHits(timestampSeconds: Int): Int {
-        TODO("implement")
-    }
-
-    /** Kotlin's `%` follows the sign of the dividend; we always want a non-negative index. */
-    private fun mod(value: Int, divisor: Int): Int {
         TODO("implement")
     }
 }

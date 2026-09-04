@@ -19,8 +19,9 @@ package com.cjbooms.prep.stages.stage8
  * (Kahn can — nodes that never reach in-degree 0 — but DFS exposes the cycle
  * edges, which is usually what the interviewer is probing for.)
  */
-fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean =
-    findCycle(n, edges).isNotEmpty()
+fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean {
+    TODO("implement")
+}
 
 fun findCycle(n: Int, edges: List<Pair<Int, Int>>): List<Int> {
     TODO("implement")

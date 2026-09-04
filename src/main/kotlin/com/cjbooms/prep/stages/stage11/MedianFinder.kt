@@ -1,7 +1,5 @@
 package com.cjbooms.prep.stages.stage11
 
-import java.util.PriorityQueue
-
 /**
  * Stage 11.4 — Find median from a data stream (30 min).
  *
@@ -23,9 +21,6 @@ import java.util.PriorityQueue
  * Time budget: 30 min.
  */
 class MedianFinder {
-
-    private val lowerHalf = PriorityQueue<Int>(compareByDescending { it })
-    private val upperHalf = PriorityQueue<Int>()
 
     /**
      * Adds [num] to the stream. O(log n).

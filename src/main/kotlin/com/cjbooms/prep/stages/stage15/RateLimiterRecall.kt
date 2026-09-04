@@ -22,11 +22,6 @@ package com.cjbooms.prep.stages.stage15
  */
 class RateLimiterRecall(private val maxRequests: Int, private val perMillis: Long) {
 
-    // Sliding window via an ArrayDeque of (requestId, timestamp).
-    // O(1) amortized per call: evict from the head while entries are older than
-    // (nowMillis - perMillis), then admit at the tail if size < maxRequests.
-    // The timestamp doubles as the ordering key, so no separate map is needed.
-    val inflightRequests = ArrayDeque<Pair<String, Long>>(maxRequests)
 
     fun allow(requestId: String, nowMillis: Long): Boolean {
         TODO("implement")

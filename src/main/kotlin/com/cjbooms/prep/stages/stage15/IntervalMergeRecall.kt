@@ -31,8 +31,6 @@ fun mergeIntervals(intervals: List<IntRange>): List<IntRange> {
 
 class StreamingIntervalMerger {
 
-    // Merged intervals keyed by start, sorted by start (half-open [start, end)).
-    private val mergedByStart = java.util.TreeMap<Int, Int>()
 
     fun add(interval: IntRange) {
         TODO("implement")

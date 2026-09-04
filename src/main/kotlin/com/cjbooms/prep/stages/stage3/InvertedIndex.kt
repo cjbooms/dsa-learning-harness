@@ -25,10 +25,10 @@ class InvertedIndex {
     }
 
     fun searchAll(vararg terms: String): Set<String> {
-        TODO("AND semantics — which set operation?")
+        TODO()
     }
 
     fun delete(docId: String) {
-        TODO("what makes this O(terms in doc) instead of O(index size)?")
+        TODO()
     }
 }

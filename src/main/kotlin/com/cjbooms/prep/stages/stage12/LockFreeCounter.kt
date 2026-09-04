@@ -1,7 +1,5 @@
 package com.cjbooms.prep.stages.stage12
 
-import java.util.concurrent.atomic.AtomicLong
-
 /**
  * Stage 12.3 — Lock-free counter using compare-and-set.
  * Time budget: 10 min.
@@ -35,8 +33,6 @@ import java.util.concurrent.atomic.AtomicLong
  *   - "Why not volatile long?" -> ++ isn't atomic on a long; CAS is.
  */
 class LockFreeCounter {
-
-    private val value = AtomicLong(0)
 
     /**
      * Atomically add [delta] and return the new value.

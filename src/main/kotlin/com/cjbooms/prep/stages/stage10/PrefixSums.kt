@@ -28,8 +28,6 @@ package com.cjbooms.prep.stages.stage10
  * Space: O(n) for the table.
  */
 class ImmutableArraySum(private val numbers: IntArray) {
-    private val prefix: IntArray = IntArray(numbers.size + 1)
-
     fun sumRange(left: Int, right: Int): Int {
         TODO("implement")
     }

@@ -26,8 +26,8 @@ fun shortestPathGrid(
     grid: Array<IntArray>,
     start: Pair<Int, Int>,
     target: Pair<Int, Int>,
-): Int = shortestPathGridPath(grid, start, target).let { path ->
-    if (path.isEmpty()) -1 else path.size - 1
+): Int {
+    TODO("implement")
 }
 
 fun shortestPathGridPath(
@@ -35,52 +35,5 @@ fun shortestPathGridPath(
     start: Pair<Int, Int>,
     target: Pair<Int, Int>,
 ): List<Pair<Int, Int>> {
-    if (grid.isEmpty() || grid[0].isEmpty()) return emptyList()
-    val rows = grid.size
-    val cols = grid[0].size
-    val (sr, sc) = start
-    val (tr, tc) = target
-    if (grid[sr][sc] != 0 || grid[tr][tc] != 0) return emptyList()
-
-    val visited = Array(rows) { BooleanArray(cols) }
-    val parent = Array(rows) { IntArray(cols) { -1 } }
-    val queue: ArrayDeque<Int> = ArrayDeque()
-    queue.addLast(sr * cols + sc)
-    visited[sr][sc] = true
-
-    // 4-neighbour moves: up, down, left, right.
-    val dr = intArrayOf(-1, 1, 0, 0)
-    val dc = intArrayOf(0, 0, -1, 1)
-
-    while (queue.isNotEmpty()) {
-        val code = queue.removeFirst()
-        val r = code / cols
-        val c = code % cols
-        if (r == tr && c == tc) {
-            // Reconstruct path: walk parent[] back to start.
-            val path = mutableListOf<Pair<Int, Int>>()
-            var curR = tr
-            var curC = tc
-            while (curR != sr || curC != sc) {
-                path.add(curR to curC)
-                val prev = parent[curR][curC]
-                curR = prev / cols
-                curC = prev % cols
-            }
-            path.add(sr to sc)
-            return path.reversed()
-        }
-        for (k in 0 until 4) {
-            val nr = r + dr[k]
-            val nc = c + dc[k]
-            if (nr in 0 until rows && nc in 0 until cols &&
-                !visited[nr][nc] && grid[nr][nc] == 0
-            ) {
-                visited[nr][nc] = true
-                parent[nr][nc] = r * cols + c
-                queue.addLast(nr * cols + nc)
-            }
-        }
-    }
-    return emptyList()
+    TODO("implement")
 }

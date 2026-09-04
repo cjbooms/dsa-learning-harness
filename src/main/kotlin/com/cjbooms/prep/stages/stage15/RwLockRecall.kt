@@ -29,11 +29,6 @@ import kotlin.concurrent.withLock
  */
 class RwLockRecall {
 
-    val lock = ReentrantLock()
-    val condition = lock.newCondition()
-    var readers = 0
-    var activeWriter = false
-    var waitingWriters = 0
 
     fun readLock() {
         TODO("implement")

@@ -1,8 +1,5 @@
 package com.cjbooms.prep.stages.stage12
 
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
-
 /**
  * Stage 12.1 — Producer/consumer bounded blocking queue.
  * Time budget: 20 min.
@@ -36,13 +33,6 @@ import kotlin.concurrent.withLock
  *   - "Fair ordering for producers?"   -> ReentrantLock(fair = true).
  */
 class BoundedBlockingQueue<T>(private val capacity: Int) {
-
-    private val lock = ReentrantLock()
-
-    private val notFull = lock.newCondition()
-    private val notEmpty = lock.newCondition()
-
-    private val buffer = ArrayDeque<T>(capacity)
 
     /**
      * Block until a slot is free, then append [item].

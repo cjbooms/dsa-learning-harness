@@ -24,29 +24,5 @@ fun scheduleTasksDfs(
     tasks: List<String>,
     dependencies: List<Pair<String, String>>,
 ): List<String> {
-    // Build adjacency list: prereq -> [dependents].
-    val dependents = mutableMapOf<String, MutableList<String>>()
-    tasks.forEach { dependents.getOrPut(it) { mutableListOf() } }
-    dependencies.forEach { (prereq, dependent) ->
-        dependents.getOrPut(prereq) { mutableListOf() }.add(dependent)
-        dependents.getOrPut(dependent) { mutableListOf() }
-    }
-
-    val color = mutableMapOf<String, Int>()  // 0 = WHITE, 1 = GRAY, 2 = BLACK
-    val finished = ArrayDeque<String>()     // post-order: push on finish, reverse at end
-    var hasCycle = false
-
-    fun dfs(node: String) {
-        TODO("implement")
-    }
-
-    for (task in tasks) {
-        if ((color[task] ?: 0) == 0) {
-            dfs(task)
-            if (hasCycle) return emptyList()
-        }
-    }
-
-    // Reverse post-order = topological sort.
-    return finished.reversed()
+    TODO("implement")
 }

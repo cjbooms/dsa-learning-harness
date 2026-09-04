@@ -31,33 +31,6 @@ class LruCache<K, V>(private val capacity: Int) {
         require(capacity > 0) { "capacity must be positive, was $capacity" }
     }
 
-    private class Node<K, V>(
-        val key: K,
-        var value: V,
-        var prev: Node<K, V>? = null,
-        var next: Node<K, V>? = null,
-    )
-
-    private val map = HashMap<K, Node<K, V>>(capacity)
-    // Doubly-linked list of nodes; head = LRU end, tail = MRU end.
-    private var head: Node<K, V>? = null
-    private var tail: Node<K, V>? = null
-
-    /** Append [node] at the MRU end. */
-    private fun appendMru(node: Node<K, V>) {
-        TODO("implement")
-    }
-
-    /** Remove [node] from the list; updates head/tail as needed. */
-    private fun removeNode(node: Node<K, V>) {
-        TODO("implement")
-    }
-
-    /** Move [node] to the MRU end (assumes node is currently in the list). */
-    private fun touch(node: Node<K, V>) {
-        TODO("implement")
-    }
-
     /**
      * Returns the value for [key] and marks it as most-recently-used,
      * or null if absent. O(1).
@@ -70,7 +43,7 @@ class LruCache<K, V>(private val capacity: Int) {
      * Inserts or refreshes [key] = [value]. If the cache is at capacity
      * afterwards, the least-recently-used entry is evicted. O(1).
      */
-    fun put(key: K, value: V) {
+    fun put(key: V, value: V) {
         TODO("implement")
     }
 

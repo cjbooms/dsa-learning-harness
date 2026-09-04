@@ -1,7 +1,5 @@
 package com.cjbooms.prep.stages.stage13
 
-import java.util.TreeMap
-
 /**
  * Stage 13.3 — Consistent hashing with virtual nodes.
  *
@@ -42,13 +40,6 @@ class ConsistentHashing<T>(
         require(replicasPerNode > 0) { "replicasPerNode must be positive, was $replicasPerNode" }
     }
 
-    // Virtual-node hash -> real node.
-    private val ring = TreeMap<Int, T>()
-    // Real node -> its virtual-node hashes (so removal is O(replicas) not O(ring)).
-    private val hashesByNode = HashMap<T, MutableList<Int>>()
-    // Real nodes in insertion order; used for nodeCount and stable iteration.
-    private val realNodes = LinkedHashSet<T>()
-
     /**
      * Adds a node [node] to the ring. Subsequent lookups may now return it.
      * Re-adding an already-present node is a no-op.
@@ -87,19 +78,4 @@ class ConsistentHashing<T>(
         get() {
             TODO("implement")
         }
-
-    /**
-     * Stable 32-bit hash. Uses MD5 truncated to 4 bytes so the ring layout
-     * is deterministic across runs (String.hashCode would do, but explicit
-     * hashing makes the "consistent" part of "consistent hashing" literal).
-     */
-    private fun stableHash(input: String): Int {
-        TODO("implement")
-    }
-
-    companion object {
-        private fun md5Digest(input: String): ByteArray {
-            TODO("implement")
-        }
-    }
 }

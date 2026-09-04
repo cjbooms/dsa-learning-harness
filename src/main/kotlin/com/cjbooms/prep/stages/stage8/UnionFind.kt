@@ -22,10 +22,6 @@ package com.cjbooms.prep.stages.stage8
  */
 class UnionFind(n: Int) {
 
-    private val parent: IntArray = IntArray(n) { it }
-    private val rank: IntArray = IntArray(n)
-    private var count: Int = n
-
     fun find(x: Int): Int {
         TODO("implement")
     }
