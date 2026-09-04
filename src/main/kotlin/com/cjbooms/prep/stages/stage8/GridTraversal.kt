@@ -1,24 +1,30 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
- * Stage 8.8 — Grid traversal patterns: islands and rotting oranges (40 min).
+ * Number of islands.
  *
- * Why this matters for MongoDB: geospatial / image-grid analytics, chunk layout
- * reasoning (contiguous shard key ranges), and cluster-health propagation
- * ("how many minutes until a failure spreads to every affected node?").
+ * Given a 2D grid of characters where '1' represents land and '0' represents
+ * water, count the number of distinct islands. Two land cells belong to the
+ * same island if they are connected horizontally or vertically (4-directional
+ * adjacency).
  *
- * Structure-selection ritual:
- *   - For `countIslands`, every land cell starts a flood-fill if it hasn't been
- *     visited yet. Either DFS recursion or an explicit stack/queue works; the
- *     stub uses in-place mutation (sink visited '1's to '0') so no extra
- *     visited matrix is needed.
- *   - For `rottingOranges`, single-source BFS (see [ShortestPath.kt]) is the
- *     wrong shape: rot spreads from EVERY initially rotten orange simultaneously.
- *     Seed the queue with all rotten cells, then process level by level. Each
- *     level is one elapsed minute.
+ * @param grid the m x n grid of '0' and '1' characters.
+ * @return the number of distinct islands in [grid].
+ */
+
+/**
+ * Rotting oranges.
  *
- * Time budget: 40 min. Defend aloud: why multi-source BFS for spreading-state
- * problems but single-source BFS for point-to-point shortest path?
+ * Given a 2D grid of integers where 0 is empty, 1 is a fresh orange, and 2
+ * is a rotten orange, every minute any fresh orange that is horizontally or
+ * vertically adjacent to a rotten orange becomes rotten. All rotten oranges
+ * rot their neighbours simultaneously each minute. Return the number of
+ * minutes until every fresh orange has become rotten, or -1 if any fresh
+ * orange can never be reached.
+ *
+ * @param grid the m x n grid of 0, 1, and 2 values.
+ * @return the elapsed minutes until no fresh oranges remain, or -1 if at
+ *   least one fresh orange is unreachable from any initially rotten cell.
  */
 fun countIslands(grid: Array<CharArray>): Int {
     TODO("implement")

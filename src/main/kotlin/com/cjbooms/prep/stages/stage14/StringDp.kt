@@ -1,39 +1,26 @@
 package com.cjbooms.prep.stages.stage14
 
-/**
- * Stage 14.2 — String dynamic programming.
- *
- * MongoDB relevance: edit distance and LCS are how MongoDB Atlas
- * Search does fuzzy matching and how schema-migration tools diff
- * config documents. The classic 2D DP table is a workhorse.
- *
- * Structure-selection ritual:
- *   - 2D DP indexed by [i, j] over prefixes of the two strings.
- *   - Base row/column for empty prefix — get this right or every
- *     test fails.
- *   - Edit distance and LCS differ by one cell recurrence — say
- *     both aloud to the interviewer when they ask.
- *
- * Time budget: 15 min.
- */
 
 /**
- * Length of the longest common subsequence of a and b.
- * dp[i][j] over (a[0..i), b[0..j)).
- * If a[i-1] == b[j-1]: dp[i][j] = dp[i-1][j-1] + 1.
- * Else:                dp[i][j] = max(dp[i-1][j], dp[i][j-1]).
+ * Computes the length of the longest sequence of characters that appears in
+ * both [a] and [b] in the same relative order (not necessarily contiguous).
+ *
+ * @param a the first string
+ * @param b the second string
+ * @return the length of the longest common subsequence of [a] and [b]
  */
 fun longestCommonSubsequence(a: String, b: String): Int {
     TODO("implement")
 }
 
 /**
- * Levenshtein edit distance with uniform cost 1 for insert, delete,
- * replace. dp[i][j] = cost of transforming a[0..i) into b[0..j).
- * If last chars match: dp[i][j] = dp[i-1][j-1].
- * Else:                dp[i][j] = 1 + min(dp[i-1][j],   // delete
- *                                          dp[i][j-1],   // insert
- *                                          dp[i-1][j-1]) // replace
+ * Computes the Levenshtein edit distance between [a] and [b] using uniform
+ * cost 1 for insertion, deletion, and substitution of a single character.
+ *
+ * @param a the source string
+ * @param b the target string
+ * @return the minimum number of single-character edits required to transform
+ *   [a] into [b]
  */
 fun editDistance(a: String, b: String): Int {
     TODO("implement")

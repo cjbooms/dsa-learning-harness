@@ -2,34 +2,29 @@ package com.cjbooms.prep.stages.stage9
 
 /**
  * Stage 9.4 — Serialize / deserialize a BST using pre-order only.
- *
- * MongoDB relevance: compact storage / wire format for index keys. BST
- * pre-order is enough to reconstruct the tree because the BST ordering
- * tells you exactly where each subtree boundary is — you don't need to
- * encode nulls. Smaller payloads over the wire, fewer round-trips.
- *
- * Structure-selection ritual:
- *   - Generic binary tree serialization needs nulls to mark structure
- *     (see Stage 1.2). BST serialization does NOT, because the ordering
- *     lets you split pre-order into left/right subtrees by upper bound.
- *   - Serialize: just pre-order traversal, values separated by a delimiter.
- *   - Deserialize: recursively consume values <= maxBound into the left
- *     subtree and > maxBound for the right; the bound threads through
- *     the recursion so you know where each subtree ends.
- *   - Empty tree: pick a sentinel string ("null", or an empty string) and
- *     document it. Null root is a common edge case in tests.
- *
- * Time budget: 10 min.
  */
 
 data class BstNode(val value: Int, var left: BstNode? = null, var right: BstNode? = null)
 
-/** Returns the pre-order serialization of [root], or a sentinel for null. */
+/**
+ * Returns the pre-order serialization of [root] as a comma-separated string of
+ * node values, or the string `"null"` when [root] is `null`.
+ *
+ * @param root the root of the BST, or `null` to represent an empty tree
+ * @return the encoded pre-order representation of the BST
+ */
 fun serializeBst(root: BstNode?): String {
     TODO("implement")
 }
 
-/** Parses [data] (the output of [serializeBst]) back into a BST. */
+/**
+ * Parses [data] (the output of `serializeBst`) back into a BST.
+ *
+ * @param data the encoded BST produced by `serializeBst`; must equal `"null"`
+ *             for an empty tree
+ * @return the reconstructed BST root, or `null` if [data] is the empty-tree
+ *         sentinel
+ */
 fun deserializeBst(data: String): BstNode? {
     TODO("implement")
 }

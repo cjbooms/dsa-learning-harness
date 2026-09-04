@@ -3,25 +3,21 @@ package com.cjbooms.prep.stages.stage11
 import java.util.ArrayDeque
 
 /**
- * Stage 11.5 — Sliding window maximum (25 min).
+ * Sliding window maximum.
  *
- * Why this matters for MongoDB: rolling max over streaming metrics (oplog
- * throughput, replication lag, cache hit rate), and windowed aggregations where
- * you need the peak in every fixed-size interval.
+ * Given an integer array `nums` and a window size `k`, slide a fixed-size
+ * window across the array one position at a time and record the maximum
+ * value in each window.
  *
- * Structure-selection ritual:
- *   - Brute force: scan each window -> O(n*k).
- *   - Max-heap of window values: O(n log k), but stale elements (indices that
- *     left the window) are expensive to evict.
- *   - Monotonic deque of INDICES: values decrease from front to back. The front
- *     is always the current window maximum. O(n) total.
+ * Parameters:
+ *  - [nums]: the input array of integers.
+ *  - [k]: the window size. MUST be between 1 and `nums.size` inclusive;
+ *    otherwise no complete window fits.
  *
- * Invariant: for indices in the deque, `nums[deque[0]]` is the max of the
- * current window, and values increase as you move from the back to the front.
- * Pop the back while the incoming value is larger; pop the front when it falls
- * out of the window.
- *
- * Time budget: 25 min.
+ * Returns:
+ *  - an array of length `nums.size - k + 1` (or an empty array if `k` is
+ *    out of range) where the i-th element is the maximum of
+ *    `nums[i .. i + k - 1]`.
  */
 fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
     TODO("implement")

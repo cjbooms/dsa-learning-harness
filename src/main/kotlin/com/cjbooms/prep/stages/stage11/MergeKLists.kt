@@ -1,19 +1,22 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
- * Stage 11.2 — Merge K sorted lists via min-heap (15 min).
+ * Merge k sorted linked lists and return a single sorted list of values.
  *
- * MongoDB relevance: ordered merge of K already-sorted index ranges, sorted
- * scan over sharded merge-sort output, time-ordered union of per-shard cursors.
- * Compare with the lazy iterator approach in Stage 3.2 — heap wins on
- * asymptotic per-element cost for large k (O(log k) vs O(k)), at the price
- * of holding one element per list in memory.
+ * Each input list is a singly linked list whose `next` pointers form a
+ * non-decreasing sequence of integers. Merge them into one sorted sequence
+ * of values.
  *
- * Structure-selection ritual:
- *   - Map<index, currentHead>: O(k) per emit — fine for small k.
- *   - Min-heap of size k: O(log k) per emit — the canonical "k-way merge".
- *   Heap entry carries (value, listIndex, elementIndex) so equal values from
- *   different lists are ordered consistently (deterministic output).
+ * Parameter:
+ *  - [lists]: the input lists. Entries may be `null` or empty and are
+ *    skipped.
+ *
+ * Returns:
+ *  - the sorted list of values from all non-empty inputs. If every input is
+ *    empty or `null`, the result is an empty list.
+ *
+ * Example:
+ *  - `mergeKLists(listOf(1->4->7, 2->5->8, 3->6->9)) == [1, 2, 3, 4, 5, 6, 7, 8, 9]`
  */
 class ListNode(var value: Int) {
     var next: ListNode? = null

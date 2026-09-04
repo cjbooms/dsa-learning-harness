@@ -1,35 +1,33 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
- * Stage 11.3 — Task scheduler with cooldown (15 min).
+ * Task scheduler with cooldown.
  *
- * MongoDB relevance: scheduling operations on a hot collection with a
- * cooldown between repeated writes (rate-shaped writes, deduplicated
- * retries, Atlas trigger throttling). The greedy "always run the most
- * frequent remaining task" is the LeetCode 621 formulation.
+ * Given a set of tasks represented by characters and a `cooldown` value,
+ * schedule the tasks in some order so that the same task never runs twice
+ * within `cooldown` intervening slots. Idle slots may be inserted to satisfy
+ * the cooldown requirement. Return the minimum number of slots (intervals)
+ * needed to finish all tasks.
  *
- * Structure-selection ritual:
- *   - Sort + interval scheduling: O(n log n) but ignores task identity.
- *   - Max-heap of (count, taskId): each tick pops the most frequent available
- *     task, decrements it, and parks it in a FIFO "cooldown queue" sized by n.
- *     When the queue's head's cooldown expires, it re-enters the heap.
- *   The cooldown queue is essential: it is what enforces the n-cycle gap
- *   between consecutive runs of the same task.
- *
- * Tie-breaker (matters when two tasks have equal count): pop whichever task
- * the heap returns. Determinism needs a stable secondary key — encode the
- * task's identity into the heap entry so equal counts compare consistently.
+ * Behavior:
+ *  - Each interval holds exactly one task, or one idle slot if no task is
+ *    allowed to run.
+ *  - If `cooldown == 0`, no gaps are required and the answer is `tasks.size`.
+ *  - If `cooldown > 0`, two runs of the same task must be separated by at
+ *    least `cooldown` other tasks or idle cycles.
  */
 class TaskSchedulerWithCooldown {
 
     /**
-     * Return the minimum number of intervals required to finish all tasks
-     * with at least `cooldown` idle cycles between any two runs of the same
+     * Return the minimum number of intervals required to finish all [tasks]
+     * with at least [cooldown] idle cycles between any two runs of the same
      * task.
      *
-     * If cooldown == 0, no gaps are needed — the answer is just tasks.size.
-     * If cooldown > 0, runs of the same task must be separated by `cooldown`
-     * other tasks (or idle cycles).
+     * @param tasks the characters representing the tasks to run.
+     * @param cooldown the minimum number of intervening slots between two
+     * runs of the same task.
+     * @return the minimum total number of intervals (including any idle
+     * slots).
      */
     fun leastInterval(tasks: CharArray, cooldown: Int): Int {
         TODO("implement")

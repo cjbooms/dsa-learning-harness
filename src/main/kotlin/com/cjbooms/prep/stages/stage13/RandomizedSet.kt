@@ -3,46 +3,45 @@ package com.cjbooms.prep.stages.stage13
 import java.util.Random
 
 /**
- * Stage 13.5 — Randomized set: insert, remove, getRandom in O(1) (20 min).
+ * Set that supports `insert`, `remove`, and uniform `getRandom` in O(1).
  *
- * Why this matters for MongoDB: random sampling from a dynamic set of replica
- * nodes, random query-plan hints, A/B test bucket assignment, and reservoir-style
- * estimators all need uniform random access that survives insert/remove.
+ * Each value may appear at most once. `insert` of an existing value returns
+ * `false` without changing the set; otherwise it returns `true`. `remove`
+ * returns `true` if the value was present and removed, `false` otherwise.
+ * `getRandom` returns a uniformly random element and throws if the set is
+ * empty.
  *
- * Structure-selection ritual:
- *   - ArrayList alone gives O(1) getRandom but O(n) insert/remove.
- *   - HashMap alone gives O(1) insert/remove but no O(1) random element.
- *   - COMBINE: ArrayList stores the values (random index is O(1));
- *     HashMap<V, Int> stores value -> index, making removal O(1) via
- *     swap-with-last-then-pop.
- *
- * The swap trick is the whole question: overwrite the doomed element with the
- * tail element, update the tail's index in the map, then pop.
+ * @param V element type.
+ * @param random random source used by `getRandom`.
  */
 class RandomizedSet<V>(private val random: Random = Random()) {
 
     /**
-     * Adds [value] if not present. Returns true if inserted, false if already present. O(1).
+     * Adds [value] if not present. Returns `true` if inserted, `false` if
+     * already present.
      */
     fun insert(value: V): Boolean {
         TODO("implement")
     }
 
     /**
-     * Removes [value] if present. Returns true if removed, false if absent. O(1).
+     * Removes [value] if present. Returns `true` if removed, `false` if
+     * absent.
      */
     fun remove(value: V): Boolean {
         TODO("implement")
     }
 
     /**
-     * Returns a uniformly random element. O(1). Throws if the set is empty.
+     * Returns a uniformly random element from the set.
+     *
+     * @throws NoSuchElementException if the set is empty.
      */
     fun getRandom(): V {
         TODO("implement")
     }
 
-    /** Current element count. O(1). */
+    /** Current element count. */
     val size: Int
         get() {
             TODO("implement")

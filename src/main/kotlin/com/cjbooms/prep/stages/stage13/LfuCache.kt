@@ -1,26 +1,17 @@
 package com.cjbooms.prep.stages.stage13
 
 /**
- * Stage 13.4 — LFU Cache (LeetCode 460).
+ * LFU (Least Frequently Used) cache with a fixed capacity.
  *
- * Why this matters for MongoDB: query-cache eviction by access *frequency*
- * (not just recency), hot-index pinning, and buffer-pool page replacement where
- * a page touched many times should survive a one-off scan.
+ * Supports `get` and `put` in O(1). Eviction removes the entry with the
+ * lowest access frequency; ties are broken by least-recently-used among
+ * entries that share that lowest frequency. When `put` updates an existing
+ * key's value, the key's frequency resets to 1.
  *
- * Structure-selection ritual:
- *   - LRU cache (see `LruCache.kt`) uses one list ordered by recency. LFU needs
- *     many lists: one per frequency bucket.
- *   - HashMap<K, Node>: O(1) key lookup and stores current frequency.
- *   - HashMap<Int, LinkedHashSet<K>>: frequency -> keys, with insertion order
- *     giving LRU *within* a bucket. The first key in the set is the next victim.
- *   - `minFreq` tracker: the eviction candidate is always in the `minFreq`
- *     bucket. Update `minFreq` on every operation that could lower it.
- *
- * Invariant: after a `put` that replaces an existing key, the key's frequency
- * resets to 1. This differs from the LeetCode default (where re-put keeps the
- * frequency) — the test suite checks the reset behaviour.
- *
- * Time budget: 30 min.
+ * @param K key type.
+ * @param V value type.
+ * @property capacity maximum number of entries the cache can hold. Must be
+ *   positive.
  */
 class LfuCache<K, V>(private val capacity: Int) {
 
@@ -29,17 +20,21 @@ class LfuCache<K, V>(private val capacity: Int) {
     }
 
     /**
-     * Returns the value for [key] and increments its frequency, or null if absent. O(1).
+     * Returns the value for [key] and increments its access frequency, or
+     * `null` if [key] is not present.
      */
     fun get(key: K): V? {
         TODO("implement")
     }
 
     /**
-     * Inserts or refreshes [key] = [value]. If [key] already exists, its value is
-     * updated and its frequency resets to 1. If capacity is exceeded, evicts the
-     * least-frequently-used key, breaking ties by LRU within the lowest frequency
-     * bucket. O(1).
+     * Inserts or refreshes the mapping [key] = [value].
+     *
+     * - If [key] is already present, its value is replaced and its frequency
+     *   resets to 1.
+     * - If inserting would exceed [capacity], evicts the least-frequently-used
+     *   entry; ties are broken by least-recently-used within the lowest
+     *   frequency bucket.
      */
     fun put(key: K, value: V) {
         TODO("implement")

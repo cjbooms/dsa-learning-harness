@@ -3,24 +3,33 @@ package com.cjbooms.prep.stages.stage8
 import java.util.ArrayDeque
 
 /**
- * Stage 8.4 — Shortest path on an unweighted graph (grid variant).
+ * Shortest path in a 0/1 grid.
  *
- * Why this matters for MongoDB: query planning intuition (every hop in a join
- * graph is a cost), geospatial shortest-path reasoning on GeoJSON data,
- * latency reasoning across replica hops. The grid form is a frequent interview
- * shape — "0/1 matrix, find shortest path from top-left to bottom-right".
+ * Given a grid of non-negative integers where each cell holds a movement
+ * cost (0 or 1, or any non-negative value) and 4-directional adjacency
+ * (up, down, left, right), find the length of the shortest path from
+ * [start] to [target].
  *
- * Structure-selection ritual:
- *   - BFS from the source — BFS guarantees first arrival is shortest on an
- *     unweighted graph.
- *   - Grid encoding: 4-neighbour (up/down/left/right). Encode (r, c) as
- *     `r * cols + c` to use a plain IntQueue / array.
- *   - Track distance per cell and the predecessor for path reconstruction.
- *   - Return -1 (or empty list) for unreachable.
+ * @param grid the m x n grid of non-negative integer cell costs.
+ * @param start the (row, column) of the starting cell.
+ * @param target the (row, column) of the destination cell.
+ * @return the number of steps in the shortest path from [start] to
+ *   [target], or -1 if [target] is unreachable from [start].
+ */
+
+/**
+ * Shortest path in a 0/1 grid, returning the path itself.
  *
- * Time budget: 15 min. Defend aloud: why BFS not DFS for shortest path?
- * (DFS explores depth-first and may find a non-shortest route first; BFS
- * expands by distance layers.)
+ * Same problem as the other `shortestPathGrid` function, but returns the
+ * sequence of cells along the shortest path from [start] to [target]
+ * (inclusive of both endpoints), in order.
+ *
+ * @param grid the m x n grid of non-negative integer cell costs.
+ * @param start the (row, column) of the starting cell.
+ * @param target the (row, column) of the destination cell.
+ * @return the list of (row, column) cells along one shortest path from
+ *   [start] to [target] in order, or an empty list if [target] is
+ *   unreachable.
  */
 fun shortestPathGrid(
     grid: Array<IntArray>,

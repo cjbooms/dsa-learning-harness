@@ -1,28 +1,22 @@
 package com.cjbooms.prep.stages.stage15
 
 /**
- * Stage 15.1 — Cold-recall rebuild: fixed sliding-window rate limiter.
+ * A fixed sliding-window rate limiter that admits at most [maxRequests] calls
+ * within any trailing window of [perMillis] milliseconds.
  *
- * MongoDB framing: Atlas Control Plane rate-limits incoming requests per tenant
- * to protect shared services. Same shape as the request governor you'd see in
- * a control-plane edge service.
- *
- * allow(requestId, nowMillis):
- *   - returns true if the request is admitted, false if rate-limited
- *   - at most [maxRequests] requests per trailing window of [perMillis] ms
- *   - requestIds are unique per attempt (use them to defend against double-add)
- *   - nowMillis is non-decreasing within a single instance
- *
- * Ritual before coding (speak aloud):
- *   1. Name two candidate structures (deque of timestamps? counter + tree map?).
- *   2. Pick one and say WHY in one sentence.
- *   3. THEN code.
- *
- * Time budget: 8 minutes cold.
+ * @param maxRequests the maximum number of requests permitted in any window
+ * @param perMillis the size of the trailing window in milliseconds
  */
 class RateLimiterRecall(private val maxRequests: Int, private val perMillis: Long) {
 
-
+    /**
+     * Decides whether a request should be admitted under the rate limit.
+     *
+     * @param requestId a unique identifier for this request attempt
+     * @param nowMillis the current time in milliseconds; non-decreasing across
+     *   calls on the same instance
+     * @return `true` if the request is admitted, `false` if it is rate-limited
+     */
     fun allow(requestId: String, nowMillis: Long): Boolean {
         TODO("implement")
     }

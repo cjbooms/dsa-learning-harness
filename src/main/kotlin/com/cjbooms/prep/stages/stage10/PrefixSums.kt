@@ -2,52 +2,39 @@ package com.cjbooms.prep.stages.stage10
 
 /**
  * Stage 10.4 — Prefix Sums.
- *
- * MongoDB relevance: range-sum acceleration in aggregation pipelines
- * ($densify, custom map-reduce, time-windowed metrics) and shard-balancing
- * scoring all precompute partial sums to turn an O(n) range query into O(1).
- *
- * Structure-selection ritual: when does a prefix-sum table win?
- *   - The underlying array is IMMUTABLE after construction (otherwise the
- *     table has to be rebuilt on every update — usually a deal-breaker).
- *   - Many range-sum queries follow on the same array.
- *   - You want O(1) per range query after an O(n) build.
- * If the array mutates, prefer a Fenwick tree (BIT) or segment tree.
- *
- * Time budget: 10 minutes.
  */
 
 /**
- * Range Sum Query - Immutable (LC 303): pre-build a prefix-sum table once,
- * then answer each sumRange(left, right) in O(1).
+ * Range Sum Query - Immutable (LC 303). Given an integer array that is fixed
+ * at construction time, answer `sumRange(left, right)` queries returning the
+ * sum of `numbers[left..=right]`. Each query must run in O(1) after an O(n)
+ * build performed in the constructor.
  *
- * Approach: prefixSums[i] = sum of nums[0 ..< i]. Then
- *   sumRange(left, right) = prefixSums[right + 1] - prefixSums[left].
- *
- * Time:  O(n) build, O(1) per query.
- * Space: O(n) for the table.
+ * @param numbers the immutable input array; indices outside `[0,
+ *                numbers.size)` must not be queried
  */
 class ImmutableArraySum(private val numbers: IntArray) {
+
+    /**
+     * @param left 0-based inclusive left index
+     * @param right 0-based inclusive right index; must satisfy `left <= right`
+     * @return the sum of `numbers[left] + numbers[left + 1] + ... +
+     *         numbers[right]`
+     */
     fun sumRange(left: Int, right: Int): Int {
         TODO("implement")
     }
 }
 
 /**
- * Subarray Sum Equals K (LC 560): count the number of continuous subarrays
- * whose elements sum to `k`. Elements may be negative.
+ * Subarray Sum Equals K (LC 560). Count the number of contiguous (non-empty)
+ * subarrays whose elements sum to exactly `k`. Elements may be negative or
+ * zero.
  *
- * Approach: as you scan, treat the running prefix sum as the key.
- * If prefixSum[j] - prefixSum[i] == k for some earlier i, then nums[i..<j]
- * sums to k. Count, for each j, how many earlier i's satisfy prefixSum[i] ==
- * prefixSum[j] - k. Hash map of prefix-sum -> frequency.
- *
- * Time:  O(n) average.
- * Space: O(n) for the map.
- *
- * NB: negatives are fine here because we are not relying on monotonicity —
- * the hashmap collapses all prefix sums with the same value, regardless of
- * where they occurred.
+ * @param numbers the input array (may contain negative numbers and zeros);
+ *                `numbers.length >= 1`
+ * @param k the target subarray sum
+ * @return the number of contiguous subarrays whose elements sum to `k`
  */
 fun subarraySumEqualsK(numbers: IntArray, k: Int): Int {
     TODO("implement")

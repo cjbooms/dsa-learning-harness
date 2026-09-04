@@ -3,39 +3,39 @@ package com.cjbooms.prep.stages.stage15
 import kotlin.math.max
 
 /**
- * Stage 15.2 — Cold-recall rebuild: interval merging (batch + streaming variants).
+ * Merges a list of half-open intervals `[start, end)` into the minimal set of
+ * non-overlapping intervals. Intervals that overlap or touch are combined into
+ * a single interval.
  *
- * MongoDB framing: consolidate overlapping time ranges — backup windows, query
- * plan execution windows, lock-acquisition intervals during deadlock analysis.
- *
- * mergeIntervals(list):
- *   - merge overlapping OR touching half-open [start, end) intervals
- *   - return the minimal sorted merged list
- *   - empty input -> empty output
- *
- * StreamingIntervalMerger:
- *   - add(interval) keeps the merged set current as intervals arrive one at a time
- *   - merged() returns the current merged set at any moment
- *   - no re-sorting the world per add
- *
- * Ritual before coding (speak aloud):
- *   1. Batch: which sort key? what defines "overlap" for half-open ranges?
- *   2. Streaming: which map gives O(log n) floor lookup? Walk the absorbed
- *      neighbors in one direction or both?
- *
- * Time budget: 6 minutes cold.
+ * @param intervals the input intervals
+ * @return a sorted list containing the minimal set of merged intervals; an
+ *   empty list when [intervals] is empty
  */
 fun mergeIntervals(intervals: List<IntRange>): List<IntRange> {
     TODO("implement")
 }
 
+/**
+ * Maintains the current minimal set of merged half-open `[start, end)`
+ * intervals as new intervals are added one at a time.
+ */
 class StreamingIntervalMerger {
 
-
+    /**
+     * Adds [interval] to the maintained set, merging it with any stored
+     * intervals that overlap or touch it.
+     *
+     * @param interval the interval to add
+     */
     fun add(interval: IntRange) {
         TODO("implement")
     }
 
+    /**
+     * Returns the current minimal set of merged intervals.
+     *
+     * @return the merged intervals at this moment
+     */
     fun merged(): List<IntRange> {
         TODO("implement")
     }

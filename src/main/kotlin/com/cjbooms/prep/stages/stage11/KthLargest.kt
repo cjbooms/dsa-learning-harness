@@ -1,22 +1,20 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
- * Stage 11.1 — Kth largest element in a stream (15 min).
+ * Kth largest element in a stream.
  *
- * MongoDB relevance: top-k-style queries against streaming oplog events,
- * finding the k most recent slow queries, leaderboards over append-only
- * event streams. A sorted structure keeps "what is the current kth largest?"
- * cheap as new elements arrive.
+ * Design a class to find the kth largest element in a stream of integers.
+ * The class receives values one at a time and must report the current kth
+ * largest after each insertion.
  *
- * Structure-selection ritual:
- *   - Full sort: O(n log n) per query — only OK if queries are rare.
- *   - Min-heap of size k: O(log k) per add, O(1) per peek at the kth largest.
- *     Invariant: the heap's top (smallest in the heap) is the current kth
- *     largest of everything seen so far. New value larger than the top -> swap
- *     in and re-heapify. New value smaller -> ignore (it can't enter the top k).
+ * Constructor parameter:
+ *  - [k]: the rank to track. MUST be positive.
  *
- * Why not a max-heap of size n - k + 1? Either works; min-heap-of-size-k is
- * the canonical formulation and gives "peek in O(1)" for the answer.
+ * Behavior:
+ *  - `add(value)` records a new value from the stream.
+ *  - `peek()` returns the current kth largest value among everything added.
+ *  - If fewer than `k` values have been added, `peek()` returns the smallest
+ *    value seen so far.
  */
 class KthLargest(private val k: Int) {
 
@@ -25,22 +23,18 @@ class KthLargest(private val k: Int) {
     }
 
     /**
-     * Record a new value from the stream.
+     * Record a new [value] from the stream.
      *
-     * Structure ritual: maintain a min-heap of size k. Drop the smallest
-     * element from the heap whenever adding a value that exceeds it; that
-     * keeps the heap = the current top k values, smallest of them on top.
+     * @param value the next integer from the data stream.
      */
     fun add(value: Int) {
         TODO("implement")
     }
 
     /**
-     * The current kth largest value among everything added so far.
-     *
-     * If fewer than k values have been added, this returns the smallest
-     * value seen so far (the "kth largest" in a pool of fewer than k items).
-     * The heap is therefore never empty unless no values have been added.
+     * @return the current kth largest value among everything added so far.
+     * If fewer than `k` values have been added, returns the smallest value
+     * seen so far.
      */
     fun peek(): Int {
         TODO("implement")

@@ -1,23 +1,21 @@
 package com.cjbooms.prep.stages.stage12
 
 /**
- * Stage 12.2 — Multithreaded web crawler (15 min).
+ * Multithreaded web crawler.
  *
- * MongoDB relevance: crawling metadata indexes, changestream topology
- * discovery, and any graph where edges are discovered lazily by many
- * workers. The challenge is combining BFS reachability with safe shared
- * mutable state.
+ * Given a starting URL and a fetcher that returns the outgoing links of a
+ * given URL, crawl the reachable URL graph concurrently using a fixed worker
+ * pool and return every URL that can be reached from the start.
  *
- * Structure-selection ritual:
- *   - A plain BFS queue + visited set works, but one thread cannot saturate
- *     I/O wait. Use a fixed worker pool.
- *   - Shared state: a work queue, a visited set, and an in-flight counter.
- *   - Mark a URL visited when you DEQUEUE it; enqueue links freely and skip
- *     duplicates on dequeue. Pre-marking before enqueue prevents fetching.
- *   - Termination: stop when the queue is empty AND no worker is currently
- *     fetching.
+ * Constructor parameters:
+ *  - [fetcher]: a function that, given a URL, returns the outgoing links
+ *    reachable from that URL.
+ *  - [threadCount]: the number of worker threads used to fetch pages.
  *
- * Time budget: 15 min.
+ * Behavior:
+ *  - Each URL is fetched at most once, even if it is linked from multiple
+ *    pages.
+ *  - Crawling stops once no more reachable, unfetched URLs remain.
  */
 class WebCrawler(
     private val fetcher: (String) -> List<String>,
@@ -25,8 +23,11 @@ class WebCrawler(
 ) {
 
     /**
-     * Starts at [startUrl], fetches pages concurrently, and returns the set of
-     * all reachable URLs. The fetcher returns the outgoing links for a URL.
+     * Start at [startUrl], fetch pages concurrently, and return every URL
+     * reachable from it.
+     *
+     * @param startUrl the URL to begin crawling from.
+     * @return the set of all reachable URLs.
      */
     fun crawl(startUrl: String): List<String> {
         TODO("implement")

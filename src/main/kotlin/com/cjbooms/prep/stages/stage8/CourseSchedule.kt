@@ -3,23 +3,18 @@ package com.cjbooms.prep.stages.stage8
 import java.util.ArrayDeque
 
 /**
- * Stage 8.5.1 — Course Schedule II: return the ordering, not just a boolean.
+ * Course Schedule II.
  *
- * Why this matters for MongoDB: scheduling background jobs in a deterministic
- * order (compaction -> validate -> report), migration step ordering, dependency
- * resolution at startup. Returning the schedule (vs a boolean) is what makes
- * the result useful — and it surfaces the harder edge cases (multiple valid
- * orderings, impossible schedules).
+ * Given a number of courses labelled 0..numCourses - 1 and a list of
+ * prerequisite pairs (a, b) meaning course `a` depends on course `b` (b
+ * must be completed before a), return any ordering of all courses that
+ * satisfies every prerequisite.
  *
- * Structure-selection ritual:
- *   - Kahn's BFS over in-degrees; emit node when popped; decrement neighbours.
- *   - If the output size is less than numCourses -> impossible schedule ->
- *     return empty list.
- *   - Multiple valid orderings are fine — any topological sort is acceptable.
- *
- * Time budget: 15 min. Defend aloud: would DFS be cleaner here? (It would,
- * but Kahn produces the ordering in arrival order without an extra reverse
- * step, and the "impossible schedule" check is a single length comparison.)
+ * @param numCourses the total number of courses, in 0..numCourses - 1.
+ * @param prerequisites dependency pairs of the form (course, prereq);
+ *   may be empty.
+ * @return a list of all numCourses course ids in a valid order, or an empty
+ *   list if no ordering satisfies the prerequisites (i.e. there is a cycle).
  */
 fun findCourseOrder(numCourses: Int, prerequisites: List<Pair<Int, Int>>): List<Int> {
     TODO("implement")

@@ -1,43 +1,36 @@
 package com.cjbooms.prep.stages.stage11
 
 /**
- * Stage 11.4 — Find median from a data stream (30 min).
+ * Find median from a data stream.
  *
- * Why this matters for MongoDB: streaming latency percentiles from the
- * profiler, real-time aggregation of query durations, and rolling statistics
- * over the oplog. Median is harder than mean because you need order, not
- * just a running sum.
+ * Design a class that supports two operations on an integer stream:
+ * inserting a number and reading the current median of all numbers seen.
  *
- * Structure-selection ritual:
- *   - Full sort on every insert: O(n log n) — only OK if the stream is tiny.
- *   - Two heaps: a max-heap for the lower half and a min-heap for the upper
- *     half. Rebalance so their sizes differ by at most one.
- *   - Invariant: every element in the lower half <= every element in the upper
- *     half. The heaps only need to know their own max/min, so each rebalance
- *     is O(log n).
+ * Behavior:
+ *  - `addNum(num)` appends a number to the stream.
+ *  - `findMedian()` returns the median of all numbers added so far.
  *
- * The invariant IS the answer — say it before coding.
- *
- * Time budget: 30 min.
+ * Edge cases:
+ *  - If the total count is odd, the median is the middle value after sorting.
+ *  - If the total count is even, the median is the average of the two middle
+ *    values.
+ *  - On an empty stream, `findMedian()` is undefined.
  */
 class MedianFinder {
 
     /**
-     * Adds [num] to the stream. O(log n).
+     * Append [num] to the stream.
      *
-     * Invariant: lowerHalf.size == upperHalf.size, or lowerHalf.size is one
-     * larger. lowerHalf.peek() is the largest value in the lower half;
-     * upperHalf.peek() is the smallest value in the upper half.
+     * @param num the next integer from the data stream.
      */
     fun addNum(num: Int) {
         TODO("implement")
     }
 
     /**
-     * Returns the median of all numbers seen so far. O(1).
-     *
-     * If the total count is odd, the larger heap's root is the median.
-     * If even, the median is the average of the two roots.
+     * @return the median of all numbers added so far. If the count is odd,
+     * returns the middle value; if even, returns the average of the two
+     * middle values.
      */
     fun findMedian(): Double {
         TODO("implement")

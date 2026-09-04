@@ -1,24 +1,44 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
- * Stage 8.5 — Union-Find with path compression + union by rank.
+ * Union-Find (Disjoint Set Union) over a fixed set of n elements.
  *
- * Why this matters for MongoDB: dynamic connectivity over clusters, network
- * partition detection, "are these two shards in the same replica set?". When
- * edges arrive one at a time and you re-query repeatedly, union-find beats
- * DFS/BFS — nearly O(1) amortised per op with both optimisations.
+ * Maintains a partition of the elements 0..n - 1 into disjoint connected
+ * components, supporting incremental edge insertion (union) and connectivity
+ * queries (find/connected).
  *
- * Structure-selection ritual:
- *   - parent[i] = parent of i (eventually a root).
- *   - rank[i]   = approximate tree depth (used to choose the new root on
- *     union).
- *   - find(x): walk up to root; compress the path along the way (re-parent
- *     every visited node to the root).
- *   - union(x, y): link root-of-smaller-rank under root-of-larger-rank.
+ * @param n the number of elements, labelled 0..n - 1.
+ */
+
+/**
+ * Find the representative (root) of the component containing [x].
  *
- * Time budget: 15 min. Defend aloud: when is union-find actually worth the
- * machinery over plain DFS? (When edges arrive incrementally and you need
- * many "are these connected?" queries between additions.)
+ * @param x an element id in 0..n - 1.
+ * @return the id of the representative of [x]'s component. Two elements
+ *   share a representative if and only if they are in the same component.
+ */
+
+/**
+ * Merge the components containing [x] and [y].
+ *
+ * @param x an element id in 0..n - 1.
+ * @param y an element id in 0..n - 1.
+ * @return true if [x] and [y] were in different components and are now
+ *   merged into one, or false if they were already in the same component.
+ */
+
+/**
+ * Test whether [x] and [y] belong to the same component.
+ *
+ * @param x an element id in 0..n - 1.
+ * @param y an element id in 0..n - 1.
+ * @return true if [x] and [y] are in the same component, false otherwise.
+ */
+
+/**
+ * Number of distinct components currently tracked.
+ *
+ * @return the count of components over the elements 0..n - 1.
  */
 class UnionFind(n: Int) {
 

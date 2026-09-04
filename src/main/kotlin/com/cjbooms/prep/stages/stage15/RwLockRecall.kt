@@ -4,44 +4,43 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Stage 15.6 — Cold-recall rebuild: read-write lock.
+ * A reader-writer lock built from `ReentrantLock` and one or more `Condition`s
+ * (not from `ReentrantReadWriteLock`).
  *
- * MongoDB framing: storage engine shared-buffer access — many readers scan
- * pages concurrently, writers flush dirty pages exclusively. Same shape as
- * the Verified Stage 2 onsite question (Aug 2025).
- *
- * Rules:
- *   - readLock()    : many threads may hold concurrently
- *   - writeLock()   : exclusive — no readers, no other writer
- *   - readUnlock() / writeUnlock() paired with the matching acquire
- *   - Must be built from ReentrantLock + Condition(s) — NOT from
- *     java.util.concurrent.locks.ReentrantReadWriteLock
- *
- * State you'll need: reader count, active-writer flag, waiting-writer count.
- * Policy: writer preference (new readers block while a writer is waiting).
- *
- * Ritual before coding (speak aloud):
- *   1. ONE condition or TWO? Which is enough?
- *   2. The wait predicate for readers (when to block)? For writers?
- *   3. Why writer preference here — what's the cost?
- *
- * Time budget: 8 minutes cold.
+ * Multiple readers may hold the lock concurrently. A writer holds it
+ * exclusively: while a writer holds the lock, no reader or other writer may
+ * hold it. Newly arriving readers block while a writer is waiting. Every
+ * successful `readLock()` must be paired with `readUnlock()`; every
+ * successful `writeLock()` must be paired with `writeUnlock()`.
  */
 class RwLockRecall {
 
-
+    /**
+     * Acquires the lock for reading; blocks if a writer currently holds the
+     * lock or a writer is waiting.
+     */
     fun readLock() {
         TODO("implement")
     }
 
+    /**
+     * Releases a previously acquired read lock.
+     */
     fun readUnlock() {
         TODO("implement")
     }
 
+    /**
+     * Acquires the lock for writing; blocks while any readers or another
+     * writer currently hold the lock.
+     */
     fun writeLock() {
         TODO("implement")
     }
 
+    /**
+     * Releases a previously acquired write lock.
+     */
     fun writeUnlock() {
         TODO("implement")
     }

@@ -1,23 +1,27 @@
 package com.cjbooms.prep.stages.stage8
 
 /**
- * Stage 8.3 — Cycle detection in a directed graph, optionally returning the
- * cycle itself.
+ * Cycle detection in a directed graph.
  *
- * Why this matters for MongoDB: deadlock detection between transactions,
- * circular migrations in sharded clusters, import pipelines that loop on each
- * other. Boolean is rarely enough — the cycle is the actionable artefact.
+ * Given a directed graph defined by a count of nodes and a list of directed
+ * edges (u, v) meaning u -> v, determine whether the graph contains a cycle.
  *
- * Structure-selection ritual:
- *   - DFS with WHITE / GRAY / BLACK colouring.
- *   - A back edge to a GRAY node closes a cycle; walk the recursion stack
- *     from the current node back to that GRAY node to materialise the cycle.
- *   - No cycle => return empty list (the no-cycle answer for both
- *     `findCycle` and the boolean `hasCycle` convenience).
+ * @param n the number of nodes, labelled 0..n - 1.
+ * @param edges directed edges of the form (from, to).
+ * @return true if the graph contains a directed cycle, false otherwise.
+ */
+
+/**
+ * Find a directed cycle in a directed graph.
  *
- * Time budget: 15 min. Defend aloud: why not Kahn's for cycle detection too?
- * (Kahn can — nodes that never reach in-degree 0 — but DFS exposes the cycle
- * edges, which is usually what the interviewer is probing for.)
+ * Given a directed graph defined by a count of nodes and a list of directed
+ * edges (u, v) meaning u -> v, return the nodes of any directed cycle in
+ * the order they appear along the cycle.
+ *
+ * @param n the number of nodes, labelled 0..n - 1.
+ * @param edges directed edges of the form (from, to).
+ * @return a list of node ids forming a directed cycle (the first and last
+ *   ids need not be repeated), or an empty list if the graph is acyclic.
  */
 fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean {
     TODO("implement")
@@ -27,11 +31,6 @@ fun findCycle(n: Int, edges: List<Pair<Int, Int>>): List<Int> {
     TODO("implement")
 }
 
-/**
- * DFS with WHITE / GRAY / BLACK colouring. Returns the pair (tail, head)
- * where `tail` is the current node when DFS hits a back edge to GRAY `head`,
- * or null if no cycle is found in this DFS tree.
- */
 private fun dfsCycle(
     start: Int,
     adj: Array<MutableList<Int>>,

@@ -3,19 +3,13 @@ package com.cjbooms.prep.stages.stage3
 import java.util.PriorityQueue
 
 /**
- * Stage 3.1 + 3.2 — sorted-stream union and k-way merge.
- * VERIFIED shape (1P3A 2026): "union iterator over sorted inputs,
- * follow-up: k iterators".
+ * Returns a sorted iterator that yields the elements of the sorted iterators
+ * [a] and [b] in ascending order, with duplicates appearing only once.
  *
- * CRITICAL requirement: LAZY. Do not materialize the inputs. The work happens
- * inside hasNext()/next(). Why laziness matters (say aloud): inputs may be
- * huge or unbounded (oplog segments, paged query results); memory stays O(1)
- * beyond the iterators themselves (O(k) for the merge).
- */
-
-/**
- * 3.1 — Union of two sorted iterators: sorted output, no duplicates.
- * unionSorted(iter(1,3,5), iter(1,2,3)) yields 1,2,3,5
+ * @param a the first sorted input iterator
+ * @param b the second sorted input iterator
+ * @return a lazy iterator over the sorted union of [a] and [b] with duplicates
+ *   removed
  */
 fun unionSorted(a: Iterator<Int>, b: Iterator<Int>): Iterator<Int> {
     return object : Iterator<Int> {
@@ -49,9 +43,13 @@ fun unionSorted(a: Iterator<Int>, b: Iterator<Int>): Iterator<Int> {
 }
 
 /**
- * 3.2 — Merge K sorted iterators. O(log k) per emitted element.
- * Structure ritual: what holds the current head of each iterator?
- * (You've used this structure before — ReplicationLagAlerter's age index.)
+ * Returns a lazy iterator that merges [iterators] into a single ascending
+ * sequence. Each input iterator must already be sorted in ascending order.
+ * The merge is lazy: nothing is materialized beyond what the iterators
+ * themselves expose (O(k) state for k iterators).
+ *
+ * @param iterators the sorted input iterators to merge
+ * @return a lazy iterator over the merged ascending sequence
  */
 fun mergeKSorted(iterators: List<Iterator<Int>>): Iterator<Int> {
     val currentHeads = mutableMapOf<Int, Int?>()
@@ -88,6 +86,14 @@ fun mergeKSorted(iterators: List<Iterator<Int>>): Iterator<Int> {
     }
 }
 
+/**
+ * Returns a lazy iterator that merges [iterators] using a priority queue,
+ * emitting each next element in O(log k) time where k is the number of input
+ * iterators. Each input iterator must already be sorted in ascending order.
+ *
+ * @param iterators the sorted input iterators to merge
+ * @return a lazy iterator over the merged ascending sequence
+ */
 fun mergeKSortedPriorityQ(iterators: List<Iterator<Int>>): Iterator<Int> {
     val queue = PriorityQueue<Pair<Int, Int>>( compareBy { it.second })
     iterators.forEachIndexed { index, iterator ->
@@ -121,6 +127,11 @@ fun mergeKSortedPriorityQ(iterators: List<Iterator<Int>>): Iterator<Int> {
     }
 }
 
-/** Tiny helper if you want it: iterator from varargs. */
+/**
+ * Returns an iterator over the supplied [items].
+ *
+ * @param items the elements to iterate over
+ * @return an [Iterator] yielding [items] in order
+ */
 fun <T> iterOf(vararg items: T): Iterator<Int> =
     items.map { it as Int }.iterator()

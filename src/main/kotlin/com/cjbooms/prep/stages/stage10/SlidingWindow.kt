@@ -2,48 +2,30 @@ package com.cjbooms.prep.stages.stage10
 
 /**
  * Stage 10.2 — Sliding Window.
- *
- * MongoDB relevance: oplog tailing windows, change-stream resumability,
- * aggregation $setWindowFields, and time-bucketed counters in $bucket all
- * reduce to "maintain state over the last K elements of a stream". The
- * hit-counter and rate-limiter stages are sliding-window siblings.
- *
- * Structure-selection ritual: when does a sliding window win?
- *   - You need a contiguous range of elements with a property
- *     (sum / length / "all distinct").
- *   - You can update the window in O(1) when you slide one step.
- *   - You want O(n) instead of O(n*k) brute force.
- * If the window size is fixed, the variant is a fixed-size rolling aggregate.
- * If the window size varies, you typically need two pointers with a
- * validity check and a "shrink until valid" inner loop.
- *
- * Time budget: 15 minutes. Two exercises.
  */
 
 /**
- * Longest substring without repeating characters (LC 3).
+ * Longest substring without repeating characters (LC 3). Given a string `s`,
+ * return the length of the longest contiguous substring that contains no
+ * repeated characters.
  *
- * Approach: variable window with a "last seen index" map. Expand `right`.
- * If `s[right]` is already inside the window, jump `left` past its previous
- * occurrence. Track the maximum window length seen.
- *
- * Time:  O(n) — each index is visited at most twice.
- * Space: O(min(n, alphabet)) for the last-seen map.
+ * @param s the input string (may contain ASCII letters, digits, symbols, or
+ *          spaces)
+ * @return the length of the longest substring with all distinct characters;
+ *         `0` if `s` is empty
  */
 fun longestSubstringWithoutRepeats(s: String): Int {
     TODO("implement")
 }
 
 /**
- * Minimum Window Substring (LC 76): shortest substring of `s` that contains
- * every character of `t` (including multiplicities). Return "" if none exists.
+ * Minimum Window Substring (LC 76). Given strings `s` and `t`, return the
+ * shortest contiguous substring of `s` that contains every character of `t`
+ * (with multiplicities). Return `""` if no such substring exists.
  *
- * Approach: variable window with a "need vs have" counter. Expand `right`
- * until the window satisfies the requirement, then shrink `left` as far as
- * possible while still satisfying it, recording the best window. Repeat.
- *
- * Time:  O(n + |t|).
- * Space: O(|t|) for the frequency tables (capped at the alphabet in practice).
+ * @param s the source string to search within
+ * @param t the string whose characters must all be present in the window
+ * @return the shortest qualifying substring of `s`, or `""` if none exists
  */
 fun minWindowSubstring(s: String, t: String): String {
     TODO("implement")

@@ -1,24 +1,29 @@
 package com.cjbooms.prep.stages.stage10
 
 /**
- * Stage 10.5 — Text Justification (15 min).
- *
- * MongoDB relevance: formatting query results, fixed-width CLI output, and
- * any text-layout problem where whitespace must be distributed evenly across
- * a known line width.
- *
- * Structure-selection ritual:
- *   - Greedy line packing is the right move: pack as many words as fit on
- *     each line, then distribute spaces.
- *   - Last line and single-word lines are special-cased (left-justified).
- *   - O(n) total: each word is placed exactly once.
- *
- * Time budget: 15 min.
+ * Stage 10.5 — Text Justification.
  */
 
 /**
- * Formats [words] into lines of length [maxWidth], fully justifying every
- * line except the last one and single-word lines, which are left-justified.
+ * Format `words` into fully-justified text of width `maxWidth`. Every line
+ * must contain exactly `maxWidth` characters (counting spaces between words).
+ *
+ * Rules:
+ *   - Greedy packing: each line contains as many words as will fit, joined by
+ *     single spaces.
+ *   - For all lines except the last, and any line containing a single word,
+ *     extra spaces are distributed evenly between words. Leftover spaces
+ *     (when the count does not divide evenly) go into the leftmost gaps, one
+ *     extra space per gap from left to right.
+ *   - The last line is left-justified: a single space between words, with all
+ *     remaining space as trailing spaces on the right (it may therefore
+ *     contain fewer than `maxWidth` non-space characters plus a single
+ *     trailing run of spaces).
+ *
+ * @param words the input words in order; `words.length >= 1`
+ * @param maxWidth the exact width of every output line; must be at least as
+ *                 wide as the longest single word
+ * @return a list of formatted lines, one entry per output line
  */
 fun textJustify(words: Array<String>, maxWidth: Int): List<String> {
     TODO("implement")
