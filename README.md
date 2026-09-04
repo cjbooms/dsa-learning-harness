@@ -57,7 +57,6 @@ retrospective of the passed screen.
 - `TreeSerialize.kt` — `serialize` / `deserialize`
 - `ConnectedComponents.kt` — `countComponents`
 - `KvWithTtl.kt` — `put` / `get` with TTL
-- `TopologicalSort.kt` — Kahn's topological sort
 
 ### Stage 2 — Read-Write Lock (45m)
 - `ReadWriteLock.kt` — `SimpleReadWriteLock` with writer preference

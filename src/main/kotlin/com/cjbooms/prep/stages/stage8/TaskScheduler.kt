@@ -26,37 +26,38 @@ fun scheduleTasksKahn(
     dependencies: List<Pair<String, String>>,
 ): List<String> {
     val output = mutableListOf<String>()
-    val dependents = mutableMapOf<String, MutableList<String>>()  // task -> tasks that depend ON it
-    val inDegree = hashMapOf<String, Int>()                       // task -> remaining prereq count
+    val tasksWithDeps = mutableMapOf<String, MutableList<String>>()  // task -> tasks that depend ON it
+    val taskWithCount = hashMapOf<String, Int>()                     // task -> how many prereqs remain (in-degree)
 
     tasks.forEach {
-        dependents.getOrPut(it) { mutableListOf() }
-        inDegree[it] = 0
+        tasksWithDeps.getOrPut(it) { mutableListOf() }
+        taskWithCount[it] = 0
     }
 
     dependencies.forEach { (prereq, dependent) ->
-        dependents.getOrPut(prereq) { mutableListOf() }.add(dependent)
-        inDegree[dependent] = inDegree.getOrDefault(dependent, 0) + 1
+        tasksWithDeps.getOrPut(prereq) { mutableListOf() }.add(dependent)
+        taskWithCount[dependent] = taskWithCount[dependent]!! + 1
     }
 
     // Frontier: tasks with zero remaining prerequisites — schedulable NOW.
-    val ready = ArrayDeque<String>()
-    inDegree.forEach { (task, count) ->
-        if (count == 0) ready.addLast(task)
+    val readyToSchedule = ArrayDeque<String>()
+    taskWithCount.forEach { (task, count) ->
+        if (count == 0) readyToSchedule.addLast(task)
     }
 
-    while (ready.isNotEmpty()) {
-        val current = ready.removeFirst()
-        output.add(current)
+    while (readyToSchedule.isNotEmpty()) {
+        val currentTask = readyToSchedule.removeFirst()
+        output.add(currentTask)
 
-        // "Remove it as a dep from all dependents" — the moment one hits zero, it joins the frontier.
-        dependents[current]?.forEach { dependent ->
-            val remaining = inDegree[dependent]!! - 1
-            inDegree[dependent] = remaining
-            if (remaining == 0) ready.addLast(dependent)
+        // "Remove it as a dep from all other tasks" — decrement each dependent;
+        // the moment one hits zero, it joins the frontier.
+        tasksWithDeps[currentTask]?.forEach { dependent ->
+            val remaining = taskWithCount[dependent]!! - 1
+            taskWithCount[dependent] = remaining
+            if (remaining == 0) readyToSchedule.addLast(dependent)
         }
     }
 
-    // Cycle detection: nodes still pinned at in-degree > 0 -> no valid schedule.
+    // Some tasks never hit zero -> they're on a cycle -> no valid schedule.
     return if (output.size == tasks.size) output else emptyList()
 }
