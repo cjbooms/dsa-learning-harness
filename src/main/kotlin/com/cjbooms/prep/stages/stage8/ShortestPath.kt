@@ -1,18 +1,18 @@
 package com.cjbooms.prep.stages.stage8
 
-import kotlin.math.max
-import kotlin.math.min
+import java.util.PriorityQueue
 
 /**
  * Learn first: see docs/learning-resources.md
- * Shortest path in a 0/1 grid.
+ * Shortest path in an unweighted binary grid.
  *
- * Given a grid of non-negative integers where each cell holds a movement
- * cost (0 or 1, or any non-negative value) and 4-directional adjacency
- * (up, down, left, right), find the length of the shortest path from
- * [start] to [target].
+ * 0 marks an open/passable cell, 1 marks a blocked wall. Find the length
+ * (in steps) of the shortest 4-directional path from [start] to [target].
  *
- * @param grid the m x n grid of non-negative integer cell costs.
+ * This is standard BFS: every move costs one step, every visited cell is
+ * recorded once when it is first enqueued to avoid queue explosion.
+ *
+ * @param grid the m x n grid of 0s (open) and 1s (walls).
  * @param start the (row, column) of the starting cell.
  * @param target the (row, column) of the destination cell.
  * @return the number of steps in the shortest path from [start] to
@@ -23,81 +23,18 @@ fun shortestPathGrid(
     start: Pair<Int, Int>,
     target: Pair<Int, Int>,
 ): Int {
-    val length = grid.size
-    println("Length: $length")
-    data class Position(val x: Int, val y: Int, val cost: Int, val steps: Int)
-
-    println("Processing Grid: \n" + grid.joinToString(separator = "\n") { it.joinToString() })
-    println()
-
-    val queue = ArrayDeque<Position>()
-    queue.addLast(Position(start.first, start.second, grid[start.first][start.second], 0))
-
-    val visited = mutableSetOf<Pair<Int, Int>>()
-    val directions = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
-
-    var result = sortedMapOf<Int, Int>()
-
-    fun isInBounds(x: Int, y: Int) = min(x, y) >= 0 && max(x, y) < length
-
-
-    while (queue.isNotEmpty()) {
-        val current = queue.removeFirst()
-        println("Processing node: $current")
-        if (visited.contains(current.x to current.y)) continue
-        if (target == current.x to current.y) {
-            println("Target found: $current ")
-            result.put(current.cost, current.steps)
-            continue
-        }
-        visited.add(current.x to current.y)
-        directions.forEach { (x, y) ->
-            val newX = current.x + x
-            val newY = current.y + y
-            if (isInBounds(newX, newY)) {
-                val nextPosition = Position(newX, newY, current.cost + grid[newX][newY], current.steps + 1)
-                println("Adding next position: $nextPosition")
-                queue.addLast(nextPosition)
-            } else {
-                println("Out of Bounds: $newX, $newY")
-
-            }
-        }
-    }
-    println("Results: $result")
-
-    return if (result.isNotEmpty()) result.firstEntry().value else -1
-}
-
-
-fun main() {
-
-
-    println(
-        "Expected 2, Actual: " + shortestPathGrid(
-            arrayOf(
-                intArrayOf(0, 2),
-                intArrayOf(4, 1)
-            ),
-            0 to 0,
-            1 to 1
-        )
-    )
-
-    println()
-
-
+    TODO("implement BFS here")
 }
 
 /**
  * Weighted shortest path in a grid, returning the path itself.
  *
- * Same shape as the first function, but each cell holds a non-negative
- * movement cost. Find a path from [start] to [target] with the lowest
- * total cost and return the sequence of cells along that path
- * (inclusive of both endpoints), in order.
+ * Each cell holds a non-negative movement cost. Find a path from [start]
+ * to [target] with the lowest total cost and return the sequence of cells
+ * along that path (inclusive of both endpoints), in order.
  *
- * Use Dijkstra's algorithm (or 0-1 BFS when costs are only 0 or 1).
+ * Use Dijkstra's algorithm: explore cells in order of total cost, tracking
+ * the previous cell on the cheapest path so the route can be reconstructed.
  *
  * @param grid the m x n grid of non-negative integer cell costs.
  * @param start the (row, column) of the starting cell.
@@ -111,5 +48,15 @@ fun shortestPathGridPath(
     start: Pair<Int, Int>,
     target: Pair<Int, Int>,
 ): List<Pair<Int, Int>> {
-    TODO("implement")
+    TODO("implement Dijkstra's here")
+}
+
+fun main() {
+    val grid = arrayOf(
+        intArrayOf(0, 0, 0),
+        intArrayOf(1, 1, 0),
+        intArrayOf(0, 0, 0),
+    )
+    val distance = shortestPathGrid(grid, 0 to 0, 2 to 0)
+    println("Expected: 6, Actual: $distance")
 }
