@@ -26,37 +26,37 @@ class UnionFind(n: Int) {
     private val rank: IntArray = IntArray(n)
     private var count: Int = n
 
-    fun find(x: Int): Int {
-        var root = x
+    fun find(node: Int): Int {
+        var root = node
         while (parent[root] != root) root = parent[root]
         // Path compression: re-parent every visited node to the root.
-        var cur = x
-        while (parent[cur] != root) {
-            val next = parent[cur]
-            parent[cur] = root
-            cur = next
+        var current = node
+        while (parent[current] != root) {
+            val next = parent[current]
+            parent[current] = root
+            current = next
         }
         return root
     }
 
-    fun union(x: Int, y: Int): Boolean {
-        val rx = find(x)
-        val ry = find(y)
-        if (rx == ry) return false
+    fun union(nodeA: Int, nodeB: Int): Boolean {
+        val rootA = find(nodeA)
+        val rootB = find(nodeB)
+        if (rootA == rootB) return false
         // Union by rank: attach the shallower tree under the deeper one.
         when {
-            rank[rx] < rank[ry] -> parent[rx] = ry
-            rank[rx] > rank[ry] -> parent[ry] = rx
+            rank[rootA] < rank[rootB] -> parent[rootA] = rootB
+            rank[rootA] > rank[rootB] -> parent[rootB] = rootA
             else -> {
-                parent[ry] = rx
-                rank[rx]++
+                parent[rootB] = rootA
+                rank[rootA]++
             }
         }
         count--
         return true
     }
 
-    fun connected(x: Int, y: Int): Boolean = find(x) == find(y)
+    fun connected(nodeA: Int, nodeB: Int): Boolean = find(nodeA) == find(nodeB)
 
     fun componentCount(): Int = count
 }

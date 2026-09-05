@@ -34,14 +34,14 @@ fun findCourseOrder(numCourses: Int, prerequisites: List<Pair<Int, Int>>): List<
     }
 
     val ready = ArrayDeque<Int>()
-    for (c in 0 until numCourses) if (inDegree[c] == 0) ready.addLast(c)
+    for (course in 0 until numCourses) if (inDegree[course] == 0) ready.addLast(course)
 
     val order = mutableListOf<Int>()
     while (ready.isNotEmpty()) {
-        val c = ready.removeFirst()
-        order.add(c)
-        for (next in dependents[c]) {
-            if (--inDegree[next] == 0) ready.addLast(next)
+        val course = ready.removeFirst()
+        order.add(course)
+        for (dependent in dependents[course]) {
+            if (--inDegree[dependent] == 0) ready.addLast(dependent)
         }
     }
 

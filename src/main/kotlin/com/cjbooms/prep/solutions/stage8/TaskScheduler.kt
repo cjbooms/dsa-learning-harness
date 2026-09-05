@@ -29,9 +29,9 @@ fun scheduleTasksKahn(
     val dependents = mutableMapOf<String, MutableList<String>>()  // task -> tasks that depend ON it
     val inDegree = hashMapOf<String, Int>()                       // task -> remaining prereq count
 
-    tasks.forEach {
-        dependents.getOrPut(it) { mutableListOf() }
-        inDegree[it] = 0
+    tasks.forEach { task ->
+        dependents.getOrPut(task) { mutableListOf() }
+        inDegree[task] = 0
     }
 
     dependencies.forEach { (prereq, dependent) ->
@@ -41,8 +41,8 @@ fun scheduleTasksKahn(
 
     // Frontier: tasks with zero remaining prerequisites — schedulable NOW.
     val ready = ArrayDeque<String>()
-    inDegree.forEach { (task, count) ->
-        if (count == 0) ready.addLast(task)
+    inDegree.forEach { (task, remaining) ->
+        if (remaining == 0) ready.addLast(task)
     }
 
     while (ready.isNotEmpty()) {

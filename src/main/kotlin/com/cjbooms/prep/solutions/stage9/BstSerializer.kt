@@ -28,15 +28,15 @@ data class BstNode(val value: Int, var left: BstNode? = null, var right: BstNode
 fun serializeBst(root: BstNode?): String {
     // Sentinel for an empty tree. Documented as part of the wire contract.
     if (root == null) return ""
-    val sb = StringBuilder()
+    val builder = StringBuilder()
     fun walk(node: BstNode) {
-        sb.append(node.value).append(',')
+        builder.append(node.value).append(',')
         node.left?.let { walk(it) }
         node.right?.let { walk(it) }
     }
     walk(root)
     // Strip the trailing comma for tidiness. Empty result still encodes "null root".
-    return sb.toString().trimEnd(',')
+    return builder.toString().trimEnd(',')
 }
 
 /** Parses [data] (the output of [serializeBst]) back into a BST. */
@@ -46,20 +46,20 @@ fun deserializeBst(data: String): BstNode? {
     // by side effect — exactly the trick used in the recursive-descent
     // JSON parser in Stage 3.
     val tokens = data.split(',').map { it.toInt() }
-    var i = 0
+    var cursor = 0
     fun consume(upperBound: Int?): BstNode? {
-        if (i >= tokens.size) return null
-        val v = tokens[i]
+        if (cursor >= tokens.size) return null
+        val value = tokens[cursor]
         // If the next value violates the bound for this subtree, this subtree is empty.
-        if (upperBound != null && v >= upperBound) return null
-        i++
-        // Left subtree must be strictly less than v; right subtree must be
-        // >= v but < upperBound (i.e. < parent's bound). Since the BST is
-        // built strictly with unique keys per the contract, left is < v and
-        // right is > v; we encode ">" as the new upperBound on the right.
-        val left = consume(v)
-        val right = consume(upperBound)
-        return BstNode(v, left, right)
+        if (upperBound != null && value >= upperBound) return null
+        cursor++
+        // Left subtree must be strictly less than value; right subtree must be
+        // >= value but < upperBound (i.e. < parent's bound). Since the BST is
+        // built strictly with unique keys per the contract, left is < value and
+        // right is > value; we encode ">" as the new upperBound on the right.
+        val leftChild = consume(value)
+        val rightChild = consume(upperBound)
+        return BstNode(value, leftChild, rightChild)
     }
     return consume(null)
 }

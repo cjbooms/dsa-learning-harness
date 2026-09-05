@@ -23,29 +23,29 @@ import java.util.ArrayDeque
  *
  * Time budget: 25 min.
  */
-fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
-    require(k > 0) { "window size must be positive, was $k" }
+fun maxSlidingWindow(nums: IntArray, windowSize: Int): IntArray {
+    require(windowSize > 0) { "window size must be positive, was $windowSize" }
     if (nums.isEmpty()) return intArrayOf()
 
     val deque: ArrayDeque<Int> = ArrayDeque()
-    val result = IntArray(nums.size - k + 1)
+    val result = IntArray(nums.size - windowSize + 1)
     var outputIndex = 0
 
-    for (i in nums.indices) {
+    for (index in nums.indices) {
         // Discard indices that slid out of the window.
-        if (deque.isNotEmpty() && deque.first() <= i - k) {
+        if (deque.isNotEmpty() && deque.first() <= index - windowSize) {
             deque.removeFirst()
         }
 
         // Maintain decreasing values: incoming num is larger than back -> back can never be a max.
-        while (deque.isNotEmpty() && nums[deque.last()] <= nums[i]) {
+        while (deque.isNotEmpty() && nums[deque.last()] <= nums[index]) {
             deque.removeLast()
         }
 
-        deque.addLast(i)
+        deque.addLast(index)
 
-        // First window is complete at index k - 1.
-        if (i >= k - 1) {
+        // First window is complete at index windowSize - 1.
+        if (index >= windowSize - 1) {
             result[outputIndex++] = nums[deque.first()]
         }
     }

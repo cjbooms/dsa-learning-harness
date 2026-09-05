@@ -38,15 +38,15 @@ fun shortestPathGridPath(
     if (grid.isEmpty() || grid[0].isEmpty()) return emptyList()
     val rows = grid.size
     val cols = grid[0].size
-    val (sr, sc) = start
-    val (tr, tc) = target
-    if (grid[sr][sc] != 0 || grid[tr][tc] != 0) return emptyList()
+    val (startRow, startCol) = start
+    val (targetRow, targetCol) = target
+    if (grid[startRow][startCol] != 0 || grid[targetRow][targetCol] != 0) return emptyList()
 
     val visited = Array(rows) { BooleanArray(cols) }
     val parent = Array(rows) { IntArray(cols) { -1 } }
     val queue: ArrayDeque<Int> = ArrayDeque()
-    queue.addLast(sr * cols + sc)
-    visited[sr][sc] = true
+    queue.addLast(startRow * cols + startCol)
+    visited[startRow][startCol] = true
 
     // 4-neighbour moves: up, down, left, right.
     val dr = intArrayOf(-1, 1, 0, 0)
@@ -54,31 +54,31 @@ fun shortestPathGridPath(
 
     while (queue.isNotEmpty()) {
         val code = queue.removeFirst()
-        val r = code / cols
-        val c = code % cols
-        if (r == tr && c == tc) {
+        val row = code / cols
+        val col = code % cols
+        if (row == targetRow && col == targetCol) {
             // Reconstruct path: walk parent[] back to start.
             val path = mutableListOf<Pair<Int, Int>>()
-            var curR = tr
-            var curC = tc
-            while (curR != sr || curC != sc) {
-                path.add(curR to curC)
-                val prev = parent[curR][curC]
-                curR = prev / cols
-                curC = prev % cols
+            var currentRow = targetRow
+            var currentCol = targetCol
+            while (currentRow != startRow || currentCol != startCol) {
+                path.add(currentRow to currentCol)
+                val prev = parent[currentRow][currentCol]
+                currentRow = prev / cols
+                currentCol = prev % cols
             }
-            path.add(sr to sc)
+            path.add(startRow to startCol)
             return path.reversed()
         }
-        for (k in 0 until 4) {
-            val nr = r + dr[k]
-            val nc = c + dc[k]
-            if (nr in 0 until rows && nc in 0 until cols &&
-                !visited[nr][nc] && grid[nr][nc] == 0
+        for (directionIndex in 0 until 4) {
+            val nextRow = row + dr[directionIndex]
+            val nextCol = col + dc[directionIndex]
+            if (nextRow in 0 until rows && nextCol in 0 until cols &&
+                !visited[nextRow][nextCol] && grid[nextRow][nextCol] == 0
             ) {
-                visited[nr][nc] = true
-                parent[nr][nc] = r * cols + c
-                queue.addLast(nr * cols + nc)
+                visited[nextRow][nextCol] = true
+                parent[nextRow][nextCol] = row * cols + col
+                queue.addLast(nextRow * cols + nextCol)
             }
         }
     }

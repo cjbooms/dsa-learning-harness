@@ -23,26 +23,26 @@ package com.cjbooms.prep.solutions.stage14
  * If a[i-1] == b[j-1]: dp[i][j] = dp[i-1][j-1] + 1.
  * Else:                dp[i][j] = max(dp[i-1][j], dp[i][j-1]).
  */
-fun longestCommonSubsequence(a: String, b: String): Int {
-    val m = a.length
-    val n = b.length
-    if (m == 0 || n == 0) return 0
-    // Single-row rolling buffer keeps it O(min(m,n)) space.
-    var prev = IntArray(n + 1)
-    var curr = IntArray(n + 1)
-    for (i in 1..m) {
-        for (j in 1..n) {
-            curr[j] = if (a[i - 1] == b[j - 1]) {
-                prev[j - 1] + 1
+fun longestCommonSubsequence(first: String, second: String): Int {
+    val lengthA = first.length
+    val lengthB = second.length
+    if (lengthA == 0 || lengthB == 0) return 0
+    // Single-row rolling buffer keeps it O(min(lengthA,lengthB)) space.
+    var prev = IntArray(lengthB + 1)
+    var curr = IntArray(lengthB + 1)
+    for (indexA in 1..lengthA) {
+        for (indexB in 1..lengthB) {
+            curr[indexB] = if (first[indexA - 1] == second[indexB - 1]) {
+                prev[indexB - 1] + 1
             } else {
-                maxOf(prev[j], curr[j - 1])
+                maxOf(prev[indexB], curr[indexB - 1])
             }
         }
         val tmp = prev
         prev = curr
         curr = tmp
     }
-    return prev[n]
+    return prev[lengthB]
 }
 
 /**
@@ -53,25 +53,25 @@ fun longestCommonSubsequence(a: String, b: String): Int {
  *                                          dp[i][j-1],   // insert
  *                                          dp[i-1][j-1]) // replace
  */
-fun editDistance(a: String, b: String): Int {
-    val m = a.length
-    val n = b.length
-    if (m == 0) return n
-    if (n == 0) return m
-    var prev = IntArray(n + 1) { it } // distance from "" to b[0..j) = j
-    var curr = IntArray(n + 1)
-    for (i in 1..m) {
-        curr[0] = i // distance from a[0..i) to "" = i
-        for (j in 1..n) {
-            curr[j] = if (a[i - 1] == b[j - 1]) {
-                prev[j - 1]
+fun editDistance(first: String, second: String): Int {
+    val lengthA = first.length
+    val lengthB = second.length
+    if (lengthA == 0) return lengthB
+    if (lengthB == 0) return lengthA
+    var prev = IntArray(lengthB + 1) { it } // distance from "" to second[0..j) = j
+    var curr = IntArray(lengthB + 1)
+    for (indexA in 1..lengthA) {
+        curr[0] = indexA // distance from first[0..i) to "" = i
+        for (indexB in 1..lengthB) {
+            curr[indexB] = if (first[indexA - 1] == second[indexB - 1]) {
+                prev[indexB - 1]
             } else {
-                1 + minOf(prev[j], curr[j - 1], prev[j - 1])
+                1 + minOf(prev[indexB], curr[indexB - 1], prev[indexB - 1])
             }
         }
         val tmp = prev
         prev = curr
         curr = tmp
     }
-    return prev[n]
+    return prev[lengthB]
 }

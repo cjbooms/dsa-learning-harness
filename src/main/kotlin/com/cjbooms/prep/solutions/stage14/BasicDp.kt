@@ -28,7 +28,7 @@ fun climbStairs(n: Int): Int {
     if (n <= 1) return 1
     var prevPrev = 1 // f(0)
     var prev = 1     // f(1)
-    for (k in 2..n) {
+    for (stepIndex in 2..n) {
         val curr = prev + prevPrev
         prevPrev = prev
         prev = curr
@@ -46,8 +46,8 @@ fun houseRobber(nums: List<Int>): Int {
     if (nums.size == 1) return nums[0]
     var prevPrev = nums[0]
     var prev = maxOf(nums[0], nums[1])
-    for (k in 2 until nums.size) {
-        val curr = maxOf(prev, prevPrev + nums[k])
+    for (stepIndex in 2 until nums.size) {
+        val curr = maxOf(prev, prevPrev + nums[stepIndex])
         prevPrev = prev
         prev = curr
     }

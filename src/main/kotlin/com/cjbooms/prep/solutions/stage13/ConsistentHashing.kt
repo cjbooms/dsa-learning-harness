@@ -56,13 +56,13 @@ class ConsistentHashing<T>(
     fun add(node: T) {
         if (!realNodes.add(node)) return
         val hashes = ArrayList<Int>(replicasPerNode)
-        for (i in 0 until replicasPerNode) {
-            val h = stableHash("$node#$i")
+        for (replicaIndex in 0 until replicasPerNode) {
+            val hash = stableHash("$node#$replicaIndex")
             // Hash collisions across replicas are vanishingly rare with MD5,
             // but if one occurs, the later replica overwrites — still correct
             // because both map to the same real node.
-            ring[h] = node
-            hashes.add(h)
+            ring[hash] = node
+            hashes.add(hash)
         }
         hashesByNode[node] = hashes
     }
@@ -74,7 +74,7 @@ class ConsistentHashing<T>(
     fun remove(node: T) {
         if (!realNodes.remove(node)) return
         val hashes = hashesByNode.remove(node) ?: return
-        for (h in hashes) ring.remove(h)
+        for (hash in hashes) ring.remove(hash)
     }
 
     /**
@@ -86,8 +86,8 @@ class ConsistentHashing<T>(
      */
     fun getNode(key: String): T {
         check(realNodes.isNotEmpty()) { "getNode called on empty ring" }
-        val h = stableHash(key)
-        val ceiling = ring.ceilingEntry(h)
+        val keyHash = stableHash(key)
+        val ceiling = ring.ceilingEntry(keyHash)
         if (ceiling != null) return ceiling.value
         // Wrap around: the first entry on the ring owns everything from the
         // largest virtual hash up to 2^32.

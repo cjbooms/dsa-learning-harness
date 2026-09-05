@@ -36,13 +36,13 @@ class Trie {
 
     /** Inserts [word] into the trie. Lowercase a-z assumed; document the contract. */
     fun insert(word: String) {
-        var cur = root
+        var current = root
         for (ch in word) {
-            val idx = ch - 'a'
-            val next = cur.children[idx] ?: TrieNode().also { cur.children[idx] = it }
-            cur = next
+            val index = ch - 'a'
+            val next = current.children[index] ?: TrieNode().also { current.children[index] = it }
+            current = next
         }
-        cur.isWord = true
+        current.isWord = true
     }
 
     /** Returns true iff [word] was previously inserted (full word, not just a prefix). */
@@ -59,11 +59,11 @@ class Trie {
     }
 
     /** Walks the trie character by character; returns the node, or null if any step is missing. */
-    private fun walkTo(s: String): TrieNode? {
-        var cur: TrieNode? = root
-        for (ch in s) {
-            cur = cur?.children[ch - 'a'] ?: return null
+    private fun walkTo(text: String): TrieNode? {
+        var current: TrieNode? = root
+        for (ch in text) {
+            current = current?.children[ch - 'a'] ?: return null
         }
-        return cur
+        return current
     }
 }

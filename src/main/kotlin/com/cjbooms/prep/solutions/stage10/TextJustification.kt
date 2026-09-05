@@ -19,23 +19,23 @@ package com.cjbooms.prep.solutions.stage10
 fun textJustify(words: Array<String>, maxWidth: Int): List<String> {
     require(maxWidth > 0) { "maxWidth must be positive, was $maxWidth" }
     val result = mutableListOf<String>()
-    var i = 0
+    var lineStart = 0
 
-    while (i < words.size) {
-        var j = i + 1
-        var lineLength = words[i].length
+    while (lineStart < words.size) {
+        var lineEnd = lineStart + 1
+        var lineLength = words[lineStart].length
 
         // Pack as many words as fit; account for the mandatory single space between words.
-        while (j < words.size && lineLength + 1 + words[j].length <= maxWidth) {
-            lineLength += 1 + words[j].length
-            j++
+        while (lineEnd < words.size && lineLength + 1 + words[lineEnd].length <= maxWidth) {
+            lineLength += 1 + words[lineEnd].length
+            lineEnd++
         }
 
-        val lineWords = words.slice(i until j)
+        val lineWords = words.slice(lineStart until lineEnd)
         val numWords = lineWords.size
         val numSpaces = maxWidth - lineWords.sumOf { it.length }
 
-        if (j == words.size || numWords == 1) {
+        if (lineEnd == words.size || numWords == 1) {
             // Last line or single-word line: left-justify.
             result.add(lineWords.joinToString(" ").padEnd(maxWidth))
         } else {
@@ -45,16 +45,16 @@ fun textJustify(words: Array<String>, maxWidth: Int): List<String> {
             val spacePerGap = numSpaces / gaps
             val extraSpaces = numSpaces % gaps
             val builder = StringBuilder()
-            for (k in lineWords.indices) {
-                builder.append(lineWords[k])
-                if (k < gaps) {
-                    builder.append(" ".repeat(spacePerGap + if (k < extraSpaces) 1 else 0))
+            for (position in lineWords.indices) {
+                builder.append(lineWords[position])
+                if (position < gaps) {
+                    builder.append(" ".repeat(spacePerGap + if (position < extraSpaces) 1 else 0))
                 }
             }
             result.add(builder.toString())
         }
 
-        i = j
+        lineStart = lineEnd
     }
 
     return result

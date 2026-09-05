@@ -29,7 +29,7 @@ package com.cjbooms.prep.solutions.stage10
  */
 class ImmutableArraySum(private val numbers: IntArray) {
     private val prefix: IntArray = IntArray(numbers.size + 1).also { table ->
-        for (i in numbers.indices) table[i + 1] = table[i] + numbers[i]
+        for (index in numbers.indices) table[index + 1] = table[index] + numbers[index]
     }
 
     fun sumRange(left: Int, right: Int): Int {
@@ -54,14 +54,14 @@ class ImmutableArraySum(private val numbers: IntArray) {
  * the hashmap collapses all prefix sums with the same value, regardless of
  * where they occurred.
  */
-fun subarraySumEqualsK(numbers: IntArray, k: Int): Int {
+fun subarraySumEqualsK(numbers: IntArray, targetSum: Int): Int {
     val counts = HashMap<Int, Int>()
     counts[0] = 1
     var running = 0
     var result = 0
     for (value in numbers) {
         running += value
-        result += counts[running - k] ?: 0
+        result += counts[running - targetSum] ?: 0
         counts[running] = (counts[running] ?: 0) + 1
     }
     return result

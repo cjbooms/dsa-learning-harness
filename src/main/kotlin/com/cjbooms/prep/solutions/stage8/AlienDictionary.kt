@@ -38,25 +38,25 @@ fun alienOrder(words: List<String>): String {
     val adj = mutableMapOf<Char, MutableSet<Char>>()
     // Track all characters that appear in any word.
     val allChars = mutableSetOf<Char>()
-    for (w in words) {
-        for (c in w) {
-            allChars.add(c)
-            adj.getOrPut(c) { mutableSetOf() }
+    for (word in words) {
+        for (char in word) {
+            allChars.add(char)
+            adj.getOrPut(char) { mutableSetOf() }
         }
     }
 
-    for (i in 0 until words.size - 1) {
-        val a = words[i]
-        val b = words[i + 1]
+    for (index in 0 until words.size - 1) {
+        val current = words[index]
+        val next = words[index + 1]
         // Invalid prefix: longer word that starts with a SHORTER next word.
-        if (a.length > b.length && a.startsWith(b)) return ""
+        if (current.length > next.length && current.startsWith(next)) return ""
         // Find the first differing character to derive one ordering constraint.
-        val minLen = minOf(a.length, b.length)
+        val minLen = minOf(current.length, next.length)
         var foundDiff = false
-        for (k in 0 until minLen) {
-            if (a[k] != b[k]) {
-                val from = a[k]
-                val to = b[k]
+        for (charIndex in 0 until minLen) {
+            if (current[charIndex] != next[charIndex]) {
+                val from = current[charIndex]
+                val to = next[charIndex]
                 // Skip duplicate edges — set semantics dedupe.
                 adj.getOrPut(from) { mutableSetOf() }.add(to)
                 foundDiff = true
@@ -66,27 +66,27 @@ fun alienOrder(words: List<String>): String {
         // If all minLen characters match and the shorter is a prefix, that's
         // already covered above; if no diff and same length, it's a duplicate —
         // no constraint, continue.
-        if (!foundDiff && a.length == b.length) continue
+        if (!foundDiff && current.length == next.length) continue
     }
 
     // Kahn's BFS over character graph.
     val inDegree = mutableMapOf<Char, Int>()
-    for (c in allChars) inDegree[c] = 0
+    for (char in allChars) inDegree[char] = 0
     for ((_, neighbours) in adj) {
         for (v in neighbours) inDegree[v] = inDegree.getOrDefault(v, 0) + 1
     }
 
     val ready = ArrayDeque<Char>()
-    for ((c, d) in inDegree) if (d == 0) ready.addLast(c)
+    for ((char, degree) in inDegree) if (degree == 0) ready.addLast(char)
 
     val result = StringBuilder()
     while (ready.isNotEmpty()) {
-        val c = ready.removeFirst()
-        result.append(c)
-        for (next in adj[c].orEmpty()) {
-            val remaining = inDegree[next]!! - 1
-            inDegree[next] = remaining
-            if (remaining == 0) ready.addLast(next)
+        val char = ready.removeFirst()
+        result.append(char)
+        for (nextChar in adj[char].orEmpty()) {
+            val remaining = inDegree[nextChar]!! - 1
+            inDegree[nextChar] = remaining
+            if (remaining == 0) ready.addLast(nextChar)
         }
     }
 

@@ -27,24 +27,24 @@ fun countIslands(grid: Array<CharArray>): Int {
     val rows = grid.size
     val cols = grid[0].size
     var islands = 0
-    for (r in 0 until rows) {
-        for (c in 0 until cols) {
-            if (grid[r][c] == '1') {
+    for (row in 0 until rows) {
+        for (col in 0 until cols) {
+            if (grid[row][col] == '1') {
                 islands++
-                sink(grid, r, c, rows, cols)
+                sink(grid, row, col, rows, cols)
             }
         }
     }
     return islands
 }
 
-private fun sink(grid: Array<CharArray>, r: Int, c: Int, rows: Int, cols: Int) {
-    if (r !in 0 until rows || c !in 0 until cols || grid[r][c] != '1') return
-    grid[r][c] = '0'
-    sink(grid, r - 1, c, rows, cols)
-    sink(grid, r + 1, c, rows, cols)
-    sink(grid, r, c - 1, rows, cols)
-    sink(grid, r, c + 1, rows, cols)
+private fun sink(grid: Array<CharArray>, row: Int, col: Int, rows: Int, cols: Int) {
+    if (row !in 0 until rows || col !in 0 until cols || grid[row][col] != '1') return
+    grid[row][col] = '0'
+    sink(grid, row - 1, col, rows, cols)
+    sink(grid, row + 1, col, rows, cols)
+    sink(grid, row, col - 1, rows, cols)
+    sink(grid, row, col + 1, rows, cols)
 }
 
 fun rottingOranges(grid: Array<IntArray>): Int {
@@ -53,10 +53,10 @@ fun rottingOranges(grid: Array<IntArray>): Int {
     val cols = grid[0].size
     val queue: ArrayDeque<Pair<Int, Int>> = ArrayDeque()
     var fresh = 0
-    for (r in 0 until rows) {
-        for (c in 0 until cols) {
-            when (grid[r][c]) {
-                2 -> queue.addLast(r to c)
+    for (row in 0 until rows) {
+        for (col in 0 until cols) {
+            when (grid[row][col]) {
+                2 -> queue.addLast(row to col)
                 1 -> fresh++
             }
         }
@@ -69,14 +69,14 @@ fun rottingOranges(grid: Array<IntArray>): Int {
     while (queue.isNotEmpty() && fresh > 0) {
         val levelSize = queue.size
         repeat(levelSize) {
-            val (r, c) = queue.removeFirst()
-            for (k in 0 until 4) {
-                val nr = r + dr[k]
-                val nc = c + dc[k]
-                if (nr in 0 until rows && nc in 0 until cols && grid[nr][nc] == 1) {
-                    grid[nr][nc] = 2
+            val (row, col) = queue.removeFirst()
+            for (directionIndex in 0 until 4) {
+                val nextRow = row + dr[directionIndex]
+                val nextCol = col + dc[directionIndex]
+                if (nextRow in 0 until rows && nextCol in 0 until cols && grid[nextRow][nextCol] == 1) {
+                    grid[nextRow][nextCol] = 2
                     fresh--
-                    queue.addLast(nr to nc)
+                    queue.addLast(nextRow to nextCol)
                 }
             }
         }

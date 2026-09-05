@@ -44,12 +44,12 @@ fun isValidBst(root: TreeNode?): Boolean {
  */
 fun isValidBstInOrder(root: TreeNode?): Boolean {
     // Holder for the previous in-order value; null means "none seen yet".
-    val prev = arrayOfNulls<Int>(1)
+    val previous = arrayOfNulls<Int>(1)
     fun walk(node: TreeNode?): Boolean {
         if (node == null) return true
         if (!walk(node.left)) return false
-        if (prev[0] != null && node.value <= prev[0]!!) return false
-        prev[0] = node.value
+        if (previous[0] != null && node.value <= previous[0]!!) return false
+        previous[0] = node.value
         return walk(node.right)
     }
     return walk(root)

@@ -45,14 +45,14 @@ class HitCounter(private val windowSeconds: Int = 300) {
      * Records a hit at wall-clock time [timestampSeconds]. O(1) amortized.
      */
     fun hit(timestampSeconds: Int) {
-        val idx = mod(timestampSeconds, windowSeconds)
-        val bucket = buckets[idx]
-        if (bucket == null || bucket.timestamp != timestampSeconds) {
+        val slotIndex = mod(timestampSeconds, windowSeconds)
+        val currentBucket = buckets[slotIndex]
+        if (currentBucket == null || currentBucket.timestamp != timestampSeconds) {
             // First hit in this slot for this second, OR slot was last written
             // for a different (older) second — reset before incrementing.
-            buckets[idx] = Bucket(timestamp = timestampSeconds, count = 1)
+            buckets[slotIndex] = Bucket(timestamp = timestampSeconds, count = 1)
         } else {
-            bucket.count += 1
+            currentBucket.count += 1
         }
     }
 
@@ -65,11 +65,11 @@ class HitCounter(private val windowSeconds: Int = 300) {
         // Lower bound is exclusive: a hit at exactly `cutoff` is excluded.
         val cutoff = timestampSeconds - windowSeconds
         var total = 0
-        for (i in 0 until windowSeconds) {
-            val b = buckets[i] ?: continue
-            // Include bucket iff: cutoff < bucket.timestamp <= timestampSeconds.
-            if (b.timestamp > cutoff && b.timestamp <= timestampSeconds) {
-                total += b.count
+        for (slot in 0 until windowSeconds) {
+            val currentBucket = buckets[slot] ?: continue
+            // Include bucket iff: cutoff < currentBucket.timestamp <= timestampSeconds.
+            if (currentBucket.timestamp > cutoff && currentBucket.timestamp <= timestampSeconds) {
+                total += currentBucket.count
             }
         }
         return total
@@ -77,7 +77,7 @@ class HitCounter(private val windowSeconds: Int = 300) {
 
     /** Kotlin's `%` follows the sign of the dividend; we always want a non-negative index. */
     private fun mod(value: Int, divisor: Int): Int {
-        val r = value % divisor
-        return if (r < 0) r + divisor else r
+        val remainder = value % divisor
+        return if (remainder < 0) remainder + divisor else remainder
     }
 }

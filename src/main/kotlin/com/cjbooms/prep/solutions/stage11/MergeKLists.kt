@@ -45,20 +45,20 @@ fun mergeKLists(lists: List<ListNode?>): List<Int> {
     // Seed: each non-null list contributes its head with elementIndex = 0.
     // elementIndex disambiguates equal values within the same list (which
     // can't happen if the input is sorted, but cheap insurance).
-    lists.forEachIndexed { i, head ->
-        if (head != null) heap.add(Entry(head.value, i, 0, head))
+    lists.forEachIndexed { listIndex, head ->
+        if (head != null) heap.add(Entry(head.value, listIndex, 0, head))
     }
 
-    val out = ArrayList<Int>()
+    val output = ArrayList<Int>()
     var emittedFromList = IntArray(lists.size)
     while (heap.isNotEmpty()) {
-        val e = heap.poll()
-        out.add(e.value)
-        val next = e.node.next
-        if (next != null) {
-            emittedFromList[e.listIndex] = emittedFromList[e.listIndex] + 1
-            heap.add(Entry(next.value, e.listIndex, emittedFromList[e.listIndex], next))
+        val entry = heap.poll()
+        output.add(entry.value)
+        val nextNode = entry.node.next
+        if (nextNode != null) {
+            emittedFromList[entry.listIndex] = emittedFromList[entry.listIndex] + 1
+            heap.add(Entry(nextNode.value, entry.listIndex, emittedFromList[entry.listIndex], nextNode))
         }
     }
-    return out
+    return output
 }

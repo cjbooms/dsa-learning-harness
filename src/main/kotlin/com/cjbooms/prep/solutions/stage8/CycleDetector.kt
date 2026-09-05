@@ -19,19 +19,19 @@ package com.cjbooms.prep.solutions.stage8
  * (Kahn can — nodes that never reach in-degree 0 — but DFS exposes the cycle
  * edges, which is usually what the interviewer is probing for.)
  */
-fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean =
-    findCycle(n, edges).isNotEmpty()
+fun hasCycle(nodeCount: Int, edges: List<Pair<Int, Int>>): Boolean =
+    findCycle(nodeCount, edges).isNotEmpty()
 
-fun findCycle(n: Int, edges: List<Pair<Int, Int>>): List<Int> {
-    val adj = Array(n) { mutableListOf<Int>() }
-    for ((u, v) in edges) {
-        if (u in 0 until n && v in 0 until n) adj[u].add(v)
+fun findCycle(nodeCount: Int, edges: List<Pair<Int, Int>>): List<Int> {
+    val adj = Array(nodeCount) { mutableListOf<Int>() }
+    for ((from, to) in edges) {
+        if (from in 0 until nodeCount && to in 0 until nodeCount) adj[from].add(to)
     }
 
-    val color = IntArray(n) // 0 WHITE, 1 GRAY, 2 BLACK
-    val parent = IntArray(n) { -1 }
+    val color = IntArray(nodeCount) // 0 WHITE, 1 GRAY, 2 BLACK
+    val parent = IntArray(nodeCount) { -1 }
 
-    for (start in 0 until n) {
+    for (start in 0 until nodeCount) {
         if (color[start] != 0) continue
         // Returns the deepest node of the back edge (the GRAY ancestor + the
         // current node), or null if no cycle in this DFS tree.
@@ -43,12 +43,12 @@ fun findCycle(n: Int, edges: List<Pair<Int, Int>>): List<Int> {
             // multiple times in the stack walk if there are multiple paths
             // to it — we stop at the first occurrence.
             val cycle = mutableListOf(tail)
-            var cur = tail
+            var current = tail
             var safety = 0
-            while (cur != head) {
-                cur = parent[cur]
-                if (cur == -1 || ++safety > n) return cycle // defensive
-                cycle.add(cur)
+            while (current != head) {
+                current = parent[current]
+                if (current == -1 || ++safety > nodeCount) return cycle // defensive
+                cycle.add(current)
             }
             return cycle
         }
@@ -68,14 +68,14 @@ private fun dfsCycle(
     parent: IntArray,
 ): Pair<Int, Int>? {
     color[start] = 1 // GRAY
-    for (next in adj[start]) {
-        if (color[next] == 1) {
-            // Back edge: `next` is on the current DFS stack.
-            return start to next
+    for (neighbor in adj[start]) {
+        if (color[neighbor] == 1) {
+            // Back edge: `neighbor` is on the current DFS stack.
+            return start to neighbor
         }
-        if (color[next] == 0) {
-            parent[next] = start
-            val found = dfsCycle(next, adj, color, parent)
+        if (color[neighbor] == 0) {
+            parent[neighbor] = start
+            val found = dfsCycle(neighbor, adj, color, parent)
             if (found != null) return found
         }
     }

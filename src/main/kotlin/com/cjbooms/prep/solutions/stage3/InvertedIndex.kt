@@ -39,8 +39,8 @@ class InvertedIndex {
         val normalized = terms.map { it.lowercase() }
         val first = index[normalized[0]] ?: return emptySet()
         var result = first.toSet()
-        for (i in 1 until normalized.size) {
-            val set = index[normalized[i]] ?: return emptySet()
+        for (termIndex in 1 until normalized.size) {
+            val set = index[normalized[termIndex]] ?: return emptySet()
             result = result.intersect(set)
             if (result.isEmpty()) return emptySet()
         }

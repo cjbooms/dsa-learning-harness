@@ -38,11 +38,11 @@ fun scheduleTasksDfs(
 
     fun dfs(node: String) {
         color[node] = 1 // GRAY
-        for (next in dependents[node].orEmpty()) {
-            when (color[next] ?: 0) {
-                0 -> dfs(next)         // WHITE — descend
-                1 -> hasCycle = true   // GRAY — back edge, cycle
-                else -> {}             // BLACK — already fully explored
+        for (dependent in dependents[node].orEmpty()) {
+            when (color[dependent] ?: 0) {
+                0 -> dfs(dependent)         // WHITE — descend
+                1 -> hasCycle = true        // GRAY — back edge, cycle
+                else -> {}                  // BLACK — already fully explored
             }
             if (hasCycle) return
         }

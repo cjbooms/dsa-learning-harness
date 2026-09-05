@@ -19,38 +19,38 @@ package com.cjbooms.prep.solutions.stage14
  */
 
 fun wordBreak(s: String, wordDict: Set<String>): Boolean {
-    val n = s.length
-    val dp = BooleanArray(n + 1)
+    val length = s.length
+    val dp = BooleanArray(length + 1)
     dp[0] = true
     val maxLen = wordDict.maxOfOrNull { it.length } ?: 0
 
-    for (i in 1..n) {
-        for (j in (i - maxLen).coerceAtLeast(0) until i) {
-            if (dp[j] && s.substring(j, i) in wordDict) {
-                dp[i] = true
+    for (endIndex in 1..length) {
+        for (startIndex in (endIndex - maxLen).coerceAtLeast(0) until endIndex) {
+            if (dp[startIndex] && s.substring(startIndex, endIndex) in wordDict) {
+                dp[endIndex] = true
                 break
             }
         }
     }
-    return dp[n]
+    return dp[length]
 }
 
 fun wordBreakIi(s: String, wordDict: Set<String>): List<String> {
     if (s.isEmpty()) return emptyList()
-    val n = s.length
-    val dp = Array(n + 1) { mutableListOf<String>() }
+    val length = s.length
+    val dp = Array(length + 1) { mutableListOf<String>() }
     dp[0].add("")
     val maxLen = wordDict.maxOfOrNull { it.length } ?: 0
 
-    for (i in 1..n) {
-        for (j in (i - maxLen).coerceAtLeast(0) until i) {
-            val word = s.substring(j, i)
-            if (word in wordDict && dp[j].isNotEmpty()) {
-                for (prefix in dp[j]) {
-                    dp[i].add(if (prefix.isEmpty()) word else "$prefix $word")
+    for (endIndex in 1..length) {
+        for (startIndex in (endIndex - maxLen).coerceAtLeast(0) until endIndex) {
+            val word = s.substring(startIndex, endIndex)
+            if (word in wordDict && dp[startIndex].isNotEmpty()) {
+                for (prefix in dp[startIndex]) {
+                    dp[endIndex].add(if (prefix.isEmpty()) word else "$prefix $word")
                 }
             }
         }
     }
-    return dp[n]
+    return dp[length]
 }

@@ -46,10 +46,10 @@ class TaskSchedulerWithCooldown {
         // do all tasks back-to-back.
         val counts = IntArray(26)
         var maxCount = 0
-        for (t in tasks) {
-            val c = t.code - 'A'.code
-            counts[c]++
-            if (counts[c] > maxCount) maxCount = counts[c]
+        for (task in tasks) {
+            val bucket = task.code - 'A'.code
+            counts[bucket]++
+            if (counts[bucket] > maxCount) maxCount = counts[bucket]
         }
         val numMaxTasks = counts.count { it == maxCount }
         val frameLength = (maxCount - 1) * (cooldown + 1)

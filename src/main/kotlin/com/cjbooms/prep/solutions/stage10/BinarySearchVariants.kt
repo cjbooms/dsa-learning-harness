@@ -98,15 +98,15 @@ fun findPeakElement(numbers: IntArray): Int {
  */
 fun search2DMatrix(matrix: Array<IntArray>, target: Int): Boolean {
     if (matrix.isEmpty() || matrix[0].isEmpty()) return false
-    val m = matrix.size
-    val n = matrix[0].size
+    val rows = matrix.size
+    val columns = matrix[0].size
     var left = 0
-    var right = m * n - 1
+    var right = rows * columns - 1
     while (left <= right) {
         val mid = left + (right - left) / 2
-        val row = mid / n
-        val col = mid % n
-        val value = matrix[row][col]
+        val row = mid / columns
+        val column = mid % columns
+        val value = matrix[row][column]
         when {
             value == target -> return true
             value < target -> left = mid + 1
