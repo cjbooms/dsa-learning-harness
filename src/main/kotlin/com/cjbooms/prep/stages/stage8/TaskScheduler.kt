@@ -1,6 +1,6 @@
 package com.cjbooms.prep.stages.stage8
 
-import java.util.ArrayDeque
+import kotlin.collections.ArrayDeque
 
 /**
  * Stage 8.1 — Topological sort via Kahn's algorithm (BFS over in-degrees).
@@ -25,39 +25,65 @@ fun scheduleTasksKahn(
     tasks: List<String>,
     dependencies: List<Pair<String, String>>,
 ): List<String> {
-    val output = mutableListOf<String>()
-    val tasksWithDeps = mutableMapOf<String, MutableList<String>>()  // task -> tasks that depend ON it
-    val taskWithCount = hashMapOf<String, Int>()                     // task -> how many prereqs remain (in-degree)
-
+    val inDegree = mutableMapOf<String, Int>()
+    val dependentTasks = mutableMapOf<String, MutableSet<String>>()
     tasks.forEach {
-        tasksWithDeps.getOrPut(it) { mutableListOf() }
-        taskWithCount[it] = 0
+        inDegree[it] = 0
+        dependentTasks[it] = mutableSetOf()
     }
 
-    dependencies.forEach { (prereq, dependent) ->
-        tasksWithDeps.getOrPut(prereq) { mutableListOf() }.add(dependent)
-        taskWithCount[dependent] = taskWithCount[dependent]!! + 1
+    dependencies.forEach { (dependency, task) ->
+        val count = inDegree.getOrDefault(task, 0)
+        inDegree[task] = count + 1
+        dependentTasks[dependency]!!.add(task)
     }
+    println("Tasks with dep count: $inDegree")
+    println("Dependent Tasks : $dependentTasks")
 
-    // Frontier: tasks with zero remaining prerequisites — schedulable NOW.
-    val readyToSchedule = ArrayDeque<String>()
-    taskWithCount.forEach { (task, count) ->
-        if (count == 0) readyToSchedule.addLast(task)
-    }
+    var zeroDependencyTasks = inDegree.filter { it.value == 0 }.keys
 
-    while (readyToSchedule.isNotEmpty()) {
-        val currentTask = readyToSchedule.removeFirst()
-        output.add(currentTask)
+    val outputTasks = ArrayDeque<String>()
 
-        // "Remove it as a dep from all other tasks" — decrement each dependent;
-        // the moment one hits zero, it joins the frontier.
-        tasksWithDeps[currentTask]?.forEach { dependent ->
-            val remaining = taskWithCount[dependent]!! - 1
-            taskWithCount[dependent] = remaining
-            if (remaining == 0) readyToSchedule.addLast(dependent)
+    while (zeroDependencyTasks.isNotEmpty()) {
+        println("Tasks with no deps : $zeroDependencyTasks")
+
+        zeroDependencyTasks.forEach { readyTask ->
+            outputTasks.addLast(readyTask)
+            val tasksNeedingAdjustment = dependentTasks[readyTask] ?: emptyList()
+            tasksNeedingAdjustment.forEach {
+                inDegree[it] = inDegree[it]?.let { it - 1 } ?: 0
+            }
+            dependentTasks.remove(readyTask)
+            inDegree.remove(readyTask)
+            println("Tasks with dep count after removal: $inDegree")
+            println("Dependent Tasks after removal : $dependentTasks")
         }
+        zeroDependencyTasks = inDegree.filter { it.value == 0 }.keys
     }
-
-    // Some tasks never hit zero -> they're on a cycle -> no valid schedule.
-    return if (output.size == tasks.size) output else emptyList()
+    if (dependentTasks.size > 0) {
+        println("Cycle detected")
+        return emptyList()
+    }
+    return outputTasks
 }
+
+
+fun main() {
+
+    println(
+        "No cycle: " + scheduleTasksKahn(
+            listOf("t1", "t2", "t3"),
+            listOf("t1" to "t2", "t1" to "t3")
+        )
+    )
+
+    // Cyclic Dependency
+    println(
+        "Cycle: " +
+                scheduleTasksKahn(
+                    listOf("t1", "t2", "t3"),
+                    listOf("t2" to "t1", "t1" to "t2")
+                )
+    )
+}
+
