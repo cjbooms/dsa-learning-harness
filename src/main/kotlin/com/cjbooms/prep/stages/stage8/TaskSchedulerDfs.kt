@@ -37,46 +37,45 @@ fun scheduleTasksDfs(
     dependencies: List<Pair<String, String>>,
 ): List<String> {
 
-    val inDegree = mutableMapOf<String, Int>()
-    val dependentTasks = mutableMapOf<String, MutableSet<String>>()
+    val taskDependencies = mutableMapOf<String, MutableSet<String>>()
     tasks.forEach {
-        inDegree[it] = 0
-        dependentTasks[it] = mutableSetOf()
+        taskDependencies[it] = mutableSetOf()
     }
 
     dependencies.forEach { (dependency, task) ->
-        val count = inDegree.getOrDefault(task, 0)
-        inDegree[task] = count + 1
-        dependentTasks[dependency]!!.add(task)
+        taskDependencies[task]!!.add(dependency)
     }
-    println("Tasks with dep count: $inDegree")
-    println("Dependent Tasks : $dependentTasks")
+    println("Tasks Dependecies : $taskDependencies")
 
-    var zeroDependencyTasks = inDegree.filter { it.value == 0 }.keys
+    val visited = mutableSetOf<String>()
+    val ready = ArrayDeque<String>()
+    var cycleDetected = false
 
-    val outputTasks = ArrayDeque<String>()
 
-    while (zeroDependencyTasks.isNotEmpty()) {
-        println("Tasks with no deps : $zeroDependencyTasks")
-
-        zeroDependencyTasks.forEach { readyTask ->
-            outputTasks.addLast(readyTask)
-            val tasksNeedingAdjustment = dependentTasks[readyTask] ?: emptyList()
-            tasksNeedingAdjustment.forEach {
-                inDegree[it] = inDegree[it]?.let { it - 1 } ?: 0
-            }
-            dependentTasks.remove(readyTask)
-            inDegree.remove(readyTask)
-            println("Tasks with dep count after removal: $inDegree")
-            println("Dependent Tasks after removal : $dependentTasks")
+    fun visitTask(task: String) {
+        if (ready.contains(task)) return
+        if (cycleDetected || visited.contains(task)) {
+            println("Cycle Detected, already visited : $task")
+            cycleDetected = true
+            return
         }
-        zeroDependencyTasks = inDegree.filter { it.value == 0 }.keys
+        visited.add(task)
+        if (taskDependencies[task]?.isNotEmpty() ?: false) {
+            taskDependencies[task]!!.forEach { dependency ->
+                println("Visiting $task dependency : $dependency")
+                visitTask(dependency)
+            }
+        }
+        ready.add(task)
     }
-    if (dependentTasks.size > 0) {
-        println("Cycle detected")
-        return emptyList()
+
+    tasks.forEach {
+        visitTask(it)
     }
-    return outputTasks
+
+
+    return if (cycleDetected) emptyList()
+    else ready
 
 
 }
