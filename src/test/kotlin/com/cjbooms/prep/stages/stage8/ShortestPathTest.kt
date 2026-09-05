@@ -47,16 +47,17 @@ class ShortestPathTest {
     }
 
     @Test
-    fun `path reconstruction returns a valid route`() {
+    fun `weighted path reconstruction returns minimum cost route`() {
+        // Cheapest path avoids the 1s even though it is longer in steps.
         val grid = arrayOf(
-            intArrayOf(0, 0, 0),
-            intArrayOf(1, 1, 0),
+            intArrayOf(0, 1, 0),
+            intArrayOf(0, 1, 0),
             intArrayOf(0, 0, 0),
         )
-        val path = shortestPathGridPath(grid, 0 to 0, 2 to 2)
+        val path = shortestPathGridPath(grid, 0 to 0, 0 to 2)
         assertEquals(0 to 0, path.first())
-        assertEquals(2 to 2, path.last())
-        // length should be one more than the hop count
-        assertEquals(shortestPathGrid(grid, 0 to 0, 2 to 2) + 1, path.size)
+        assertEquals(0 to 2, path.last())
+        // Min-cost path: 0,0 -> 1,0 -> 2,0 -> 2,1 -> 2,2 -> 1,2 -> 0,2 (7 cells, cost 0)
+        assertEquals(7, path.size)
     }
 }

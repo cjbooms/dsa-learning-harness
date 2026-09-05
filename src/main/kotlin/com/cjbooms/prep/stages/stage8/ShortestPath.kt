@@ -90,18 +90,20 @@ fun main() {
 }
 
 /**
- * Shortest path in a binary grid, returning the path itself.
+ * Weighted shortest path in a grid, returning the path itself.
  *
- * Given a grid where 0 marks an open cell and 1 marks a blocked wall,
- * find any shortest 4-directional path from [start] to [target] and
- * return the sequence of cells along that path (inclusive of both
- * endpoints), in order.
+ * Same shape as the first function, but each cell holds a non-negative
+ * movement cost. Find a path from [start] to [target] with the lowest
+ * total cost and return the sequence of cells along that path
+ * (inclusive of both endpoints), in order.
  *
- * @param grid the m x n grid of 0s (open) and 1s (walls).
+ * Use Dijkstra's algorithm (or 0-1 BFS when costs are only 0 or 1).
+ *
+ * @param grid the m x n grid of non-negative integer cell costs.
  * @param start the (row, column) of the starting cell.
  * @param target the (row, column) of the destination cell.
- * @return the list of (row, column) cells along one shortest path from
- *   [start] to [target] in order, or an empty list if [target] is
+ * @return the list of (row, column) cells along one minimum-cost path
+ *   from [start] to [target] in order, or an empty list if [target] is
  *   unreachable.
  */
 fun shortestPathGridPath(
