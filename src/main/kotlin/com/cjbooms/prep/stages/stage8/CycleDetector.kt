@@ -31,12 +31,3 @@ fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean {
 fun findCycle(n: Int, edges: List<Pair<Int, Int>>): List<Int> {
     TODO("implement")
 }
-
-private fun dfsCycle(
-    start: Int,
-    adj: Array<MutableList<Int>>,
-    color: IntArray,
-    parent: IntArray,
-): Pair<Int, Int>? {
-    TODO("implement")
-}

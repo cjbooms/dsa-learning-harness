@@ -48,9 +48,4 @@ class Trie {
     fun startsWith(prefix: String): Boolean {
         TODO("implement")
     }
-
-    /** Walks the trie character by character; returns the node, or null if any step is missing. */
-    private fun walkTo(s: String): TrieNode? {
-        TODO("implement")
-    }
 }

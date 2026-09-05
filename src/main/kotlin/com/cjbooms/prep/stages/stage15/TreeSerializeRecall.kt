@@ -23,10 +23,6 @@ fun serialize(root: RecallTreeNode?): String {
     TODO("implement")
 }
 
-private fun serializeInto(node: RecallTreeNode?, parts: MutableList<String>) {
-    TODO("implement")
-}
-
 /**
  * Deserializes a string previously produced by [serialize] back into the
  * original tree shape.
@@ -36,9 +32,5 @@ private fun serializeInto(node: RecallTreeNode?, parts: MutableList<String>) {
  *   empty tree
  */
 fun deserialize(data: String): RecallTreeNode? {
-    TODO("implement")
-}
-
-private fun deserializeWalk(tokens: List<String>, cursor: IntArray): RecallTreeNode? {
     TODO("implement")
 }
