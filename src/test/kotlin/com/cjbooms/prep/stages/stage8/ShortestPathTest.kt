@@ -33,20 +33,17 @@ class ShortestPathTest {
     }
 
     @Test
-    fun `unreachable target returns -1`() {
-        // Surrounded by walls, target isolated
+    fun `costly route is taken when cheapest`() {
+        // With 1 treated as a movement cost, the cheapest path from (0,0)
+        // to (2,2) goes around the 1s rather than through them.
         val grid = arrayOf(
             intArrayOf(0, 1, 0),
             intArrayOf(1, 0, 0),
             intArrayOf(0, 0, 0),
         )
-        // 1,1 -> 2,1 not directly reachable because (1,1) is bordered by 1s on three sides
-        // path: (1,1) -> (2,1) -> (2,2) -> 2 steps from (1,1) to (2,2)
-        // from (0,0) -> (2,2): need to navigate around the wall — let's just assert non-negative
         val distance = shortestPathGrid(grid, 0 to 0, 2 to 2)
-        // (0,0) -> (0,1)? No, (0,1) is a wall. (0,0) -> (1,0)? No, (1,0) is a wall.
-        // (0,0) is isolated! Return -1.
-        assertEquals(-1, distance)
+        // Cheapest path has total cost 0 and takes 4 steps.
+        assertEquals(4, distance)
     }
 
     @Test

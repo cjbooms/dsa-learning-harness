@@ -5,13 +5,14 @@ import kotlin.math.min
 
 /**
  * Learn first: see docs/learning-resources.md
- * Shortest path in a binary grid.
+ * Shortest path in a 0/1 grid.
  *
- * Given a grid where 0 marks an open cell and 1 marks a blocked wall,
- * find the length (in steps) of the shortest 4-directional path from
+ * Given a grid of non-negative integers where each cell holds a movement
+ * cost (0 or 1, or any non-negative value) and 4-directional adjacency
+ * (up, down, left, right), find the length of the shortest path from
  * [start] to [target].
  *
- * @param grid the m x n grid of 0s (open) and 1s (walls).
+ * @param grid the m x n grid of non-negative integer cell costs.
  * @param start the (row, column) of the starting cell.
  * @param target the (row, column) of the destination cell.
  * @return the number of steps in the shortest path from [start] to
@@ -89,13 +90,14 @@ fun main() {
 }
 
 /**
- * Shortest path in a 0/1 grid, returning the path itself.
+ * Shortest path in a binary grid, returning the path itself.
  *
- * Same problem as the other `shortestPathGrid` function, but returns the
- * sequence of cells along the shortest path from [start] to [target]
- * (inclusive of both endpoints), in order.
+ * Given a grid where 0 marks an open cell and 1 marks a blocked wall,
+ * find any shortest 4-directional path from [start] to [target] and
+ * return the sequence of cells along that path (inclusive of both
+ * endpoints), in order.
  *
- * @param grid the m x n grid of non-negative integer cell costs.
+ * @param grid the m x n grid of 0s (open) and 1s (walls).
  * @param start the (row, column) of the starting cell.
  * @param target the (row, column) of the destination cell.
  * @return the list of (row, column) cells along one shortest path from
