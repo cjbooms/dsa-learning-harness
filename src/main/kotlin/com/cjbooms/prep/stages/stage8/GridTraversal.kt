@@ -12,6 +12,9 @@ package com.cjbooms.prep.stages.stage8
  * @param grid the m x n grid of '0' and '1' characters.
  * @return the number of distinct islands in [grid].
  */
+fun countIslands(grid: Array<CharArray>): Int {
+    TODO("implement")
+}
 
 /**
  * Rotting oranges.
@@ -27,10 +30,6 @@ package com.cjbooms.prep.stages.stage8
  * @return the elapsed minutes until no fresh oranges remain, or -1 if at
  *   least one fresh orange is unreachable from any initially rotten cell.
  */
-fun countIslands(grid: Array<CharArray>): Int {
-    TODO("implement")
-}
-
 fun rottingOranges(grid: Array<IntArray>): Int {
     TODO("implement")
 }

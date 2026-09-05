@@ -1,7 +1,5 @@
 package com.cjbooms.prep.stages.stage8
 
-import java.util.ArrayDeque
-
 /**
  * Learn first: see docs/learning-resources.md
  * Shortest path in a 0/1 grid.
@@ -17,6 +15,13 @@ import java.util.ArrayDeque
  * @return the number of steps in the shortest path from [start] to
  *   [target], or -1 if [target] is unreachable from [start].
  */
+fun shortestPathGrid(
+    grid: Array<IntArray>,
+    start: Pair<Int, Int>,
+    target: Pair<Int, Int>,
+): Int {
+    TODO("implement")
+}
 
 /**
  * Shortest path in a 0/1 grid, returning the path itself.
@@ -32,14 +37,6 @@ import java.util.ArrayDeque
  *   [start] to [target] in order, or an empty list if [target] is
  *   unreachable.
  */
-fun shortestPathGrid(
-    grid: Array<IntArray>,
-    start: Pair<Int, Int>,
-    target: Pair<Int, Int>,
-): Int {
-    TODO("implement")
-}
-
 fun shortestPathGridPath(
     grid: Array<IntArray>,
     start: Pair<Int, Int>,
