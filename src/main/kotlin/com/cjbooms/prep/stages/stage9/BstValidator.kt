@@ -24,7 +24,18 @@ data class TreeNode(val value: Int, var left: TreeNode? = null, var right: TreeN
 
 /** Returns true iff the tree rooted at [root] satisfies the BST property. */
 fun isValidBst(root: TreeNode?): Boolean {
-    TODO("implement")
+    if (root == null) return true
+
+
+    fun checkNode(node: TreeNode?, min: Long, max: Long): Boolean {
+        if (node == null) return true
+        if (node.value < min || node.value > max) return false
+
+        return checkNode(node.left, min, node.value.toLong()) &&
+            checkNode(node.right, node.value.toLong(), max)
+
+    }
+    return checkNode(root, Long.MIN_VALUE, Long.MAX_VALUE)
 }
 
 /**
@@ -34,5 +45,19 @@ fun isValidBst(root: TreeNode?): Boolean {
  * single-cell holder because Kotlin can't mutate a captured `var` cleanly.
  */
 fun isValidBstInOrder(root: TreeNode?): Boolean {
-    TODO("implement")
+    if (root == null) return true
+    var initial = Long.MIN_VALUE
+    var valid = true
+    fun checkNode(node: TreeNode) {
+        if (node.left != null) {
+            checkNode(node.left!!)
+        }
+        if (node.value < initial) valid = false
+        initial = node.value.toLong()
+        if (node.right != null) {
+            checkNode(node.right!!)
+        }
+    }
+    checkNode(root)
+    return valid
 }
