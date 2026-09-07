@@ -1,6 +1,5 @@
 package com.cjbooms.prep.stages.stage8
 
-import java.util.ArrayDeque
 
 /**
  * Learn first: see docs/learning-resources.md
@@ -18,5 +17,58 @@ import java.util.ArrayDeque
  *   list if no ordering satisfies the prerequisites (i.e. there is a cycle).
  */
 fun findCourseOrder(numCourses: Int, prerequisites: List<Pair<Int, Int>>): List<Int> {
-    TODO("implement")
+    val result = ArrayDeque<Int>()
+    val graph = Array(numCourses) { mutableListOf<Int>() }
+    val inDegree = IntArray(numCourses) { 0 }
+
+    prerequisites.forEach { (course, preReq) ->
+        graph[preReq].add(course)
+        inDegree[course]++
+    }
+
+    val queue = ArrayDeque<Int>()
+    inDegree.forEachIndexed { course, preReqs ->
+        if (preReqs == 0) {
+            queue.add(course)
+        }
+    }
+
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        result.addLast(current)
+
+        val dependentCourses = graph[current]
+
+        dependentCourses.forEach { dependent ->
+            inDegree[dependent]--
+            if (inDegree[dependent] == 0) {
+                queue.add(dependent)
+            }
+        }
+    }
+
+    return if (result.size == numCourses) result else emptyList()
+}
+
+
+fun main() {
+    println(
+        "Expected [2, 4, 7, 8, 9, 1, 3, 5, 6, 0] \nAcutal   " +
+                findCourseOrder(
+                    10,
+                    listOf(
+                        0 to 1, 1 to 2, 3 to 4, 5 to 7, 6 to 8
+                    )
+                )
+    )
+    println(
+        "Expected [] \nAcutal   " +
+                findCourseOrder(
+                    10,
+                    listOf(
+                        0 to 1, 1 to 2, 3 to 4, 5 to 7, 6 to 8, 8 to 6
+                    )
+                )
+    )
+
 }

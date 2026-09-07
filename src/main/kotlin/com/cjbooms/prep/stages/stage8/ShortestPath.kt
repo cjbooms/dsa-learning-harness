@@ -23,7 +23,83 @@ fun shortestPathGrid(
     start: Pair<Int, Int>,
     target: Pair<Int, Int>,
 ): Int {
-    TODO("implement BFS here")
+    data class Position(val coords: Pair<Int, Int>, val steps: Int)
+
+    val rows = grid.size
+    val columns = grid[0].size
+
+    fun outOfBounds(row: Int, col: Int): Boolean {
+        return row < 0 || row >= rows || col < 0 || col >= columns
+    }
+
+    fun blocked(row: Int, col: Int): Boolean {
+        return grid[row][col] != 0
+    }
+
+    if (outOfBounds(start.first, start.second) || blocked(start.first, start.second))
+        throw IllegalArgumentException("Start out of bounds or blocked $start")
+    if (outOfBounds(target.first, target.second) || blocked(target.first, target.second))
+        throw IllegalArgumentException("Target out of bounds or blocked $start")
+    val directions = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
+
+    val queue = ArrayDeque<Position>()
+    val visited = mutableSetOf<Pair<Int, Int>>()
+    queue.add(Position(start, 0))
+    visited.add(start)
+
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        if (current.coords == target) return current.steps
+
+        directions.forEach { direction ->
+            val nextRow = current.coords.first + direction.first
+            val nextCol = current.coords.second + direction.second
+            if (!outOfBounds(nextRow, nextCol)
+                && !blocked(nextRow, nextCol)
+                && !visited.contains(nextRow to nextCol)
+            ) {
+                val pos = nextRow to nextCol
+                queue.addLast(Position(pos, current.steps + 1))
+                visited.add(pos)
+            }
+        }
+
+    }
+    return -1
+}
+
+fun main() {
+
+    println(
+        "Expected 3, Actual: " +
+                shortestPathGrid(
+                    arrayOf(
+                        intArrayOf(0, 1, 0, 1),
+                        intArrayOf(0, 0, 0, 1),
+                        intArrayOf(0, 1, 1, 1),
+                        intArrayOf(0, 1, 0, 1),
+                        intArrayOf(0, 1, 0, 1),
+                    ),
+                    0 to 0,
+                    1 to 2
+                )
+    )
+    println(
+        "Expected 4, Actual: " +
+                shortestPathGrid(
+                    arrayOf(
+                        intArrayOf(0, 1, 0, 1),
+                        intArrayOf(0, 0, 0, 1),
+                        intArrayOf(0, 1, 1, 1),
+                        intArrayOf(0, 1, 0, 1),
+                        intArrayOf(0, 1, 0, 1),
+                    ),
+                    0 to 0,
+                    4 to 0
+                )
+    )
+
+
 }
 
 /**
@@ -51,12 +127,4 @@ fun shortestPathGridPath(
     TODO("implement Dijkstra's here")
 }
 
-fun main() {
-    val grid = arrayOf(
-        intArrayOf(0, 0, 0),
-        intArrayOf(1, 1, 0),
-        intArrayOf(0, 0, 0),
-    )
-    val distance = shortestPathGrid(grid, 0 to 0, 2 to 0)
-    println("Expected: 6, Actual: $distance")
-}
+

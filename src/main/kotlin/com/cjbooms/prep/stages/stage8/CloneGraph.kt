@@ -20,5 +20,53 @@ package com.cjbooms.prep.stages.stage8
 class Node(val value: Int, val neighbors: MutableList<Node> = mutableListOf())
 
 fun cloneGraph(node: Node?): Node? {
-    TODO("implement")
+    if (node == null) return null
+    var resultNode: Node? = null
+
+    val originalToCopied = mutableMapOf<Node, Node>()
+
+    fun copyNode(original: Node): Node {
+        val copy = Node(original.value)
+        originalToCopied[original] = copy
+        original.neighbors.forEach { originalNeighbour ->
+            if (!originalToCopied.contains(originalNeighbour)) {
+                copyNode(originalNeighbour)
+            }
+            copy.neighbors.add(originalToCopied[originalNeighbour]!!)
+        }
+
+        return copy
+    }
+
+    resultNode = copyNode(node)
+
+
+    return resultNode
+}
+
+
+
+fun main() {
+    val node0 = Node(0, mutableListOf())
+    val node1 = Node(1, mutableListOf())
+    val node2 = Node(2, mutableListOf())
+    val node3 = Node(3, mutableListOf())
+    node0.neighbors.add(node1)
+    node0.neighbors.add(node3)
+
+    node1.neighbors.add(node0)
+    node1.neighbors.add(node2)
+
+    node2.neighbors.add(node1)
+    node2.neighbors.add(node3)
+
+    node3.neighbors.add(node2)
+    node3.neighbors.add(node0)
+
+    println(
+        "Expected: ${node1.neighbors.size}, Actual: " +
+                cloneGraph(node1)?.neighbors?.size
+    )
+
+
 }
