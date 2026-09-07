@@ -2,6 +2,55 @@ package com.cjbooms.prep.stages.stage8
 
 /**
  * Learn first: see docs/learning-resources.md
+ * Redundant Connection.
+ *
+ * A valid tree is an undirected graph that is connected and has absolutely
+ * no cycles. You are given a graph that started as a tree with n nodes
+ * labeled from 1 to n. Exactly one additional edge was added to this graph,
+ * creating a cycle.
+ *
+ * @param edges a 2D array of length n where edges[i] = [u, v] represents an
+ *   undirected edge between nodes u and v. Nodes are labeled from 1 to n.
+ * @return the exact edge that can be removed to eliminate the cycle, as an
+ *   IntArray of [u, v]. If there are multiple answers, return the edge that
+ *   occurs last in the input array.
+ */
+fun findRedundantConnection(edges: Array<IntArray>): IntArray {
+    val length = edges.size
+    val cycles = mutableSetOf<IntArray>()
+    val unionFind = UnionFindInner(length)
+    edges.forEach {
+        if (unionFind.union(it[0] - 1, it[1] -1) == false) {
+            println("Already in same component ${it.joinToString()}")
+            cycles.add(it)
+        }
+    }
+
+    println("All cycles ${cycles.joinToString{it.joinToString()}}")
+    return cycles.last()
+}
+
+fun main() {
+
+    println(
+        "Expected 6, 4 Found: " +
+        findRedundantConnection(
+        arrayOf(
+            intArrayOf(1,2),
+            intArrayOf(2,3),
+            intArrayOf(3,1),
+            intArrayOf(4,5),
+            intArrayOf(5,6),
+            intArrayOf(6,4),
+            )
+    ).joinToString()
+    )
+}
+
+
+
+/**
+ * Learn first: see docs/learning-resources.md
  * Union-Find (Disjoint Set Union) over a fixed set of n elements.
  *
  * Maintains a partition of the elements 0..n - 1 into disjoint connected
@@ -11,7 +60,7 @@ package com.cjbooms.prep.stages.stage8
  * @param n the number of elements, labelled 0..n - 1.
  */
 
-class UnionFind(n: Int) {
+class UnionFindInner(n: Int) {
 
     val parent = IntArray(n) { it }
     val rank = IntArray(n) { 1 }
@@ -80,25 +129,4 @@ class UnionFind(n: Int) {
         }
         return count
     }
-}
-
-fun main() {
-    val datastructure = UnionFind(10)
-    datastructure.print()
-
-    datastructure.union(0, 1) // Root 0 is now Rank 2
-    datastructure.union(2, 3) // Root 2 is now Rank 2
-    datastructure.union(4, 5) // Root 4 is now Rank 2
-    datastructure.union(6, 7) // Root 6 is now Rank 2
-    datastructure.print()
-
-    // 2. Merge the Rank 2 trees to create two trees of Rank 3
-    datastructure.union(0, 2) // Merges Root 0 and Root 2 -> Root 0 is now Rank 3
-    datastructure.union(4, 6) // Merges Root 4 and Root 6 -> Root 4 is now Rank 3
-    datastructure.print()
-
-    // 3. Merge the Rank 3 trees to create a Rank 4 tree
-    datastructure.union(0, 4) // Merges Root 0 and Root 4 -> Root 0 is now Rank
-    datastructure.print()
-
 }
