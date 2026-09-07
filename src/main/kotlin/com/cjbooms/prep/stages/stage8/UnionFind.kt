@@ -68,6 +68,7 @@ class UnionFind(n: Int) {
     fun connected(x: Int, y: Int): Boolean {
         return find(x) == find(y)
     }
+
     /**
      * Number of distinct components currently tracked.
      *
@@ -75,8 +76,8 @@ class UnionFind(n: Int) {
      */
     fun componentCount(): Int {
         var count = 0
-        parent.forEach { it ->
-            if (rank[it] == 1) count++
+        parent.forEachIndexed { i, p ->
+            if (i == p) count++
         }
         return count
     }
