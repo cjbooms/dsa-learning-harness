@@ -1,5 +1,7 @@
 package com.cjbooms.prep.stages.stage11
 
+import java.util.PriorityQueue
+
 /**
  * Learn first: see docs/learning-resources.md
  * Find median from a data stream.
@@ -19,13 +21,21 @@ package com.cjbooms.prep.stages.stage11
  */
 class MedianFinder {
 
+    val minHeap = PriorityQueue<Int>()
+    val maxHeap = PriorityQueue<Int>(compareByDescending { it })
+    var count = 0
+
     /**
      * Append [num] to the stream.
      *
      * @param num the next integer from the data stream.
      */
     fun addNum(num: Int) {
-        TODO("implement")
+        maxHeap.add(num)
+        minHeap.add(maxHeap.poll())
+        if (minHeap.size > maxHeap.size) {
+            maxHeap.add(minHeap.poll())
+        }
     }
 
     /**
@@ -34,6 +44,19 @@ class MedianFinder {
      * middle values.
      */
     fun findMedian(): Double {
-        TODO("implement")
+        if (minHeap.size < maxHeap.size) {
+            return maxHeap.peek().toDouble()
+        }
+        return  (minHeap.peek().toDouble() + maxHeap.peek().toDouble()) / 2
     }
+}
+
+fun main() {
+    val cud = MedianFinder()
+    cud.addNum(1)
+    cud.addNum(20)
+    cud.addNum(3)
+    println("Expect 3, Actual:" + cud.findMedian())
+    cud.addNum(4)
+    println("Expect 3.5, Actual:" + cud.findMedian())
 }
