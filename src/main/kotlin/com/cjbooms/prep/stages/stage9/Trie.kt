@@ -36,16 +36,70 @@ class Trie {
 
     /** Inserts [word] into the trie. Lowercase a-z assumed; document the contract. */
     fun insert(word: String) {
-        TODO("implement")
+        val wordLength = word.length
+
+        fun processNode(node: TrieNode, index: Int) {
+            val letter = word[index] - 'a'
+            if (node.children[letter] == null) {
+                node.children[letter] = TrieNode()
+            }
+            if (index == wordLength - 1) {
+                node.children[letter]!!.isWord = true
+                return
+            } else {
+                return processNode(node.children[letter]!!, index + 1)
+            }
+        }
+        return processNode(root, 0)
     }
+
+
 
     /** Returns true iff [word] was previously inserted (full word, not just a prefix). */
     fun search(word: String): Boolean {
-        TODO("implement")
+        val wordLength = word.length
+
+        fun searchNode(node: TrieNode, index: Int): Boolean {
+            val letter = word[index] - 'a'
+            if (node.children[letter] == null) {
+                return false
+            }
+            if (index == wordLength - 1) {
+                return node.children[letter]?.isWord == true
+            } else {
+                return searchNode(node.children[letter]!!, index + 1)
+            }
+        }
+        return searchNode(root, 0)
+
     }
 
     /** Returns true iff some previously inserted word starts with [prefix]. */
     fun startsWith(prefix: String): Boolean {
-        TODO("implement")
+        val wordLength = prefix.length
+
+        fun searchNode(node: TrieNode, index: Int): Boolean {
+            val letter = prefix[index] - 'a'
+            if (node.children[letter] == null) {
+                return false
+            }
+            if (index == wordLength - 1) {
+                return node.children[letter] != null
+            } else {
+                return searchNode(node.children[letter]!!, index + 1)
+            }
+        }
+        return searchNode(root, 0)
     }
+}
+
+
+fun main() {
+    val trie = Trie()
+    trie.insert("cat")
+    trie.insert("cab")
+    trie.insert("dog")
+    println("Expected true, Actual: " + trie.search("cat"))
+    println("Expected false, Actual: " + trie.search("cabbage"))
+    println("Expected true, Actual: " + trie.startsWith("ca"))
 }
