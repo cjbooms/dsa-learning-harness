@@ -34,6 +34,7 @@ class ListNode(var value: Int) {
  * Empty overall input returns an empty list.
  */
 fun mergeKLists(lists: List<ListNode?>): List<Int> {
+    if (lists.isEmpty()) return emptyList()
     val minHeap = PriorityQueue<ListNode>(lists.size, compareBy { it.value } )
     val results = mutableListOf<Int>()
 
