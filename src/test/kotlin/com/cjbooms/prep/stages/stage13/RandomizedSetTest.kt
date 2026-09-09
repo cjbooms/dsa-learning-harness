@@ -32,7 +32,7 @@ class RandomizedSetTest {
 
     @Test
     fun `getRandom from empty set throws`() {
-        assertThrows(IllegalStateException::class.java) {
+        assertThrows(NoSuchElementException::class.java) {
             RandomizedSet<Int>().getRandom()
         }
     }

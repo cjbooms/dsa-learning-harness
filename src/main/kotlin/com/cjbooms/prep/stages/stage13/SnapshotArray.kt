@@ -1,5 +1,7 @@
 package com.cjbooms.prep.stages.stage13
 
+import java.util.TreeMap
+
 /**
  * Learn first: see docs/learning-resources.md
  * Fixed-length integer array with snapshot-based point-in-time reads.
@@ -14,7 +16,11 @@ package com.cjbooms.prep.stages.stage13
  *
  * @param length number of indices in the array. Must be non-negative.
  */
-class SnapshotArray(length: Int) {
+class SnapshotArray(val length: Int) {
+
+
+    val data = Array(length) { TreeMap<Int, Int>() }
+    var currentSnapshot = 0
 
     init {
         require(length >= 0) { "length must be non-negative, was $length" }
@@ -24,7 +30,7 @@ class SnapshotArray(length: Int) {
      * Records [value] at [index] for the current snapshot.
      */
     fun set(index: Int, value: Int) {
-        TODO("implement")
+        data[index][currentSnapshot] = value
     }
 
     /**
@@ -32,7 +38,7 @@ class SnapshotArray(length: Int) {
      * id. The id is unique per snapshot and monotonically increasing.
      */
     fun snap(): Int {
-        TODO("implement")
+        return currentSnapshot++
     }
 
     /**
@@ -40,6 +46,32 @@ class SnapshotArray(length: Int) {
      * ever set at [index] before that snapshot, returns 0.
      */
     fun get(index: Int, snapId: Int): Int {
-        TODO("implement")
+        val updates = data.getOrNull(index) ?: return 0
+        val entry = updates.floorEntry(snapId) ?: return 0
+        println("Requested $snapId acutal last update in ${entry.key}")
+        return entry.value
     }
+
+
+}
+
+fun main() {
+    val cud = SnapshotArray(4)
+    cud.set(0, 0)
+    println("Expected 0 Actual:" + cud.get(0, 0) )
+    cud.set(1, 1)
+    println("Expected 1 Actual:" + cud.get(1, 0) )
+
+    cud.set(2, 1)
+    cud.set(3, 3)
+    cud.set(0, 3)
+    println("Expected 3 Actual:" + cud.get(0, 0) )
+    println("Expected 0 Actual:" + cud.get(7, 0) )
+    cud.snap()
+    cud.set(0, 4)
+    cud.snap()
+
+    println("Expected 3 Actual:" + cud.get(0, 0) )
+    println("Expected 4 Actual:" + cud.get(0, 2) )
+
 }

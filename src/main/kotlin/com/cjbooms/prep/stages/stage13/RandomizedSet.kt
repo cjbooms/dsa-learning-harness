@@ -17,12 +17,19 @@ import java.util.Random
  */
 class RandomizedSet<V>(private val random: Random = Random()) {
 
+
+    private val set = mutableListOf<V>()
+    private val index = hashMapOf<V, Int>()
+
     /**
      * Adds [value] if not present. Returns `true` if inserted, `false` if
      * already present.
      */
     fun insert(value: V): Boolean {
-        TODO("implement")
+        if (index.containsKey(value)) return false
+        set.addLast(value)
+        index[value] = set.size - 1
+        return true
     }
 
     /**
@@ -30,7 +37,15 @@ class RandomizedSet<V>(private val random: Random = Random()) {
      * absent.
      */
     fun remove(value: V): Boolean {
-        TODO("implement")
+        if (!index.containsKey(value)) return false
+        val currentIndex = index[value]!!
+        index.remove(value)
+        val last = set.removeLast()
+        if (last != value) {
+            set[currentIndex] = last
+            index[last] = currentIndex
+        }
+        return true
     }
 
     /**
@@ -39,12 +54,14 @@ class RandomizedSet<V>(private val random: Random = Random()) {
      * @throws NoSuchElementException if the set is empty.
      */
     fun getRandom(): V {
-        TODO("implement")
+        if (set.isEmpty()) throw NoSuchElementException()
+        val i = random.nextInt(set.size)
+        return set[i]
     }
 
     /** Current element count. */
     val size: Int
         get() {
-            TODO("implement")
+            return set.size
         }
 }
