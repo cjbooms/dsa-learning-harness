@@ -17,30 +17,8 @@ package com.cjbooms.prep.solutions.stage10
  * If the window size varies, you typically need two pointers with a
  * validity check and a "shrink until valid" inner loop.
  *
- * Time budget: 20 minutes. Three exercises.
+ * Time budget: 20 minutes. Two exercises.
  */
-
-/**
- * Maximum sum of any contiguous subarray of length `windowSize`.
- *
- * Approach: compute the sum of the first windowSize elements, then slide one position
- * at a time — subtract the element leaving the window, add the one entering.
- * Track the maximum observed sum.
- *
- * Time:  O(n).
- * Space: O(1).
- */
-fun maxSumSubarrayK(numbers: IntArray, windowSize: Int): Int {
-    require(windowSize <= numbers.size) { "windowSize must not exceed array size" }
-    var windowSum = 0
-    for (index in 0 until windowSize) windowSum += numbers[index]
-    var best = windowSum
-    for (index in windowSize until numbers.size) {
-        windowSum += numbers[index] - numbers[index - windowSize]
-        if (windowSum > best) best = windowSum
-    }
-    return best
-}
 
 /**
  * Longest substring without repeating characters (LC 3).
@@ -53,11 +31,12 @@ fun maxSumSubarrayK(numbers: IntArray, windowSize: Int): Int {
  * Space: O(min(n, alphabet)) for the last-seen map.
  */
 fun longestSubstringWithoutRepeats(text: String): Int {
-    val lastSeen = HashMap<Char, Int>()
+    val lastSeen = hashMapOf<Char, Int>()
     var best = 0
     var left = 0
     for ((right, character) in text.withIndex()) {
         val previous = lastSeen[character]
+        // if char is already inside the window, jump left past its old slot
         if (previous != null && previous >= left) {
             left = previous + 1
         }
@@ -81,20 +60,25 @@ fun longestSubstringWithoutRepeats(text: String): Int {
  */
 fun minWindowSubstring(text: String, pattern: String): String {
     if (pattern.isEmpty() || text.length < pattern.length) return ""
-    val need = HashMap<Char, Int>()
+
+    val need = hashMapOf<Char, Int>()
     for (character in pattern) need[character] = (need[character] ?: 0) + 1
-    val window = HashMap<Char, Int>()
+
+    val window = hashMapOf<Char, Int>()
     var have = 0
     val required = need.size
     var left = 0
     var bestLeft = 0
     var bestLen = Int.MAX_VALUE
+
     for (right in text.indices) {
         val rightChar = text[right]
         if (rightChar in need) {
             window[rightChar] = (window[rightChar] ?: 0) + 1
             if (window[rightChar] == need[rightChar]) have++
         }
+
+        // shrink from the left while the window still satisfies the pattern
         while (have == required) {
             val length = right - left + 1
             if (length < bestLen) {
@@ -110,5 +94,59 @@ fun minWindowSubstring(text: String, pattern: String): String {
             left++
         }
     }
+
     return if (bestLen == Int.MAX_VALUE) "" else text.substring(bestLeft, bestLeft + bestLen)
+}
+
+fun main() {
+    data class Test(val case: String, val expected: String, val actual: String) {
+        init {
+            if (expected == actual) println("PASSED: $this")
+            else println("FAILED: $this")
+        }
+    }
+
+    // longestSubstringWithoutRepeats: happy path, all-unique, empty, repeat-shrink
+    Test(
+        case = "Longest substring with repeats - classic",
+        expected = "3",
+        actual = longestSubstringWithoutRepeats("abcabcbb").toString()
+    )
+    Test(
+        case = "Longest substring all unique",
+        expected = "5",
+        actual = longestSubstringWithoutRepeats("abcde").toString()
+    )
+    Test(
+        case = "Longest substring empty input",
+        expected = "0",
+        actual = longestSubstringWithoutRepeats("").toString()
+    )
+    Test(
+        case = "Longest substring with whitespace and symbols",
+        expected = "4",
+        actual = longestSubstringWithoutRepeats("pwwkew ").toString()
+    )
+
+    // minWindowSubstring: happy path, no match, exact match, empty pattern
+    Test(
+        case = "Min window substring happy path",
+        expected = "BANC",
+        actual = minWindowSubstring("ADOBECODEBANC", "ABC")
+    )
+    Test(
+        case = "Min window substring no match",
+        expected = "",
+        actual = minWindowSubstring("a", "aa")
+    )
+    Test(
+        case = "Min window substring exact match",
+        expected = "a",
+        actual = minWindowSubstring("a", "a")
+    )
+    Test(
+        case = "Min window substring empty pattern",
+        expected = "",
+        actual = minWindowSubstring("hello", "")
+    )
 }

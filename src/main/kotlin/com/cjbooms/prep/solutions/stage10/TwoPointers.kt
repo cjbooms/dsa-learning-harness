@@ -34,11 +34,8 @@ fun pairSumSorted(numbers: IntArray, target: Int): IntArray? {
     var right = numbers.size - 1
     while (left < right) {
         val sum = numbers[left] + numbers[right]
-        when {
-            sum == target -> return intArrayOf(left, right)
-            sum < target -> left++
-            else -> right--
-        }
+        if (sum == target) return intArrayOf(left, right)
+        if (sum < target) left++ else right--
     }
     return null
 }
@@ -65,11 +62,8 @@ fun maxArea(heights: IntArray): Int {
         val width = right - left
         val area = minOf(heights[left], heights[right]) * width
         if (area > best) best = area
-        if (heights[left] < heights[right]) {
-            left++
-        } else {
-            right--
-        }
+        // only the shorter side can grow the limiting height
+        if (heights[left] < heights[right]) left++ else right--
     }
     return best
 }
@@ -97,4 +91,52 @@ fun removeDuplicatesSorted(numbers: IntArray): Int {
         }
     }
     return write
+}
+
+fun main() {
+    data class Test(val case: String, val expected: String, val actual: String) {
+        init {
+            if (expected == actual) println("PASSED: $this")
+            else println("FAILED: $this")
+        }
+    }
+
+    // pair sum: happy path, not found, two-element array
+    Test(
+        case = "Pair sum happy path",
+        expected = "[0, 5]",
+        actual = pairSumSorted(intArrayOf(1, 3, 4, 5, 7, 11), 12)?.contentToString().orEmpty()
+    )
+    Test(
+        case = "Pair sum not found",
+        expected = "",
+        actual = pairSumSorted(intArrayOf(1, 3, 4, 5, 7, 11), 100)?.contentToString().orEmpty()
+    )
+
+    // max area: classic case, all-equal heights
+    Test(
+        case = "Max area classic",
+        expected = "49",
+        actual = maxArea(intArrayOf(1, 8, 6, 2, 5, 4, 8, 3, 7)).toString()
+    )
+    Test(
+        case = "Max area uniform heights",
+        expected = "16",
+        actual = maxArea(intArrayOf(4, 4, 4, 4, 4)).toString()
+    )
+
+    // remove duplicates: mixed runs, empty input
+    val dedup = intArrayOf(1, 1, 2, 3, 3, 4, 5, 5)
+    val k = removeDuplicatesSorted(dedup)
+    Test(
+        case = "Remove duplicates count and prefix",
+        expected = "5|1, 2, 3, 4, 5",
+        actual = "$k|${dedup.take(k).joinToString()}"
+    )
+
+    Test(
+        case = "Remove duplicates from empty",
+        expected = "0",
+        actual = removeDuplicatesSorted(intArrayOf()).toString()
+    )
 }

@@ -3,36 +3,17 @@ package com.cjbooms.prep.solutions.stage13
 import java.util.TreeMap
 
 /**
- * Stage 13.3 — Consistent hashing with virtual nodes.
+ * Learn first: see docs/learning-resources.md
+ * Consistent hashing with virtual nodes.
  *
- * Why this matters for MongoDB: chunk distribution across shards,
- * config server routing, the CSRS (Config Server Replica Set) hash ring,
- * and any cache layer where adding/removing a node should only
- * reshuffle ~1/N of keys (NOT almost all of them, as naive `key.hashCode() % N`
- * would). It is also the foundation for "mongoS routes a query to the
- * right shard without a central lookup table".
+ * Maintains a hash ring over a set of nodes. Each real node is placed on the
+ * ring multiple times (virtual replicas) so that keys are distributed evenly
+ * and adding or removing a node only reshuffles roughly 1/N of the keys,
+ * rather than almost all of them as a naive `key.hashCode() % N` would.
  *
- * Structure-selection ritual:
- *   1. Sorted array of hash -> node, plus binary search for lookup. O(log N)
- *      per key, O(N) to rebalance on add/remove.
- *   2. TreeMap (or SkipListMap) of hash -> node. O(log N) for lookup AND
- *      O(log N) for add/remove. The right tool.
- *   3. Virtual nodes (replicas per real node): hash each real node with
- *      N suffixes (e.g. "nodeA#0" … "nodeA#199"). Without replicas, the
- *      ring is lumpy and one node can own a huge slice; replicas smooth
- *      the distribution at the cost of more entries.
- *
- * Time budget: 15 minutes. See stage doc 13.
- *
- * Implementation:
- *   - TreeMap<Int, T> mapping virtual-node hash -> owning real node.
- *   - On `getNode(key)`: hash the key, find the ceiling entry; if absent,
- *     wrap to the first entry. TreeMap.ceilingEntry is O(log N).
- *   - On `add(node)`: insert `replicasPerNode` entries, hashing
- *     `node#i` for `i in 0 until replicasPerNode`.
- *   - On `remove(node)`: we keep an inverse map (realNode -> list of
- *     virtual hashes) so removal is O(replicasPerNode * log N), not
- *     a full scan of the ring.
+ * @param T the node type stored on the ring.
+ * @property replicasPerNode number of virtual replicas placed per real node.
+ *   Must be positive.
  */
 class ConsistentHashing<T>(
     private val replicasPerNode: Int = 200,
@@ -42,25 +23,22 @@ class ConsistentHashing<T>(
         require(replicasPerNode > 0) { "replicasPerNode must be positive, was $replicasPerNode" }
     }
 
-    // Virtual-node hash -> real node.
+    // virtual-node hash -> owning real node.
     private val ring = TreeMap<Int, T>()
-    // Real node -> its virtual-node hashes (so removal is O(replicas) not O(ring)).
+    // real node -> its virtual hashes so removal scans only replicasPerNode entries.
     private val hashesByNode = HashMap<T, MutableList<Int>>()
-    // Real nodes in insertion order; used for nodeCount and stable iteration.
+    // real nodes in insertion order; stable for nodeCount and iteration.
     private val realNodes = LinkedHashSet<T>()
 
     /**
-     * Adds a node [node] to the ring. Subsequent lookups may now return it.
+     * Adds [node] to the ring. Subsequent lookups may now return it.
      * Re-adding an already-present node is a no-op.
      */
     fun add(node: T) {
         if (!realNodes.add(node)) return
         val hashes = ArrayList<Int>(replicasPerNode)
-        for (replicaIndex in 0 until replicasPerNode) {
-            val hash = stableHash("$node#$replicaIndex")
-            // Hash collisions across replicas are vanishingly rare with MD5,
-            // but if one occurs, the later replica overwrites — still correct
-            // because both map to the same real node.
+        for (replica in 0 until replicasPerNode) {
+            val hash = stableHash("$node#$replica")
             ring[hash] = node
             hashes.add(hash)
         }
@@ -79,18 +57,17 @@ class ConsistentHashing<T>(
 
     /**
      * Returns the node responsible for [key]. Always non-null once at
-     * least one node has been added. O(log N).
+     * least one node has been added.
      *
-     * Pre-condition: at least one node has been added (caller's responsibility
-     * per the KDoc; throwing makes misuse loud rather than silent).
+     * Pre-condition: at least one node has been added; behaviour is
+     * undefined otherwise.
      */
     fun getNode(key: String): T {
         check(realNodes.isNotEmpty()) { "getNode called on empty ring" }
         val keyHash = stableHash(key)
         val ceiling = ring.ceilingEntry(keyHash)
         if (ceiling != null) return ceiling.value
-        // Wrap around: the first entry on the ring owns everything from the
-        // largest virtual hash up to 2^32.
+        // wrap: first entry on the ring owns everything past the largest hash.
         return ring.firstEntry()!!.value
     }
 
@@ -102,14 +79,9 @@ class ConsistentHashing<T>(
     val ringSize: Int
         get() = ring.size
 
-    /**
-     * Stable 32-bit hash. Uses MD5 truncated to 4 bytes so the ring layout
-     * is deterministic across runs (String.hashCode would do, but explicit
-     * hashing makes the "consistent" part of "consistent hashing" literal).
-     */
+    // stable 32-bit hash so the ring layout is deterministic across runs.
     private fun stableHash(input: String): Int {
-        val digest = md5Digest(input)
-        // Take the low 32 bits as the ring position.
+        val digest = md5(input)
         return ((digest[3].toInt() and 0xFF) shl 24) or
             ((digest[2].toInt() and 0xFF) shl 16) or
             ((digest[1].toInt() and 0xFF) shl 8) or
@@ -117,13 +89,54 @@ class ConsistentHashing<T>(
     }
 
     companion object {
-        private fun md5Digest(input: String): ByteArray {
-            // java.security.MessageDigest is overkill for a ring layout, but
-            // it's already on the JVM and gives us the determinism we want.
-            // We could also use String.hashCode, but cross-JVM the spec only
-            // guarantees stability within a JVM run.
+        private fun md5(input: String): ByteArray {
             val md = java.security.MessageDigest.getInstance("MD5")
             return md.digest(input.toByteArray(Charsets.UTF_8))
         }
     }
+}
+
+fun main() {
+    data class Test(val case: String, val expected: Any?, val actual: Any?) {
+        init {
+            if (expected != actual) println("FAILED: $this")
+            else println("PASSED: $this")
+        }
+    }
+
+    val ring = ConsistentHashing<String>(replicasPerNode = 4)
+    listOf("n1", "n2", "n3").forEach { ring.add(it) }
+    Test("nodeCount after three adds", 3, ring.nodeCount)
+    Test("ringSize = nodes * replicasPerNode", 12, ring.ringSize)
+
+    // virtual nodes spread the ring: with enough replicas each node owns some keys.
+    val distributed = ConsistentHashing<String>()
+    listOf("n1", "n2", "n3").forEach { distributed.add(it) }
+    val owners = (0 until 600).map { distributed.getNode("key-$it") }.toSet()
+    Test("virtual nodes spread the ring across all nodes", setOf("n1", "n2", "n3"), owners)
+
+    // re-adding an already-present node is a no-op.
+    distributed.add("n1")
+    Test("re-adding same node leaves nodeCount unchanged", 3, distributed.nodeCount)
+    Test("re-adding same node leaves ringSize unchanged", 600, distributed.ringSize)
+
+    // after removing a node, its keys must move to a remaining node.
+    val beforeRemove = mutableMapOf<String, MutableList<String>>()
+    for (i in 0 until 600) {
+        val key = "key-$i"
+        val owner = distributed.getNode(key)
+        beforeRemove.getOrPut(owner) { mutableListOf() }.add(key)
+    }
+    val keysForRemovedNode = beforeRemove["n2"] ?: emptyList()
+    Test("nodeCount shrinks after remove", 2, distributed.nodeCount)
+    Test("ringSize shrinks by replicasPerNode", 400, distributed.ringSize)
+    // every key that n2 used to own must now belong to one of the remaining nodes.
+    val reassignedToRemoved = keysForRemovedNode.count { distributed.getNode(it) == "n2" }
+    Test("no key of the removed node still maps to it", 0, reassignedToRemoved)
+
+    // removing a missing node is a no-op.
+    distributed.remove("n2")
+    Test("removing an already-removed node is a no-op", 2, distributed.nodeCount)
+    distributed.remove("never-added")
+    Test("removing a never-added node is a no-op", 2, distributed.nodeCount)
 }

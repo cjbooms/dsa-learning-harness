@@ -6,10 +6,8 @@ import java.util.ArrayDeque
  * Stage 8.5.2 — Alien dictionary: infer character ordering from a sorted
  * alien word list.
  *
- * Why this matters for MongoDB: collation rules for non-default locales, sort
+ * MongoDB relevance: collation rules for non-default locales, sort
  * comparators for custom indexes, ordering discovery between custom types.
- * The interview form: "given a dictionary of words in an unknown alphabet,
- * derive the alphabet order (or detect an invalid dictionary)".
  *
  * Structure-selection ritual:
  *   - Compare adjacent words left-to-right; the first differing character
@@ -29,55 +27,48 @@ import java.util.ArrayDeque
  */
 fun alienOrder(words: List<String>): String {
     if (words.isEmpty()) return ""
-    if (words.size == 1) {
-        // No pairwise constraints; return the word's distinct characters as-is.
-        return words[0].toSet().joinToString("")
-    }
 
     // Adjacency: u -> set of v's ("u must come before v").
-    val adj = mutableMapOf<Char, MutableSet<Char>>()
-    // Track all characters that appear in any word.
-    val allChars = mutableSetOf<Char>()
+    val adj = hashMapOf<Char, MutableSet<Char>>()
+    // All characters seen anywhere in the input, in first-occurrence order.
+    val allChars = linkedSetOf<Char>()
     for (word in words) {
         for (char in word) {
-            allChars.add(char)
-            adj.getOrPut(char) { mutableSetOf() }
+            if (allChars.add(char)) {
+                adj.getOrPut(char) { mutableSetOf() }
+            }
         }
     }
 
     for (index in 0 until words.size - 1) {
         val current = words[index]
         val next = words[index + 1]
-        // Invalid prefix: longer word that starts with a SHORTER next word.
+        // Invalid prefix: a longer word cannot come before its own prefix.
         if (current.length > next.length && current.startsWith(next)) return ""
-        // Find the first differing character to derive one ordering constraint.
+        // Walk both words until the first differing character.
         val minLen = minOf(current.length, next.length)
-        var foundDiff = false
         for (charIndex in 0 until minLen) {
             if (current[charIndex] != next[charIndex]) {
                 val from = current[charIndex]
                 val to = next[charIndex]
-                // Skip duplicate edges — set semantics dedupe.
                 adj.getOrPut(from) { mutableSetOf() }.add(to)
-                foundDiff = true
                 break
             }
         }
-        // If all minLen characters match and the shorter is a prefix, that's
-        // already covered above; if no diff and same length, it's a duplicate —
-        // no constraint, continue.
-        if (!foundDiff && current.length == next.length) continue
     }
 
-    // Kahn's BFS over character graph.
-    val inDegree = mutableMapOf<Char, Int>()
+    // Kahn's BFS: seed the queue with every indegree-zero character, then peel
+    // them off while decrementing neighbours' indegrees.
+    val inDegree = hashMapOf<Char, Int>()
     for (char in allChars) inDegree[char] = 0
     for ((_, neighbours) in adj) {
         for (v in neighbours) inDegree[v] = inDegree.getOrDefault(v, 0) + 1
     }
 
-    val ready = ArrayDeque<Char>()
-    for ((char, degree) in inDegree) if (degree == 0) ready.addLast(char)
+    // Sort the ready queue by first-occurrence position so the topo order is
+    // deterministic regardless of hash-iteration order on the JVM.
+    val readyOrder = allChars.filter { inDegree[it] == 0 }
+    val ready = ArrayDeque<Char>(readyOrder)
 
     val result = StringBuilder()
     while (ready.isNotEmpty()) {
@@ -92,4 +83,53 @@ fun alienOrder(words: List<String>): String {
 
     // Cycle => not all characters emitted.
     return if (result.length == allChars.size) result.toString() else ""
+}
+
+fun main() {
+    data class Test(val case: String, val expected: String, val actual: String) {
+        init {
+            if (expected != actual) println("FAILED: $this")
+            else println("PASSED: $this")
+        }
+    }
+
+    // Classic ordering: "wrt" -> "wrf" gives t < f; "wrf" -> "er" gives w < e;
+    // "er" -> "ett" gives r < t; "ett" -> "rftc" gives e < r. First-occurrence
+    // order over all characters is w, r, t, f, e, c. Constraints force
+    // w < e < r < t < f; 'c' has no constraints so it lands right after w
+    // in the deterministic BFS order: "wcertf".
+    Test(
+        case = "Classic example produces a valid ordering",
+        expected = "wcertf",
+        actual = alienOrder(listOf("wrt", "wrf", "er", "ett", "rftc")),
+    )
+
+    // Cyclic ordering: a < b < c < a — no consistent alphabet exists.
+    Test(
+        case = "Cyclic ordering returns empty string",
+        expected = "",
+        actual = alienOrder(listOf("a", "b", "c", "a")),
+    )
+
+    // Invalid prefix: "abc" before "ab" cannot happen in any alphabet.
+    Test(
+        case = "Invalid prefix ordering returns empty string",
+        expected = "",
+        actual = alienOrder(listOf("abc", "ab")),
+    )
+
+    // Single-word input: no constraints, every distinct letter is fine; output
+    // follows first-occurrence order, so "abc".
+    Test(
+        case = "Single word yields its distinct characters in order",
+        expected = "abc",
+        actual = alienOrder(listOf("abc")),
+    )
+
+    // Duplicate adjacent words contribute no new constraint.
+    Test(
+        case = "Duplicate words do not break the ordering",
+        expected = "ab",
+        actual = alienOrder(listOf("a", "a", "b")),
+    )
 }

@@ -1,77 +1,78 @@
 package com.cjbooms.prep.solutions.stage14
 
 /**
- * Stage 14.2 — String dynamic programming.
+ * Learn first: see docs/learning-resources.md
+ * Computes the length of the longest sequence of characters that appears in
+ * both [a] and [b] in the same relative order (not necessarily contiguous).
  *
- * MongoDB relevance: edit distance and LCS are how MongoDB Atlas
- * Search does fuzzy matching and how schema-migration tools diff
- * config documents. The classic 2D DP table is a workhorse.
- *
- * Structure-selection ritual:
- *   - 2D DP indexed by [i, j] over prefixes of the two strings.
- *   - Base row/column for empty prefix — get this right or every
- *     test fails.
- *   - Edit distance and LCS differ by one cell recurrence — say
- *     both aloud to the interviewer when they ask.
- *
- * Time budget: 15 min.
+ * @param a the first string
+ * @param b the second string
+ * @return the length of the longest common subsequence of [a] and [b]
  */
-
-/**
- * Length of the longest common subsequence of a and b.
- * dp[i][j] over (a[0..i), b[0..j)).
- * If a[i-1] == b[j-1]: dp[i][j] = dp[i-1][j-1] + 1.
- * Else:                dp[i][j] = max(dp[i-1][j], dp[i][j-1]).
- */
-fun longestCommonSubsequence(first: String, second: String): Int {
-    val lengthA = first.length
-    val lengthB = second.length
+fun longestCommonSubsequence(a: String, b: String): Int {
+    val lengthA = a.length
+    val lengthB = b.length
     if (lengthA == 0 || lengthB == 0) return 0
-    // Single-row rolling buffer keeps it O(min(lengthA,lengthB)) space.
-    var prev = IntArray(lengthB + 1)
-    var curr = IntArray(lengthB + 1)
-    for (indexA in 1..lengthA) {
-        for (indexB in 1..lengthB) {
-            curr[indexB] = if (first[indexA - 1] == second[indexB - 1]) {
-                prev[indexB - 1] + 1
+    // dp[i][j] = length of LCS over a[0..i) and b[0..j); empty prefix -> 0
+    val dp = Array(lengthA + 1) { IntArray(lengthB + 1) }
+    for (i in 1..lengthA) {
+        for (j in 1..lengthB) {
+            dp[i][j] = if (a[i - 1] == b[j - 1]) {
+                dp[i - 1][j - 1] + 1
             } else {
-                maxOf(prev[indexB], curr[indexB - 1])
+                maxOf(dp[i - 1][j], dp[i][j - 1])
             }
         }
-        val tmp = prev
-        prev = curr
-        curr = tmp
     }
-    return prev[lengthB]
+    return dp[lengthA][lengthB]
 }
 
 /**
- * Levenshtein edit distance with uniform cost 1 for insert, delete,
- * replace. dp[i][j] = cost of transforming a[0..i) into b[0..j).
- * If last chars match: dp[i][j] = dp[i-1][j-1].
- * Else:                dp[i][j] = 1 + min(dp[i-1][j],   // delete
- *                                          dp[i][j-1],   // insert
- *                                          dp[i-1][j-1]) // replace
+ * Computes the Levenshtein edit distance between [a] and [b] using uniform
+ * cost 1 for insertion, deletion, and substitution of a single character.
+ *
+ * @param a the source string
+ * @param b the target string
+ * @return the minimum number of single-character edits required to transform
+ *   [a] into [b]
  */
-fun editDistance(first: String, second: String): Int {
-    val lengthA = first.length
-    val lengthB = second.length
+fun editDistance(a: String, b: String): Int {
+    val lengthA = a.length
+    val lengthB = b.length
     if (lengthA == 0) return lengthB
     if (lengthB == 0) return lengthA
-    var prev = IntArray(lengthB + 1) { it } // distance from "" to second[0..j) = j
-    var curr = IntArray(lengthB + 1)
-    for (indexA in 1..lengthA) {
-        curr[0] = indexA // distance from first[0..i) to "" = i
-        for (indexB in 1..lengthB) {
-            curr[indexB] = if (first[indexA - 1] == second[indexB - 1]) {
-                prev[indexB - 1]
+    // dp[i][j] = min edits to turn a[0..i) into b[0..j); base row = j deletes, base col = i inserts
+    val dp = Array(lengthA + 1) { IntArray(lengthB + 1) }
+    for (j in 0..lengthB) dp[0][j] = j
+    for (i in 1..lengthA) {
+        dp[i][0] = i
+        for (j in 1..lengthB) {
+            dp[i][j] = if (a[i - 1] == b[j - 1]) {
+                dp[i - 1][j - 1]
             } else {
-                1 + minOf(prev[indexB], curr[indexB - 1], prev[indexB - 1])
+                1 + minOf(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
             }
         }
-        val tmp = prev
-        prev = curr
-        curr = tmp
     }
-    return prev[lengthB]
+    return dp[lengthA][lengthB]
+}
+
+fun main() {
+    data class Test(val case: String, val expected: Int, val actual: Int) {
+        init {
+            if (expected != actual) println("FAILED: $this")
+            else println("PASSED: $this")
+        }
+    }
+
+    Test("LCS of empty against anything is zero", 0, longestCommonSubsequence("", "abc"))
+    Test("LCS identical strings equals length", 3, longestCommonSubsequence("abc", "abc"))
+    Test("LCS classic example is three", 3, longestCommonSubsequence("abcde", "ace"))
+    Test("LCS of disjoint strings is zero", 0, longestCommonSubsequence("abc", "xyz"))
+
+    Test("Edit distance empty to non-empty is insert count", 3, editDistance("", "abc"))
+    Test("Edit distance non-empty to empty is delete count", 3, editDistance("abc", ""))
+    Test("Edit distance identical strings is zero", 0, editDistance("kitten", "kitten"))
+    Test("Edit distance classic kitten/sitting is three", 3, editDistance("kitten", "sitting"))
+    Test("Edit distance single substitution is one", 1, editDistance("flaw", "lawn"))
 }

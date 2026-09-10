@@ -13,12 +13,15 @@ package com.cjbooms.prep.solutions.stage11
  *   - Max-heap of (count, taskId): each tick pops the most frequent available
  *     task, decrements it, and parks it in a FIFO "cooldown queue" sized by n.
  *     When the queue's head's cooldown expires, it re-enters the heap.
- *   The cooldown queue is essential: it is what enforces the n-cycle gap
- *   between consecutive runs of the same task.
+ *     The cooldown queue is essential: it is what enforces the n-cycle gap
+ *     between consecutive runs of the same task.
  *
- * Tie-breaker (matters when two tasks have equal count): pop whichever task
- * the heap returns. Determinism needs a stable secondary key — encode the
- * task's identity into the heap entry so equal counts compare consistently.
+ * Closed-form greedy (LeetCode 621) used here:
+ *   frame length = (maxCount - 1) * (cooldown + 1) slots
+ *     -> one slot per max-frequency task, plus cooldown-sized gaps between.
+ *   tail width = number of distinct tasks sharing the max count
+ *     -> they all fit in the final row of the frame.
+ *   answer = max(frame + tail, tasks.size).
  */
 class TaskSchedulerWithCooldown {
 
@@ -26,24 +29,11 @@ class TaskSchedulerWithCooldown {
      * Return the minimum number of intervals required to finish all tasks
      * with at least `cooldown` idle cycles between any two runs of the same
      * task.
-     *
-     * If cooldown == 0, no gaps are needed — the answer is just tasks.size.
-     * If cooldown > 0, runs of the same task must be separated by `cooldown`
-     * other tasks (or idle cycles).
      */
     fun leastInterval(tasks: CharArray, cooldown: Int): Int {
         if (tasks.isEmpty()) return 0
         if (cooldown == 0) return tasks.size
 
-        // Closed-form greedy (LeetCode 621):
-        //   frame length = (maxCount - 1) * (cooldown + 1) slots
-        //     -> one slot per max-frequency task, plus cooldown-sized gaps
-        //        between them.
-        //   tail width = number of distinct tasks sharing the max count
-        //     -> they all fit in the final row of the frame.
-        // The total schedule is max(frame + tail, tasks.size): if the remaining
-        // tasks can fully fill every gap, no idle slots are needed and we just
-        // do all tasks back-to-back.
         val counts = IntArray(26)
         var maxCount = 0
         for (task in tasks) {
@@ -56,4 +46,55 @@ class TaskSchedulerWithCooldown {
         val withFrame = frameLength + numMaxTasks
         return maxOf(withFrame, tasks.size)
     }
+}
+
+fun main() {
+    data class Test(val case: String, val expected: Int, val actual: Int) {
+        init {
+            if (expected != actual) println("FAILED: $this")
+            else println("PASSED: $this")
+        }
+    }
+
+    // LeetCode 621 classic AAABBB n=2: max count=3, num max=2, frame=6, withFrame=8
+    Test(
+        "leetcocode example AAABBB n=2",
+        8,
+        TaskSchedulerWithCooldown().leastInterval("AAABBB".toCharArray(), 2),
+    )
+
+    // cooldown=0 means no gaps, answer is just the task count
+    Test(
+        "cooldown zero no gaps",
+        6,
+        TaskSchedulerWithCooldown().leastInterval("ABCDEF".toCharArray(), 0),
+    )
+
+    // all same task: frame is forced, length = (count-1)*(n+1) + 1
+    Test(
+        "all same task AAAA n=2",
+        10,
+        TaskSchedulerWithCooldown().leastInterval("AAAA".toCharArray(), 2),
+    )
+
+    // remaining tasks fill every gap: max(...) picks tasks.size, not frame
+    Test(
+        "fills every slot no idle",
+        6,
+        TaskSchedulerWithCooldown().leastInterval("ABCABC".toCharArray(), 2),
+    )
+
+    // empty input: nothing to schedule
+    Test(
+        "empty tasks",
+        0,
+        TaskSchedulerWithCooldown().leastInterval("".toCharArray(), 2),
+    )
+
+    // cooldown=1 with two of the same task: A idle A
+    Test(
+        "single task cooldown one",
+        3,
+        TaskSchedulerWithCooldown().leastInterval("AA".toCharArray(), 1),
+    )
 }

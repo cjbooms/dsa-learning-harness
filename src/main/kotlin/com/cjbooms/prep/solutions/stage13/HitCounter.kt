@@ -1,35 +1,17 @@
 package com.cjbooms.prep.solutions.stage13
 
 /**
- * Stage 13.2 — Time-based hit counter (LeetCode 362 / design).
+ * Learn first: see docs/learning-resources.md
+ * Time-based hit counter over a fixed sliding window of seconds.
  *
- * Why this matters for MongoDB: per-shard QPS metering, rate-limit windows
- * the cheap way, slow-query dashboard "events in the last N seconds",
- * replication lag histograms, Oplog window auditing. Compare with the
- * sliding-log rate limiter in Stage 0 — same data shape, different
- * eviction strategy.
+ * Records hit events at integer-second timestamps and answers queries for
+ * "how many hits occurred in the last `windowSeconds` seconds". A hit at
+ * time `t` counts for a query at time `now` iff `now - windowSeconds < t <= now`
+ * (the window is half-open on the left: a hit exactly `windowSeconds` in
+ * the past is not counted; a hit at the current timestamp is).
  *
- * Structure-selection ritual:
- *   1. Naive: keep every hit timestamp in a deque. O(hits) memory.
- *   2. Fixed-window buckets (one counter per second) — O(window) memory,
- *      clean O(1) per hit.
- *   3. Circular buffer: array of size [windowSeconds], rotate index by
- *      `now % windowSeconds`. Each slot holds the count for that bucket
- *      AND the timestamp of the most recent hit that landed in it; on
- *      arrival, if the slot's timestamp != now, reset it before adding.
- *   4. For per-event timestamps (not bucketed), keep a deque of (ts, count)
- *      pairs and binary-search the cutoff — useful when the question is
- *      "count hits in last k arbitrary millis, not just whole seconds".
- *
- * Time budget: 20 minutes. See stage doc 13.
- *
- * Implementation: circular-buffer buckets (option 3) — O(1) per hit,
- * O(windowSeconds) per query. Window semantics: hits `t` count iff
- * `now - windowSeconds < t <= now` (half-open on the LEFT: a hit exactly
- * `windowSeconds` in the past is NOT counted; a hit at the current
- * timestamp IS counted). Each bucket stores `(timestamp, count)` for the
- * second it represents; a hit into a stale bucket (different timestamp)
- * resets it before incrementing.
+ * @property windowSeconds width of the sliding window in seconds. Must be
+ *   positive.
  */
 class HitCounter(private val windowSeconds: Int = 300) {
 
@@ -37,47 +19,82 @@ class HitCounter(private val windowSeconds: Int = 300) {
         require(windowSeconds > 0) { "windowSeconds must be positive, was $windowSeconds" }
     }
 
+    // each slot covers one second; second s lands at slot (s mod windowSeconds).
     private data class Bucket(var timestamp: Int, var count: Int)
 
     private val buckets = arrayOfNulls<Bucket>(windowSeconds)
 
     /**
-     * Records a hit at wall-clock time [timestampSeconds]. O(1) amortized.
+     * Records a hit at wall-clock time [timestampSeconds].
      */
     fun hit(timestampSeconds: Int) {
-        val slotIndex = mod(timestampSeconds, windowSeconds)
-        val currentBucket = buckets[slotIndex]
-        if (currentBucket == null || currentBucket.timestamp != timestampSeconds) {
-            // First hit in this slot for this second, OR slot was last written
-            // for a different (older) second — reset before incrementing.
-            buckets[slotIndex] = Bucket(timestamp = timestampSeconds, count = 1)
+        val slotIndex = indexOf(timestampSeconds, windowSeconds)
+        val bucket = buckets[slotIndex]
+        if (bucket == null || bucket.timestamp != timestampSeconds) {
+            // stale slot: was last written for an older second; reset it.
+            buckets[slotIndex] = Bucket(timestampSeconds, 1)
         } else {
-            currentBucket.count += 1
+            bucket.count += 1
         }
     }
 
     /**
      * Returns the number of hits in the half-open window
      * `(timestampSeconds - windowSeconds, timestampSeconds]`.
-     * O(windowSeconds) is acceptable.
      */
     fun getHits(timestampSeconds: Int): Int {
-        // Lower bound is exclusive: a hit at exactly `cutoff` is excluded.
+        // half-open window: exclude hits at exactly `cutoff`.
         val cutoff = timestampSeconds - windowSeconds
         var total = 0
         for (slot in 0 until windowSeconds) {
-            val currentBucket = buckets[slot] ?: continue
-            // Include bucket iff: cutoff < currentBucket.timestamp <= timestampSeconds.
-            if (currentBucket.timestamp > cutoff && currentBucket.timestamp <= timestampSeconds) {
-                total += currentBucket.count
+            val bucket = buckets[slot] ?: continue
+            if (bucket.timestamp > cutoff && bucket.timestamp <= timestampSeconds) {
+                total += bucket.count
             }
         }
         return total
     }
 
-    /** Kotlin's `%` follows the sign of the dividend; we always want a non-negative index. */
-    private fun mod(value: Int, divisor: Int): Int {
-        val remainder = value % divisor
-        return if (remainder < 0) remainder + divisor else remainder
+    // kotlin's `%` follows the dividend's sign; we always want a non-negative index.
+    private fun indexOf(value: Int, size: Int): Int {
+        val remainder = value % size
+        return if (remainder < 0) remainder + size else remainder
     }
+}
+
+fun main() {
+    data class Test(val case: String, val expected: Int, val actual: Int) {
+        init {
+            if (expected != actual) println("FAILED: $this")
+            else println("PASSED: $this")
+        }
+    }
+
+    // hits at 1, 2, 5 with window=5: at t=5 all three are inside (0, 5].
+    val cut = HitCounter(windowSeconds = 5)
+    cut.hit(1)
+    cut.hit(2)
+    cut.hit(5)
+    Test("all three hits inside (0, 5]", 3, cut.getHits(5))
+    Test("hit at current timestamp is included", 3, cut.getHits(5))
+
+    // half-open on the left: hit at exactly `cutoff` (= now - window) is excluded.
+    val boundary = HitCounter(windowSeconds = 5)
+    boundary.hit(1)
+    Test("hit exactly windowSeconds ago excluded by half-open window", 0, boundary.getHits(6))
+    Test("same exclusion holds one second later", 0, boundary.getHits(7))
+
+    // a hit just inside the window still counts.
+    boundary.hit(2)
+    Test("hit just inside the window is included", 1, boundary.getHits(6))
+
+    // multiple hits in the same second all bucket together.
+    val many = HitCounter(windowSeconds = 60)
+    repeat(5) { many.hit(10) }
+    many.hit(20)
+    Test("multiple hits in the same second bucket together", 6, many.getHits(25))
+    Test("all hits fall outside the window", 0, many.getHits(120))
+
+    val empty = HitCounter(windowSeconds = 60)
+    Test("empty counter reports zero", 0, empty.getHits(1000))
 }

@@ -55,7 +55,7 @@ class ImmutableArraySum(private val numbers: IntArray) {
  * where they occurred.
  */
 fun subarraySumEqualsK(numbers: IntArray, targetSum: Int): Int {
-    val counts = HashMap<Int, Int>()
+    val counts = hashMapOf<Int, Int>()
     counts[0] = 1
     var running = 0
     var result = 0
@@ -65,4 +65,48 @@ fun subarraySumEqualsK(numbers: IntArray, targetSum: Int): Int {
         counts[running] = (counts[running] ?: 0) + 1
     }
     return result
+}
+
+fun main() {
+    data class Test(val case: String, val expected: String, val actual: String) {
+        init {
+            if (expected == actual) println("PASSED: $this")
+            else println("FAILED: $this")
+        }
+    }
+
+    // ImmutableArraySum: full range, single element, left==right
+    val range = ImmutableArraySum(intArrayOf(-2, 0, 3, -5, 2, -1))
+    Test(
+        case = "sumRange full range",
+        expected = "-3",
+        actual = range.sumRange(0, 5).toString()
+    )
+    Test(
+        case = "sumRange sub-range",
+        expected = "0",
+        actual = range.sumRange(2, 4).toString()
+    )
+    Test(
+        case = "sumRange single element",
+        expected = "3",
+        actual = range.sumRange(2, 2).toString()
+    )
+
+    // subarraySumEqualsK: positive numbers, negatives present, zero target
+    Test(
+        case = "Subarray equals k - positive numbers",
+        expected = "2",
+        actual = subarraySumEqualsK(intArrayOf(1, 1, 1), 2).toString()
+    )
+    Test(
+        case = "Subarray equals k - with negatives",
+        expected = "2",
+        actual = subarraySumEqualsK(intArrayOf(1, 2, 3), 3).toString()
+    )
+    Test(
+        case = "Subarray equals k - zero target with zeros",
+        expected = "6",
+        actual = subarraySumEqualsK(intArrayOf(0, 0, 0), 0).toString()
+    )
 }
