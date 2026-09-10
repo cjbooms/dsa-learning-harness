@@ -38,9 +38,8 @@ fun deserializeBst(data: String): BstNode? {
     fun buildNode(min: Long, max: Long): BstNode? {
         if (queue.isEmpty()) return null
 
-        val currentVal = queue.first() // peek and validate
+        val currentVal = queue.removeFirst() // peek and validate
         if (currentVal == null || currentVal <= min || currentVal >= max) return null
-        queue.removeFirst() // validated, process it
 
         val node = BstNode(currentVal)
         node.left = buildNode(min, node.value.toLong())
