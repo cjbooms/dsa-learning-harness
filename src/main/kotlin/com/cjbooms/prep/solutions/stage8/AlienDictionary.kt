@@ -6,7 +6,7 @@ import java.util.ArrayDeque
  * Stage 8.5.2 — Alien dictionary: infer character ordering from a sorted
  * alien word list.
  *
- * MongoDB relevance: collation rules for non-default locales, sort
+ * Why this matters: collation rules for non-default locales, sort
  * comparators for custom indexes, ordering discovery between custom types.
  *
  * Structure-selection ritual:

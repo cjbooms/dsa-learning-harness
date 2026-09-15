@@ -1,259 +1,280 @@
-# Implementation Recipes — Imports + Boilerplate for CoderPad
+# Implementation Recipes — DSA Skeletons for CoderPad
 
-CoderPad autocomplete is weak. These are the exact imports and skeletons —
-memorize the shapes so you can type them cold.
+**GLANCE-AT doc — open during the interview.** Skeletons only, no prose.
+Read `cheat-sheet.md` beforehand for the why.
 
-## Imports cheat block (paste at top of file, delete what you don't use)
+## Imports (paste, delete unused)
 
 ```kotlin
-import java.util.ArrayDeque
+import kotlin.collections.ArrayDeque   // Kotlin's — never java.util.ArrayDeque
 import java.util.PriorityQueue
 import java.util.TreeMap
-import java.util.concurrent.locks.ReentrantLock
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.locks.ReentrantLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
+import kotlin.concurrent.write
+// NO import: HashMap, HashSet, ArrayList, mutableListOf, mutableMapOf/SetOf, List/Set/Map
 ```
 
-Note: `HashMap`, `HashSet`, `ArrayList`, `mutableListOf`, `mutableMapOf`,
-`List`, `Set`, `Map` need NO import (kotlin.collections is implicit).
-`ArrayDeque` DOES — it's `java.util.ArrayDeque`, not Kotlin's (CoderPad's
-Kotlin may not have `kotlin.collections.ArrayDeque`).
-
-## ArrayDeque (stack / queue / sliding window)
+## ArrayDeque — stack / queue / deque (no import)
 
 ```kotlin
-val deque = ArrayDeque<Int>()
-deque.addLast(x)         // enqueue / push
-deque.removeFirst()      // dequeue (throws if empty)
-deque.removeFirstOrNull()// dequeue safe
-deque.firstOrNull()      // peek front (oldest)
-deque.lastOrNull()       // peek back (newest)
-deque.removeLastOrNull() // pop (stack)
+val d = ArrayDeque<Int>()
+d.addLast(x)              // push / enqueue
+d.removeLast()            // pop (stack)          — throws if empty
+d.removeFirst()           // dequeue (queue)      — throws if empty
+d.removeLastOrNull()      // safe pop
+d.removeFirstOrNull()     // safe dequeue
+d.first() / d.last()      // peek front / back
+d.firstOrNull() / d.lastOrNull()
 ```
 
-## PriorityQueue (heap — top-K, merge K)
+## PriorityQueue — heap
 
 ```kotlin
-val minHeap = PriorityQueue<Int>()                              // smallest on top
-val maxHeap = PriorityQueue<Int>(compareByDescending { it })    // largest on top
-val byValue = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
-
-heap.add(x)        // O(log n)
-heap.peek()        // min, null if empty — LOOK without removing
-heap.poll()        // min, null if empty — REMOVE and return
-heap.isNotEmpty()
+val minHeap = PriorityQueue<Int>()                           // smallest on top
+val maxHeap = PriorityQueue<Int>(compareByDescending { it })
+val byFirst = PriorityQueue<Pair<Int,Int>>(compareBy { it.first })
+heap.add(x); heap.peek(); heap.poll()                        // poll removes min
+// top-K: keep size K, poll when size > K — heap holds the K largest
+// trap: kth LARGEST wants a MIN-heap of size K
 ```
 
-## TreeMap (sorted map — floor/ceiling, ranges)
+## TreeMap — sorted map
 
 ```kotlin
-val map = TreeMap<Int, String>()
-map[key] = value                       // put
-map[key]                               // get, null if absent
-map.floorEntry(k)                      // greatest entry with key <= k (null if none)
-map.ceilingEntry(k)                    // smallest entry with key >= k
-map.firstKey() / map.lastKey()         // min / max key
-map.headMap(k, true)                   // view of entries with key <= k
-map.tailMap(k, false)                  // view of entries with key > k
-// headMap returns a LIVE view: .clear() on it removes from the parent map
+val map = TreeMap<Long, String>()
+map[k] = v; map[k]
+map.floorEntry(k)         // greatest key <= k — "as of time t", versioned KV
+map.ceilingEntry(k)       // smallest key >= k
+map.firstKey(); map.lastKey()
+map.headMap(k, true)      // live view, keys <= k — .clear() removes from parent
+map.tailMap(k, false)     // keys > k
 ```
 
-## HashMap essentials (no import)
+## HashMap — no import
 
 ```kotlin
-val map = HashMap<String, Int>()
-map.getOrPut(k) { 0 }              // get or insert-default — one call
+map.getOrPut(k) { 0 }
 map.getOrDefault(k, 0)
 map.computeIfAbsent(k) { expensive() }
-map.containsKey(k)
-for ((k, v) in map) { ... }
+for ((k, v) in map) { }
 ```
 
-## ReentrantLock + Condition (concurrency round)
+## Map of sets — inverted index
+
+```kotlin
+val termToDocIds = hashMapOf<String, MutableSet<String>>()
+val docIdToTerms = hashMapOf<String, Set<String>>()   // reverse map: O(terms) delete
+
+// insert (REPLACE semantics — evict old terms first or they go stale)
+docIdToTerms[docId]?.forEach { termToDocIds[it]?.remove(docId) }
+val terms = text.split(Regex("\\s+")).map { it.lowercase() }.toSet()
+docIdToTerms[docId] = terms
+for (t in terms) termToDocIds.getOrPut(t) { mutableSetOf() }.add(docId)
+
+// search one      -> termToDocIds[term] ?: emptySet()
+// search ALL      -> intersect smallest-first
+val buckets = terms.mapNotNull { termToDocIds[it] }.sortedBy { it.size }
+if (buckets.size < terms.size) emptySet() else buckets.reduce { a, b -> a.intersect(b) }
+
+// delete
+docIdToTerms.remove(docId)?.forEach { termToDocIds[it]?.remove(docId) }
+```
+
+## Binary search
+
+```kotlin
+var left = 0; var right = lastValidIndex            // NOT size — size - 1
+while (left <= right) {
+    val mid = left + (right - left) / 2
+    if (a[mid] == target) return mid
+    if (a[mid] < target) left = mid + 1 else right = mid - 1
+}
+// "first true" variant: while (left < right) { if (pred(mid)) right = mid else left = mid + 1 }
+```
+
+## Two pointers
+
+```kotlin
+var l = 0; var r = a.size - 1
+while (l < r) {
+    val sum = a[l] + a[r]
+    when {
+        sum < target -> l++
+        sum > target -> r--
+        else -> return l to r
+    }
+}
+```
+
+## Sliding window
+
+```kotlin
+var start = 0; var best = 0
+val state = hashMapOf<Char, Int>()
+for (end in s.indices) {
+    // expand: add s[end] to state
+    while (invalid()) { /* remove s[start] from state */ start++ }
+    best = maxOf(best, end - start + 1)
+}
+```
+
+## Prefix DP / reachability — word break shape
+
+```kotlin
+val reachable = BooleanArray(s.length + 1)
+reachable[0] = true
+for (i in 0 until s.length) {
+    if (!reachable[i]) continue               // launch only from reachable
+    for (j in i until s.length) {
+        if (wordDict.contains(s.substring(i, j + 1))) {
+            reachable[j + 1] = true           // mark the LANDING only
+        }
+    }
+}
+// answer: reachable[s.length]
+```
+
+## 2D DP — LCS / edit distance
+
+```kotlin
+// dp[i][j] = answer for a[0..i) vs b[0..j) — SAY THIS ALOUD FIRST
+val dp = Array(m + 1) { IntArray(n + 1) }
+for (i in 1..m) for (j in 1..n) {
+    dp[i][j] = if (a[i-1] == b[j-1]) dp[i-1][j-1] + 1
+               else maxOf(dp[i-1][j], dp[i][j-1])
+}
+```
+
+## BFS
+
+```kotlin
+val queue = ArrayDeque<Node>()
+val visited = hashSetOf<Node>()
+queue.addLast(start); visited.add(start)      // mark at ENQUEUE time
+while (queue.isNotEmpty()) {
+    val node = queue.removeFirst()
+    for (next in node.neighbors) {
+        if (visited.add(next)) queue.addLast(next)
+    }
+}
+```
+
+## DFS + cycle detection (three-color)
+
+```kotlin
+val state = hashMapOf<Node, Int>()            // 0=white 1=gray 2=black
+fun dfs(n: Node): Boolean {                   // true = cycle
+    if (state[n] == 1) return true
+    if (state[n] == 2) return false
+    state[n] = 1
+    for (next in n.neighbors) if (dfs(next)) return true
+    state[n] = 2
+    return false
+}
+```
+
+## Union-Find
+
+```kotlin
+val parent = IntArray(n) { it }
+fun find(x: Int): Int {
+    if (parent[x] != x) parent[x] = find(parent[x])   // path compression
+    return parent[x]
+}
+fun union(a: Int, b: Int): Boolean {                  // false = already connected (cycle)
+    val (ra, rb) = find(a) to find(b)
+    if (ra == rb) return false
+    parent[ra] = rb
+    return true
+}
+```
+
+## Simulation — pack first, render second (text justification)
+
+```kotlin
+// 1: pack words per line — decide BEFORE placing anything
+//    fits if sum(lengths) + (count - 1) <= maxWidth
+// 2: render each line:
+//    last line or single word -> join(" ") + padEnd(maxWidth)
+//    else pool = maxWidth - sum(lengths); gap = pool / (count-1);
+//         extra = pool % (count-1) goes to leftmost gaps, one each
+```
+
+## LRU — HashMap + doubly-linked list
+
+```kotlin
+class Node(val k: Int, var v: Int) { var prev: Node? = null; var next: Node? = null }
+val map = hashMapOf<Int, Node>()
+// get: map hit -> move node to head, return v
+// put: insert at head; if size > cap, evict tail, remove tail.k from map
+// sentinel head/tail nodes kill the null checks
+```
+
+## ReentrantLock + conditions — bounded blocking queue
 
 ```kotlin
 val lock = ReentrantLock()
-val condition = lock.newCondition()
+val notFull = lock.newCondition()
+val notEmpty = lock.newCondition()
 
-lock.withLock {                    // auto unlock, even on exception
-    while (!predicate) {           // WHILE, never if (spurious wakeup)
-        condition.await()          // releases lock, parks thread
-    }
-    // ... do work ...
-    condition.signal()             // wake ONE waiter (homogeneous only)
-    condition.signalAll()          // wake ALL (heterogeneous waiters)
+fun put(item: T) = lock.withLock {
+    while (queue.size == capacity) notFull.await()   // WHILE, never if
+    queue.addLast(item)
+    notEmpty.signal()
+}
+fun take(): T = lock.withLock {
+    while (queue.isEmpty()) notEmpty.await()
+    val v = queue.removeFirst()
+    notFull.signal()
+    return v
 }
 ```
 
-## Atomics (single independent value)
+## ReadWriteLock
 
 ```kotlin
-val count = AtomicInteger(0)
-count.incrementAndGet()            // atomic ++
-count.get() / count.set(x)
-count.compareAndSet(expect, update)  // CAS
+val rw = ReentrantReadWriteLock()
+rw.read { /* shared */ }
+rw.write { /* exclusive */ }
+// trap: a "read" that mutates (LRU access-order get) needs write { }
 ```
 
-## Graph traversal (adjacency list, no imports)
+## Atomics
 
 ```kotlin
-val neighbors = HashMap<Int, MutableList<Int>>()
-edges.forEach { (a, b) ->
-    neighbors.getOrPut(a) { mutableListOf() }.add(b)
-    neighbors.getOrPut(b) { mutableListOf() }.add(a)
-}
-val visited = HashSet<Int>()
-fun explore(node: Int) {
-    if (!visited.add(node)) return       // add returns false if present
-    neighbors[node].orEmpty().forEach(::explore)
-}
+val count = AtomicLong(0)
+count.incrementAndGet()
+count.compareAndSet(expect, update)
+// one independent value -> atomic; multiple related fields -> lock
 ```
 
-## Iterator (lazy custom iterator)
-
-```kotlin
-fun myIterator(input: Iterator<Int>): Iterator<Int> = object : Iterator<Int> {
-    var head: Int? = if (input.hasNext()) input.next() else null
-    override fun hasNext() = head != null
-    override fun next(): Int {
-        val result = head ?: throw NoSuchElementException()
-        head = if (input.hasNext()) input.next() else null
-        return result
-    }
-}
-```
-
-## Latches + executors (stress tests)
+## Threads + latch — stress-test a concurrent thing
 
 ```kotlin
 val done = CountDownLatch(workerCount)
-val pool = Executors.newFixedThreadPool(4)
-pool.submit {
-    // work
-    done.countDown()
-}
-done.await()                       // block until 0
-pool.shutdown()
-```
-
-## Futures / CompletableFuture (async execution)
-
-```kotlin
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-```
-
-### The traps first (what interviewers probe)
-
-- `Future.get()` **blocks** — calling it immediately defeats async. Gather at the END.
-- `CompletableFuture` without an executor runs on the **commonPool** — shared,
-  unbounded-ish, and dangerous to block in. Say "I'd pass an explicit executor
-  in production" — one sentence, big signal.
-- Exceptions **vanish into the future** — an async task that throws doesn't
-  crash anything; the exception surfaces only when you `get`/`join`. Unjoined
-  futures = silent failure.
-
-### Submit + gather (the basic shape)
-
-```kotlin
-val pool: ExecutorService = Executors.newFixedThreadPool(4)
-
-// submit work -> get a handle back immediately
-val future: CompletableFuture<String> = CompletableFuture.supplyAsync({
-    doWork()                                  // runs on pool
-}, pool)
-
-val result = future.get(5, TimeUnit.SECONDS)  // bounded wait, not bare get()
-```
-
-### Fan-out + gather all (the interview shape: N tasks, one combined result)
-
-```kotlin
-val futures = items.map { item ->
-    CompletableFuture.supplyAsync({ process(item) }, pool)
-}
-
-// Wait for ALL to finish, then collect — gather at the end, not per-task
-CompletableFuture.allOf(*futures.toTypedArray()).join()
-val results = futures.map { it.join() }       // all done now, join is instant
-```
-
-### Dependent stages (chaining)
-
-```kotlin
-val result = CompletableFuture
-    .supplyAsync({ fetchUser(id) }, pool)                       // stage 1
-    .thenApply { user -> user.orderCount }                      // transform (sync)
-    .thenCompose { count -> CompletableFuture.supplyAsync({     // flatten async-in-async
-        fetchOrders(count) }, pool) }
-    .exceptionally { ex -> fallbackValue }                      // one catch for the chain
-    .get(5, TimeUnit.SECONDS)
-```
-
-### Race / first-success
-
-```kotlin
-val fastest = CompletableFuture.anyOf(futureA, futureB, futureC).join()
-```
-
-### Fire-and-forget with error handling (the refreshStatus fix)
-
-```kotlin
-CompletableFuture
-    .runAsync({ verifySnapshotReadable(snapshotId) }, pool)
-    .exceptionally { ex ->
-        log.error("verification failed for $snapshotId", ex)    // NOT swallowed
-        null
+repeat(workerCount) {
+    thread {                            // kotlin.concurrent.thread — lightweight
+        repeat(1000) { counter.incrementAndGet() }
+        done.countDown()
     }
-// NOT raw new Thread(...) — pooled, and the exception has somewhere to go
+}
+done.await()                            // blocks until 0
+// expected exact total: workers * 1000
 ```
 
-### Shutting down
+## ConcurrentHashMap
 
 ```kotlin
-pool.shutdown()
-if (!pool.awaitTermination(10, TimeUnit.SECONDS)) {
-    pool.shutdownNow()        // interrupt stragglers after the grace period
-}
+val map = ConcurrentHashMap<String, Int>()
+map.merge(k, 1) { old, _ -> old + 1 }   // atomic read-modify-write
+map.computeIfAbsent(k) { expensive() }
+// trap: get-then-put as two calls is NOT atomic — use merge/compute
 ```
-
-### Vocabulary one-liners
-
-- `thenApply` = map (sync transform) · `thenCompose` = flatMap (async next stage)
-- `allOf` = barrier · `anyOf` = race
-- `join()` = unchecked exceptions, `get()` = checked + timeout-capable
-
-### Virtual threads (Java 21+) — what changes
-
-```kotlin
-// One virtual thread per task — no pool sizing, no fan-out gymnastics
-val executor = Executors.newVirtualThreadPerTaskExecutor()
-
-val futures = items.map { item ->
-    executor.submit<String> { process(item) }   // plain Callable, cheap to block
-}
-val results = futures.map { it.get(5, TimeUnit.SECONDS) }
-executor.close()  // close() waits for all tasks — structured shutdown for free
-```
-
-- **The mindset flip:** platform threads are expensive → pool them, share them,
-  never block them. Virtual threads are ~free → one per task, blocking is FINE.
-  The whole CompletableFuture chaining machinery (thenApply/thenCompose)
-  exists to avoid blocking expensive threads — with virtual threads you can
-  just... write sequential code that blocks.
-- **What you still need:** timeouts (`get(n, SECONDS)`), error handling
-  (exceptions still hide in the future until gathered), and backpressure for
-  bounded resources (a Semaphore — "1M virtual threads" doesn't mean your DB
-  pool or the downstream API can take 1M concurrent calls).
-- **The pinning gotcha:** a virtual thread holding a `synchronized` monitor
-  (or in native code) while blocking PINNS its carrier platform thread —
-  under heavy load that silently reintroduces platform-thread exhaustion.
-  ReentrantLock doesn't pin. Worth one sentence if asked.
-- **Interview one-liner:** "virtual threads trade pool-management complexity
-  for backpressure-management — the bottleneck moves from our threads to
-  whatever we're calling."

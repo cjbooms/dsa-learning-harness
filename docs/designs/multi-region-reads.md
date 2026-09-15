@@ -1,7 +1,7 @@
 # Design: Multi-Region Read-From-Nearest with Tunable Consistency
 
-Atlas-flavored prompt (techinterview.org, strong confidence): serve reads from
-the closest region, let customers tune the consistency/latency trade.
+Prompt: serve reads from the closest region, let customers tune the
+consistency/latency trade.
 
 ## Requirements
 - Data replicated across N regions (say 3: us-east, eu-west, ap-southeast)
@@ -12,30 +12,30 @@ the closest region, let customers tune the consistency/latency trade.
 ## Shape
 
 **The consistency knobs** (Stage 4 pays off — use the vocabulary):
-- Write concern `w:majority` → acknowledged writes survive any region loss
+- Write acknowledgment `majority` → acknowledged writes survive any region loss
   (majority overlap guarantees the new primary has them)
-- Read preference `nearest` → read from the closest node, possibly a secondary
-- Read concern `majority` → never read data that could roll back
+- Read target `nearest` → read from the closest node, possibly a secondary
+- Read level `majority` → never read data that could roll back
 - The TUNE: `nearest + majority` = fast and safe-but-stale; `primary +
   linearizable` = read-your-writes, cross-region latency. Present the spectrum.
 
-**Replication**: one replica set spanning regions (electable nodes in 2–3
+**Replication**: one replicated group spanning regions (electable nodes in 2–3
 regions), or per-region shard replicas. Election: majority must live in ≥2
 regions so single-region loss still elects. Say the number: cross-region RTT
-(~60–150ms) bounds election + w:majority latency.
+(~60–150ms) bounds election + majority-ack latency.
 
 **Routing** (your applied-networking strength): DNS geo-steering or anycast to
-the nearest mongos; L7 LB for connection draining during failover; connection
-pools sized per-region-link with circuit breaking so a sick region doesn't
-exhaust client pools.
+the nearest router/L7 proxy; L7 LB for connection draining during failover;
+connection pools sized per-region-link with circuit breaking so a sick region
+doesn't exhaust client pools.
 
 **Failure modes**: region cut off → reads continue locally (stale), writes
 reroute to remaining majority; primary region lost → election in survivor
-region (~10s detection + seconds), un-replicated w:1 writes roll back — this
-is EXACTLY what you observed in the Stage 4 lab; reference it.
+region (~10s detection + seconds), un-replicated primary-ack writes roll back —
+reference the Stage 4 conceptual failover walkthrough.
 
 **Capacity math**: write throughput bounded by cross-region replication
-(RTT × w:majority); read throughput scales with regions. State both.
+(RTT × majority ack); read throughput scales with regions. State both.
 
 ## Narration notes
 - "Tunable" is the word to unpack: it maps to the three knobs above, per

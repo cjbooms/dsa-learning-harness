@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage9
 /**
  * Stage 9.4 — Serialize / deserialize a BST using pre-order only.
  *
- * MongoDB relevance: compact storage / wire format for index keys. BST
+ * Why this matters: compact storage / wire format for index keys. BST
  * pre-order is enough to reconstruct the tree because the BST ordering
  * tells you exactly where each subtree boundary is — you don't need to
  * encode nulls. Smaller payloads over the wire, fewer round-trips.

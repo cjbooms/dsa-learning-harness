@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage11
 /**
  * Stage 11.2 — Merge K sorted lists via min-heap (15 min).
  *
- * MongoDB relevance: ordered merge of K already-sorted index ranges, sorted
+ * Why this matters: ordered merge of K already-sorted index ranges, sorted
  * scan over sharded merge-sort output, time-ordered union of per-shard cursors.
  * Compare with the lazy iterator approach in Stage 3.2 — heap wins on
  * asymptotic per-element cost for large k (O(log k) vs O(k)), at the price

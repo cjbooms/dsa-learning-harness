@@ -11,7 +11,7 @@ Watch or read these **before** implementing the matching stub. Each resource mat
 - `JsonParser.kt` — Recursive descent parsing. Reading: any "build a JSON parser" walkthrough.
 
 ## Stage 4
-- `MongoLab.kt` — MongoDB University M320 or the official MongoDB replication docs for write concerns and change streams.
+- `docs/database-internals.md` — any good database internals text or your chosen DB's replication docs for write concerns and change streams.
 
 ## Stage 8 — Graph algorithms
 - `TaskScheduler.kt` (Kahn's) — NeetCode "Course Schedule" (LeetCode 207) or Abdul Bari "Topological Sort (Kahn's)".

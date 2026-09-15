@@ -1,8 +1,8 @@
-# Agents.md — MongoDB Staff+ Interview Prep
+# Agents.md — Engineering Interview Prep
 
 ## What this repo is
 
-Kotlin practice workspace for MongoDB Staff+ onsite interviews. Practice drills live in `stages/` as TODO-body skeletons with KDoc; the user implements them and JUnit5 tests provide the feedback loop. Solved reference implementations live in `solutions/` for post-exercise comparison.
+Kotlin practice workspace for engineering interviews. Practice drills live in `stages/` as TODO-body skeletons with KDoc; the user implements them and JUnit5 tests provide the feedback loop. Solved reference implementations live in `solutions/` for post-exercise comparison.
 
 ## Scope: DSA only
 
@@ -28,7 +28,7 @@ src/main/kotlin/com/cjbooms/prep/
     stage1/        # DSA structures: interval merge, tree serialize, connected components, KV+TTL, topo sort
     stage2/        # Read-write lock
     stage3/        # Iterators, JSON parser, inverted index
-    stage4/        # MongoDB internals lab
+    stage4/        # Database internals fluency
     stage5/        # Code review practice
     stage8/        # Graph algorithms (incl. 8.5 practice: CourseSchedule, AlienDictionary)
     stage9/        # Tree algorithms

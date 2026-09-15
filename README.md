@@ -1,16 +1,14 @@
-# MongoDB Staff+ Interview Prep — Atlas Clusters Onsite
+# Engineering Interview Prep
 
-Kotlin practice workspace for the **onsite panel** (screen passed ✅: rate
-limiter, sliding-window deque + map, O(1) allow).
+Kotlin practice workspace for **engineering interviews** — DSA, system design,
+code review, and concurrency drills.
 
 ## The panel
 
 1. **Programming** — CoderPad, DS selection, complexity, mid-round mutations *(in progress — current focus)*
-2. **System Design** ✅ done — Atlas-scale, whiteboard via CoderPad
+2. **System Design** ✅ done — whiteboard via CoderPad
 3. **Code Review** ✅ done — junior PR, planted issues, depth > breadth
 4. **Experience Deep Dive** ✅ done — architecture scope, production impact
-
-Screen ✅ done. Remaining work is DSA only.
 
 ## How this repo works
 
@@ -28,7 +26,7 @@ don't peek before solving.
 | [1](docs/stages/01-dsa-structures.md) ⭐ | DSA set A: choosing the right structure | 90m |
 | [2](docs/stages/02-read-write-lock.md) | Read-Write Lock (verified onsite question) | 45m |
 | [3](docs/stages/03-iterators-parsers.md) ⭐ | DSA set B: iterators, JSON parser, inverted index | 90m |
-| [4](docs/stages/04-mongodb-fluency.md) ⭐ | MongoDB internals + Docker replica-set lab | 75m |
+| [4](docs/stages/04-database-fluency.md) ⭐ | Database internals fluency | 75m |
 | [5](docs/stages/05-code-review.md) ✅ done | Code review: protocol + planted-bug PR | 60m |
 | [6](docs/stages/06-system-design.md) ✅ done | System design (light, flex stage) | 45m |
 | [7](docs/stages/07-deep-dive-gauntlet.md) ✅ done | Deep-dive checklist + final gauntlet | 30m |
@@ -46,7 +44,7 @@ don't peek before solving.
 Each active stage below lists its stub files in `src/main/kotlin/com/cjbooms/prep/stages/`,
 matching tests in `src/test/kotlin/com/cjbooms/prep/stages/`, and reference solutions in
 `src/main/kotlin/com/cjbooms/prep/solutions/`. Stages 5-7 are already complete; Stage 0 is a
-retrospective of the passed screen.
+retrospective.
 
 ### Stage 0 — Rate Limiter Retrospective ✅ (30m)
 - `RateLimiter.kt` — `allow(requestId, nowMillis)`
@@ -66,8 +64,8 @@ retrospective of the passed screen.
 - `JsonParser.kt` — `parse(json): JsonValue`
 - `InvertedIndex.kt` — `insert`, `search`, `searchAll`
 
-### Stage 4 — MongoDB Internals + Docker Lab (75m)
-- `MongoLab.kt` — write concerns, change streams, primary-failover lab
+### Stage 4 — Database Internals Fluency (75m)
+- Reading + conceptual lab in `docs/database-internals.md`
 
 ### Stage 8 — Graph Algorithms (185m)
 - `TaskScheduler.kt` — Kahn's BFS topological sort
@@ -134,7 +132,7 @@ retrospective of the passed screen.
 ## Reference docs
 
 - `docs/cheat-sheet.md` — DS/algorithms/concurrency flash cards
-- `docs/mongodb-internals.md` — internals primer (Stage 4 reading)
+- `docs/database-internals.md` — internals primer (Stage 4 reading)
 - `docs/review-protocol.md` — code review narration protocol (Stage 5)
 - `docs/reading-go.md` — Go primer in case the review sample is Go
 - `docs/design-skeleton.md` + `docs/designs/` — system design spine + 2 designs
@@ -146,7 +144,6 @@ retrospective of the passed screen.
 ```bash
 ./gradlew build                                # compile + all tests
 ./gradlew test --tests '*stages.stage1*'       # one stage's tests
-docker compose up -d                           # Stage 4 replica set
 ```
 
 ## From the screen prep (still valid)

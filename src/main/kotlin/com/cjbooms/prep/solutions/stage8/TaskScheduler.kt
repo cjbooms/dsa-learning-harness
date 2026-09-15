@@ -5,8 +5,8 @@ import java.util.ArrayDeque
 /**
  * Stage 8.1 — Topological sort via Kahn's algorithm (BFS over in-degrees).
  *
- * Why this matters for MongoDB: dependency-ordered background tasks — index
- * build jobs, migration steps, oplog appliers, change-stream consumer chains.
+ * Why this matters: dependency-ordered background tasks — index
+ * build jobs, migration steps, operation log appliers, event stream consumer chains.
  * "Build the document for me but only after its prerequisites land" is exactly
  * the question that defeated the previous interview.
  *

@@ -9,7 +9,7 @@ solution works — expect at least one per round.
 
 ---
 
-## DSA-1: Versioned Document Store ⭐ (reported MongoDB question, 2026)
+## DSA-1: Versioned Document Store ⭐
 
 > "We're building a document database. Every document has an ID, and we keep every
 > version of it with a timestamp. I need two operations: write a version of a
@@ -93,7 +93,7 @@ O(n) — how?
 
 ---
 
-## CONC-1: Bounded Blocking Queue ⭐ (MongoDB's signature round)
+## CONC-1: Bounded Blocking Queue ⭐
 
 > "Implement a bounded queue. `put` blocks when it's full, `take` blocks when it's
 > empty. Multiple producer and consumer threads will use it. Don't use
@@ -110,9 +110,9 @@ class BoundedBlockingQueue<T>(private val capacity: Int) {
 condition(s) you signal, whether you can explain *why*.
 
 **Follow-ups:** add `offer(item, timeoutMs)` · "now the queue feeds a thread pool —
-make `submit()` block when the executor's queue is full" (this exact mutation was
-reported) · fairness: wake waiters FIFO · do it again with only
-`synchronized`/`wait`/`notify` — why does that version need `notifyAll`?
+make `submit()` block when the executor's queue is full" · fairness: wake waiters
+FIFO · do it again with only `synchronized`/`wait`/`notify` — why does that version
+need `notifyAll`?
 
 ---
 
@@ -165,7 +165,7 @@ synchronization? · where else in this codebase pattern would this bug hide?
 
 ---
 
-## REAL-1: Replication Lag Alerter ⭐ (reported MongoDB round, 2026)
+## REAL-1: Replication Lag Alerter ⭐
 
 > "We're migrating data from a primary database to a secondary. An event fires when
 > a record leaves the primary, and another when it arrives at the secondary. If any

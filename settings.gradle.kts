@@ -1,1 +1,1 @@
-rootProject.name = "mongo-db-prep"
+rootProject.name = "interview-prep"

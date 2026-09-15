@@ -3,9 +3,9 @@ package com.cjbooms.prep.solutions.stage13
 /**
  * Stage 13.1 — LRU Cache (LeetCode 146).
  *
- * Why this matters for MongoDB: query result caching, session storage,
- * page cache for the WiredTiger storage engine, and any place we evict
- * "the thing nobody has touched recently" — Atlas Search query cache,
+ * Why this matters: query result caching, session storage,
+ * page cache for the storage engine storage engine, and any place we evict
+ * "the thing nobody has touched recently" — full-text search query cache,
  * connection-pool idle eviction, Oplog window buffer eviction.
  *
  * Structure-selection ritual:

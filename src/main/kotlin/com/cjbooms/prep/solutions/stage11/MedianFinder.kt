@@ -5,9 +5,9 @@ import java.util.PriorityQueue
 /**
  * Stage 11.4 — Find median from a data stream (30 min).
  *
- * Why this matters for MongoDB: streaming latency percentiles from the
+ * Why this matters: streaming latency percentiles from the
  * profiler, real-time aggregation of query durations, and rolling statistics
- * over the oplog. Median is harder than mean because you need order, not
+ * over the operation log. Median is harder than mean because you need order, not
  * just a running sum.
  *
  * Structure-selection ritual:

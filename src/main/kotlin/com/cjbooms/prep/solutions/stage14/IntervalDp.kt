@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage14
 /**
  * Stage 14.3 — Interval dynamic programming.
  *
- * MongoDB relevance: query planner cost for nested-loop joins is
+ * Why this matters: query planner cost for nested-loop joins is
  * interval DP in disguise — the optimal ordering of joins over
  * k relations is matrix-chain-multiplication. Worth being able to
  * sketch on a whiteboard.

@@ -5,7 +5,7 @@ import kotlin.math.max
 /**
  * Stage 15.2 — Cold-recall rebuild: interval merging (batch + streaming variants).
  *
- * MongoDB framing: consolidate overlapping time ranges — backup windows, query
+ * Real-world framing: consolidate overlapping time ranges — backup windows, query
  * plan execution windows, lock-acquisition intervals during deadlock analysis.
  *
  * mergeIntervals(list):

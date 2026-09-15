@@ -4,8 +4,8 @@ package com.cjbooms.prep.solutions.stage12
  * Stage 12.2 — Semaphore-based connection pool.
  * Time budget: 15 min.
  *
- * MongoDB context: the driver opens a bounded pool of TCP sockets to each
- * server (mongoc's maxPoolSize / Kotlin driver's maxConnections). The pool
+ * Why this matters: the driver opens a bounded pool of TCP sockets to each
+ * server (driver maxPoolSize / maxConnections). The pool
  * MUST hand out at most N concurrent connections, and requests for more
  * must block (or time out) rather than exhaust the server's file
  * descriptors. A Semaphore with N permits is the textbook primitive for

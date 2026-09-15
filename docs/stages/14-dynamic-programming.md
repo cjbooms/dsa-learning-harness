@@ -22,7 +22,7 @@ if a local choice is provably safe, don't reach for the table.
 - [ ] LCS: 2D table on prefixes; match -> diagonal+1, else max(up, left)
 - [ ] Edit distance: insert/delete/replace = three neighbors + 1
 - [ ] Space optimization: two rows suffice — O(min(m, n))
-- [ ] MongoDB framing: schema migration, config diffing
+- [ ] Real-world framing: schema migration, config diffing
 
 ### 14.3 Word Break (15 min)
 `wordBreak(s, wordDict)` / `wordBreakIi(s, wordDict)` in `WordBreak.kt`

@@ -20,13 +20,13 @@ contract aloud before coding — half the bugs are contract bugs, not pointer bu
 `lowestCommonAncestorBst(root, p, q)` / `lowestCommonAncestor(root, p, q)` in `LowestCommonAncestor.kt`
 - [ ] BST version: iterative walk on ordering — O(h), no recursion
 - [ ] General binary tree: post-order; first node whose two sides both hit
-- [ ] MongoDB framing: hierarchical data, org structures
+- [ ] Real-world framing: hierarchical data, org structures
 
 ### 9.3 Trie (20 min)
 `insert` / `search` / `startsWith` in `Trie.kt`
 - [ ] Fixed 26-slot children array (a-z contract — say it aloud)
 - [ ] Shared private walkTo for search vs startsWith
-- [ ] Atlas Search relevance: autocomplete, prefix queries
+- [ ] Search relevance: autocomplete, prefix queries
 
 ### 9.4 Serialize a BST (10 min)
 `serializeBst(root)` / `deserializeBst(data)` in `BstSerializer.kt`

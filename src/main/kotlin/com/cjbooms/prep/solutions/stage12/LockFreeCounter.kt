@@ -7,7 +7,7 @@ import kotlin.concurrent.thread
  * Stage 12.3 — Lock-free counter using compare-and-set.
  * Time budget: 10 min.
  *
- * MongoDB context: hot counters are everywhere in a database engine —
+ * Why this matters: hot counters are everywhere in a database engine —
  * operations executed, documents inserted, conflicts resolved, page faults
  * served. Under heavy contention a `synchronized` counter serialises every
  * increment onto one OS mutex. An AtomicLong with a CAS loop gives

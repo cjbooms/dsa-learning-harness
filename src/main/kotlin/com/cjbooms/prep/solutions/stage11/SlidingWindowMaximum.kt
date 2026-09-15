@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage11
 /**
  * Stage 11.5 — Sliding window maximum (25 min).
  *
- * Why this matters for MongoDB: rolling max over streaming metrics (oplog
+ * Why this matters: rolling max over streaming metrics (operation log
  * throughput, replication lag, cache hit rate), and windowed aggregations where
  * you need the peak in every fixed-size interval.
  *

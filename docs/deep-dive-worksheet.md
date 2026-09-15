@@ -21,7 +21,7 @@ LESSON. They probe WHY decisions were made, not just what was built.
 - What I'd do instead + why: ______
 (Shows growth; pairs with the "why did you choose X" probing.)
 
-## MongoDB mapping (30 seconds each, have them ready)
+## Database / distributed systems mapping (30 seconds each, have them ready)
 - Where in MY past does a sharded/replicated system appear? ______
 - Where have I made consistency/latency trade-offs explicitly? ______
 - Where have I built/used observability at scale? ______

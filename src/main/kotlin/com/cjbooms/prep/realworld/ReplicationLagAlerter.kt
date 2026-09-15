@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Reported MongoDB "real-world problem" round (2026): data-migration lag verifier.
+ * Classic real-world problem: data-migration lag verifier.
  *
  * Events fire when a record leaves the primary and when it arrives at the
  * secondary. Raise an alert if any record's replication lag exceeds maxLagSeconds.

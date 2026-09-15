@@ -4,7 +4,7 @@ package com.cjbooms.prep.solutions.stage8
  * Stage 8.3 — Cycle detection in a directed graph, optionally returning the
  * cycle itself.
  *
- * Why this matters for MongoDB: deadlock detection between transactions,
+ * Why this matters: deadlock detection between transactions,
  * circular migrations in sharded clusters, import pipelines that loop on each
  * other. Boolean is rarely enough — the cycle is the actionable artefact.
  *

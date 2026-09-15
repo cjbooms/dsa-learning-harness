@@ -20,7 +20,7 @@ fun findRedundantConnection(edges: Array<IntArray>): IntArray {
     val cycles = mutableSetOf<IntArray>()
     val unionFind = UnionFindInner(length)
     edges.forEach {
-        if (unionFind.union(it[0] - 1, it[1] -1) == false) {
+        if (unionFind.union(it[0] - 1, it[1] - 1) == false) {
             println("Already in same component ${it.joinToString()}")
             cycles.add(it)
         }

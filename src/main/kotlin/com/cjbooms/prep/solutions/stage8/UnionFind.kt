@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage8
 /**
  * Stage 8.5 — Union-Find with path compression + union by rank.
  *
- * Why this matters for MongoDB: dynamic connectivity over clusters, network
+ * Why this matters: dynamic connectivity over clusters, network
  * partition detection, "are these two shards in the same replica set?". When
  * edges arrive one at a time and you re-query repeatedly, union-find beats
  * DFS/BFS — nearly O(1) amortised per op with both optimisations.

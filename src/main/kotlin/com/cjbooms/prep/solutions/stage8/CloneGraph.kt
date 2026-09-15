@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage8
 /**
  * Stage 8.9 — Clone an undirected connected graph (25 min).
  *
- * Why this matters for MongoDB: query-plan graph transformation, dependency
+ * Why this matters: query-plan graph transformation, dependency
  * graph copying (e.g. for speculative optimization), and serialization of
  * connected metadata.
  *

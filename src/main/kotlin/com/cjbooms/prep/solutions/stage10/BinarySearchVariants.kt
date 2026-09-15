@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage10
 /**
  * Stage 10.3 — Binary Search Variants.
  *
- * MongoDB relevance: B-tree cursor positioning on indexes is a generalized
+ * Why this matters: B-tree cursor positioning on indexes is a generalized
  * binary search; the query planner picks scan bounds by binary-searching the
  * index for the requested key range. Rotated-array search mirrors recovery
  * scenarios (compaction, log rotation) where sorted data is shifted.

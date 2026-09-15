@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage11
 /**
  * Stage 11.3 — Task scheduler with cooldown (15 min).
  *
- * MongoDB relevance: scheduling operations on a hot collection with a
+ * Why this matters: scheduling operations on a hot collection with a
  * cooldown between repeated writes (rate-shaped writes, deduplicated
  * retries, Atlas trigger throttling). The greedy "always run the most
  * frequent remaining task" is the LeetCode 621 formulation.

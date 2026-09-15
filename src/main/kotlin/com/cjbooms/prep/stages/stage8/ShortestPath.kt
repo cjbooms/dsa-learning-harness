@@ -38,6 +38,7 @@ fun shortestPathGrid(
         throw IllegalArgumentException("Start out of bounds or blocked $start")
     if (outOfBounds(target.first, target.second) || blocked(target.first, target.second))
         throw IllegalArgumentException("Target out of bounds or blocked $start")
+
     val directions = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
 
     val queue = ArrayDeque<Position>()

@@ -3,9 +3,10 @@ package com.cjbooms.prep.stages.stage1
 import kotlin.math.max
 
 /**
- * Stage 1.1 — Interval merging (REPORTED MongoDB question).
+ * Stage 1.1 — Interval merging (classic intervals question).
  *
- * Atlas framing: consolidate overlapping backup windows.
+ * Real-world framing: consolidate overlapping backup windows, meeting schedules,
+ * or any half-open range problem.
  * Given half-open intervals [start, end), merge all overlapping or touching
  * ones and return the minimal sorted list.
  *

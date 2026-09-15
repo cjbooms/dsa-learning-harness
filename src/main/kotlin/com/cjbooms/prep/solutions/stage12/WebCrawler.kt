@@ -9,7 +9,7 @@ import kotlin.concurrent.withLock
 /**
  * Stage 12.2 — Multithreaded web crawler (15 min).
  *
- * MongoDB relevance: crawling metadata indexes, changestream topology
+ * Why this matters: crawling metadata indexes, event stream topology
  * discovery, and any graph where edges are discovered lazily by many
  * workers. The challenge is combining BFS reachability with safe shared
  * mutable state.

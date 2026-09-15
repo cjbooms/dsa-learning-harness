@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage10
 /**
  * Stage 10.5 — Text Justification (15 min).
  *
- * MongoDB relevance: formatting query results, fixed-width CLI output, and
+ * Why this matters: formatting query results, fixed-width CLI output, and
  * any text-layout problem where whitespace must be distributed evenly across
  * a known line width.
  *

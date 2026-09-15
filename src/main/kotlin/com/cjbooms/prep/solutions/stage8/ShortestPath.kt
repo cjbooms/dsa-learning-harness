@@ -5,7 +5,7 @@ import java.util.ArrayDeque
 /**
  * Stage 8.4 — Shortest path on an unweighted graph (grid variant).
  *
- * Why this matters for MongoDB: query planning intuition (every hop in a join
+ * Why this matters: query planning intuition (every hop in a join
  * graph is a cost), geospatial shortest-path reasoning on GeoJSON data,
  * latency reasoning across replica hops. The grid form is a frequent interview
  * shape — "0/1 matrix, find shortest path from top-left to bottom-right".

@@ -6,7 +6,7 @@ import kotlin.concurrent.withLock
 /**
  * Stage 15.6 — Cold-recall rebuild: read-write lock.
  *
- * MongoDB framing: storage engine shared-buffer access — many readers scan
+ * Real-world framing: storage engine shared-buffer access — many readers scan
  * pages concurrently, writers flush dirty pages exclusively. Same shape as
  * the Verified Stage 2 onsite question (Aug 2025).
  *

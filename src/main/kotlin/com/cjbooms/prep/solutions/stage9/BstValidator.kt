@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage9
 /**
  * Stage 9.1 — Validate a binary search tree.
  *
- * MongoDB relevance: index ordering invariants. A corrupted B-tree page or a
+ * Why this matters: index ordering invariants. A corrupted B-tree page or a
  * mis-ordered index entry violates the BST property just like a mis-ordered
  * node here. Validation queries (sanity checks during recovery, or in tests)
  * use the same recursive min/max bound argument.

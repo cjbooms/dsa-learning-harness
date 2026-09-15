@@ -3,8 +3,8 @@ package com.cjbooms.prep.solutions.stage10
 /**
  * Stage 10.2 — Sliding Window.
  *
- * MongoDB relevance: oplog tailing windows, change-stream resumability,
- * aggregation $setWindowFields, and time-bucketed counters in $bucket all
+ * Why this matters: operation log tailing windows, event stream resumability,
+ * aggregation windowed aggregation, and time-bucketed counters in time-bucketed grouping all
  * reduce to "maintain state over the last K elements of a stream". The
  * hit-counter and rate-limiter stages are sliding-window siblings.
  *
@@ -33,15 +33,15 @@ package com.cjbooms.prep.solutions.stage10
 fun longestSubstringWithoutRepeats(text: String): Int {
     val lastSeen = hashMapOf<Char, Int>()
     var best = 0
-    var left = 0
-    for ((right, character) in text.withIndex()) {
-        val previous = lastSeen[character]
+    var leftIndex = 0
+    for ((rightIndex, character) in text.withIndex()) {
+        val previouslySeenAtIndex = lastSeen[character]
         // if char is already inside the window, jump left past its old slot
-        if (previous != null && previous >= left) {
-            left = previous + 1
+        if (previouslySeenAtIndex != null && previouslySeenAtIndex >= leftIndex) {
+            leftIndex = previouslySeenAtIndex + 1
         }
-        lastSeen[character] = right
-        val length = right - left + 1
+        lastSeen[character] = rightIndex
+        val length = rightIndex - leftIndex + 1
         if (length > best) best = length
     }
     return best

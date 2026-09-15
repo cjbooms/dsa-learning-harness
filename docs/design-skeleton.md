@@ -14,8 +14,8 @@ is what keeps you coherent under time pressure.
   concreteness before boxes-and-arrows.
 
 ## 3. Data model (3 min)
-- Core entities + how they're stored/partitioned. At MongoDB, say the storage
-  story: collections, shard keys, indexes — Stage 4 vocabulary.
+- Core entities + how they're stored/partitioned. Use the storage story:
+  tables/collections, partition/shard keys, indexes — Stage 4 vocabulary.
 
 ## 4. Scaling story (4 min)
 - The horizontal path: what partitions, what replicates, what balances.

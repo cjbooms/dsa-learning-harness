@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage9
 /**
  * Stage 9.3 — Trie (prefix tree).
  *
- * MongoDB relevance: Atlas Search relevance (autocomplete, prefix queries),
+ * Why this matters: full-text search relevance (autocomplete, prefix queries),
  * text index token lookups, command parsing (`db.collection.aggregate`
  * dispatched on prefix). The "startsWith" operation is the literal query
  * pattern.

@@ -15,6 +15,7 @@ fun hasCycle(n: Int, edges: List<Pair<Int, Int>>): Boolean {
 
     var hasCycle = false
     val graph = mutableMapOf<Int, MutableSet<Int>>()
+
     for(i in 0 until n) {
         graph.computeIfAbsent(i) { mutableSetOf<Int>() }
     }

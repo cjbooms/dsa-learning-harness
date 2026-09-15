@@ -3,8 +3,8 @@ package com.cjbooms.prep.solutions.stage10
 /**
  * Stage 10.1 — Two Pointers.
  *
- * MongoDB relevance: query planners scan sorted index ranges with two-pointer
- * walks (merge-join in $lookup, sorted union in find().sort(), aggregation
+ * Why this matters: query planners scan sorted index ranges with two-pointer
+ * walks (merge-join in join queries, sorted union in find().sort(), aggregation
  * pipeline stages that merge pre-sorted shards). Two-pointer also shows up in
  * range intersection for index intersection planning.
  *

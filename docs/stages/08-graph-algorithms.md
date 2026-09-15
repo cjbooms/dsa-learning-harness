@@ -29,7 +29,7 @@ defend the pick.
 `hasCycle(...)` / `findCycle(...)` in `CycleDetector.kt`
 - [ ] DFS with recursion-stack (GRAY) tracking
 - [ ] Return the cycle nodes, not just a boolean — parent-chain reconstruction
-- [ ] MongoDB framing: deadlock detection, circular dependencies
+- [ ] Real-world framing: deadlock detection, circular dependencies
 
 ### 8.4 Shortest path in unweighted graph (15 min)
 `shortestPathGrid(...)` in `ShortestPath.kt`

@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage15
 /**
  * Stage 15.1 — Cold-recall rebuild: fixed sliding-window rate limiter.
  *
- * MongoDB framing: Atlas Control Plane rate-limits incoming requests per tenant
+ * Real-world framing: cloud control plane rate-limits incoming requests per tenant
  * to protect shared services. Same shape as the request governor you'd see in
  * a control-plane edge service.
  *

@@ -5,7 +5,7 @@ import java.util.ArrayDeque
 /**
  * Stage 8.5.1 — Course Schedule II: return the ordering, not just a boolean.
  *
- * Why this matters for MongoDB: scheduling background jobs in a deterministic
+ * Why this matters: scheduling background jobs in a deterministic
  * order (compaction -> validate -> report), migration step ordering, dependency
  * resolution at startup. Returning the schedule (vs a boolean) is what makes
  * the result useful — and it surfaces the harder edge cases (multiple valid

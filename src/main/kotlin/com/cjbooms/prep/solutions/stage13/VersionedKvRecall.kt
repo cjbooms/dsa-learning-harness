@@ -5,8 +5,8 @@ import java.util.TreeMap
 /**
  * Stage 13.7 — Versioned KV store cold recall (15 min).
  *
- * Why this matters for MongoDB: versioned document reads, oplog replay,
- * "as of" timestamp queries, and change-stream semantics all rely on retrieving
+ * Why this matters: versioned document reads, operation log replay,
+ * "as of" timestamp queries, and event stream semantics all rely on retrieving
  * the most recent value at or before a given timestamp.
  *
  * Reference implementation:

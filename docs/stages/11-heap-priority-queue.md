@@ -27,7 +27,7 @@ why is it exactly the answer?
 `leastInterval(tasks, cooldown)` in `TaskSchedulerWithCooldown.kt`
 - [ ] Greedy: most-frequent task first, cooldown gap between repeats
 - [ ] Closed form: (maxCount - 1) * (cooldown + 1) + numMaxTasks, floored at n
-- [ ] MongoDB framing: rate-shaped writes, throttled retries
+- [ ] Real-world framing: rate-shaped writes, throttled retries
 
 ### 11.4 Median from a stream (30 min)
 `addNum(n)` / `findMedian()` in `MedianFinder.kt`

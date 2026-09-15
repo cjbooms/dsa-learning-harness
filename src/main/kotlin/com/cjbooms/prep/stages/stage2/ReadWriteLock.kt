@@ -4,8 +4,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Stage 2 — Implement a read-write lock (VERIFIED MongoDB onsite question,
- * Aug 2025 — candidate solved it in ~30 min with follow-ups).
+ * Stage 2 — Implement a read-write lock (classic concurrency interview question).
  *
  * Rules:
  *   - readLock(): many threads may hold the read lock simultaneously

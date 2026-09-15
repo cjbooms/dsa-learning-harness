@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Canonical MongoDB concurrency-round question: producer/consumer bounded buffer.
+ * Canonical concurrency interview question: producer/consumer bounded buffer.
  *
  * put() blocks while the queue is full; take() blocks while it is empty.
  *

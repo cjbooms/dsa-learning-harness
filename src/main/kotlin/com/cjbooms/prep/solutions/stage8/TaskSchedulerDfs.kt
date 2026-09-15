@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage8
 /**
  * Stage 8.2 — Topological sort via DFS post-order.
  *
- * Why this matters for MongoDB: alternative ordering lens for dependency
+ * Why this matters: alternative ordering lens for dependency
  * chains. Useful when you'd naturally think recursively (deep dependency
  * chains first, leaves of the dep graph pulled last) and when the question
  * emphasises "detect a cycle while you traverse" — DFS naturally exposes a

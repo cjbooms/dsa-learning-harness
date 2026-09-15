@@ -6,7 +6,7 @@ import java.util.PriorityQueue
  * Stage 11.7 — Weighted shortest path in a grid (Dijkstra) with path
  * reconstruction.
  *
- * MongoDB relevance: "find the cheapest route through N cells" is the same
+ * Why this matters: "find the cheapest route through N cells" is the same
  * shape as routing a query plan across heterogeneous shards, picking the
  * minimum-cost sequence of index seeks, or finding the cheapest walk
  * through a sequence of pipeline stages. The grid is just a concrete

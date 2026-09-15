@@ -5,7 +5,7 @@ import java.util.ArrayDeque
 /**
  * Stage 8.8 — Grid traversal patterns: islands and rotting oranges (40 min).
  *
- * Why this matters for MongoDB: geospatial / image-grid analytics, chunk layout
+ * Why this matters: geospatial / image-grid analytics, chunk layout
  * reasoning (contiguous shard key ranges), and cluster-health propagation
  * ("how many minutes until a failure spreads to every affected node?").
  *

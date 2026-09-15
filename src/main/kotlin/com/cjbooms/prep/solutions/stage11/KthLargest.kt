@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage11
 /**
  * Stage 11.1 — Kth largest element in a stream (15 min).
  *
- * MongoDB relevance: top-k-style queries against streaming oplog events,
+ * Why this matters: top-k-style queries against streaming operation log events,
  * finding the k most recent slow queries, leaderboards over append-only
  * event streams. A sorted structure keeps "what is the current kth largest?"
  * cheap as new elements arrive.

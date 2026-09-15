@@ -3,8 +3,8 @@ package com.cjbooms.prep.solutions.stage13
 /**
  * Stage 13.6 — Snapshot array (15 min).
  *
- * Why this matters for MongoDB: point-in-time reads of mutable arrays or
- * per-shard state, versioned config metadata, and "as of timestamp" oplog
+ * Why this matters: point-in-time reads of mutable arrays or
+ * per-shard state, versioned config metadata, and "as of timestamp" operation log
  * queries. Snap IDs are dense ints, which is a structural hint.
  *
  * Structure-selection ritual:

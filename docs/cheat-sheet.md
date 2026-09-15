@@ -1,7 +1,11 @@
 # Interview Cheat Sheet — Kotlin/JVM Flash Cards
 
-Glance-level reminders. Kotlin standard library first, then `java.util` /
-`java.util.concurrent` (what CoderPad Kotlin actually runs on).
+**This is the read-BEFORE doc — morning-of, then close it.** Concepts, traps,
+and the *why*. (Keep `implementation-recipes.md` open during the interview for
+copy-paste skeletons.)
+
+Kotlin standard library first, then `java.util` / `java.util.concurrent`
+(what CoderPad Kotlin actually runs on).
 
 ---
 
@@ -13,7 +17,7 @@ Glance-level reminders. Kotlin standard library first, then `java.util` /
 | `LinkedHashMap` | Insertion order — or **LRU (least-recently-used) cache** via `accessOrder=true` + `removeEldestEntry` | same as HashMap |
 | `TreeMap` / `TreeSet` | Sorted keys, range queries, "greatest ≤ x". O(log n). | `floorEntry(x)`, `ceilingEntry(x)`, `headMap(k)`, `tailMap(k)`, `firstKey()` |
 | `PriorityQueue` | "Smallest/largest first" — top-K, merge K sorted lists, schedulers. O(log n) push/pop. | `add`, `peek` (min), `poll`. Max-heap: `PriorityQueue(compareByDescending{it})` |
-| `ArrayDeque` | Stack AND queue AND circular buffer. Never `Stack`/`LinkedList`. | `addLast/removeFirst` (queue), `addLast/removeLast` (stack) |
+| `ArrayDeque` | Stack AND queue AND circular buffer. **Kotlin's (`kotlin.collections`), no import — never `java.util.ArrayDeque`, never `Stack`/`LinkedList`.** | `addLast/removeFirst` (queue), `addLast/removeLast` (stack), `removeFirstOrNull`/`removeLastOrNull` (Kotlin-only safe pops) |
 | `ArrayList` | Random access, two-pointer walks | `list[i]`, amortized O(1) append |
 | `IntArray`/`BooleanArray` | Dynamic programming tables, letter counts — primitives, no boxing | `IntArray(26)`, `BooleanArray(n+1)` |
 
@@ -65,6 +69,14 @@ while (left < right) {
 ```
 
 > On a `TreeMap`, `floorEntry` / `ceilingEntry` **is** binary search — don't hand-roll it.
+
+> **Ask the constraint question BEFORE choosing the algorithm.** Binary search on
+> unsorted-looking data works whenever each probe eliminates half with certainty —
+> but the certainty usually rests on an unstated constraint. Rotated array: elements
+> distinct? Peak search: neighbors distinct? (equals kill the slope argument — a peak
+> may not even exist). Sorted matrix: rows all the same length? (flattening breaks on
+> jagged input; two-phase row-then-column search doesn't need it). Say the assumption
+> aloud, then code to it.
 
 ### Two pointers
 
@@ -146,16 +158,28 @@ fun backtrack(currentChoices: MutableList<T>) {
 4. **Answer** — which entry holds the result?
 
 ```kotlin
-// Prefix DP pattern (word break, climbing stairs, ...):
-// dp[i] = "answer for the first i elements"
-val dp = BooleanArray(input.length + 1)
-dp[0] = true                       // empty prefix
-for (end in 1..input.length) {
-    for (split in 0..<end) {
-        if (dp[split] && isValid(input, split, end)) { dp[end] = true; break }
+// Prefix DP / reachability pattern (word break, climbing stairs, ...):
+// dp[i] = "the first i elements are achievable"
+// Only extend from REACHABLE positions — a marker means "some path got here",
+// never "the path I took to get here". The future depends on where you are,
+// not how you arrived.
+val reachable = BooleanArray(input.length + 1)
+reachable[0] = true                       // empty prefix
+for (i in 0 until input.length) {
+    if (!reachable[i]) continue           // can't launch from an unreachable position
+    for (j in i until input.length) {
+        if (isValid(input, i, j + 1)) {
+            reachable[j + 1] = true       // mark the LANDING only, never mid-word
+        }
     }
 }
+// answer: reachable[input.length]
 ```
+
+> **Simulation / rendering problems (text justification, spiral order):**
+> decide first, render second. Collect the whole line/group/chunk before
+> placing a single output character — you can't redistribute spaces you've
+> already placed. Two loops, not one.
 
 ### Top-K (the K largest items)
 
@@ -287,13 +311,29 @@ Fixes:  AtomicInteger & friends (single value)
         volatile (simple flag only)
 ```
 
+## Sequential bug archetypes (single-threaded, just as deadly)
+
+```
+PEEK-WITHOUT-CONSUME:  reading queue.first() / peek() to decide, returning early,
+                       and forgetting to remove the token — the same sentinel gets
+                       re-read by the next consumer. (BstSerializer: one null
+                       sentinel served three consumers; right children vanished.)
+                       Rule: one token, one consumer. Peek-then-branch means the
+                       consume must happen on EVERY branch.
+STALE WRITE-BEFORE-READ: overwriting a record without cleaning up its old
+                       side-effects. (InvertedIndex: re-insert with new text left
+                       the docId in the OLD terms' buckets — search("old term")
+                       still hit.) Rule: replace = delete-then-insert, or evict
+                       before overwrite.
+```
+
 ## Kotlin notes for CoderPad
 
 - `list.sorted()`, `list.groupBy{}` are fine, but **say the complexity** — and know
   the manual loop version.
 - `?.let`, `?: return null`, `withLock {}` are idiomatic and read well aloud.
 - Avoid bleeding-edge syntax; CoderPad's Kotlin version lags.
-- `ArrayDeque`, `PriorityQueue`, `TreeMap` need `import java.util.*`.
+- `PriorityQueue`, `TreeMap` need `import java.util.*`. `ArrayDeque` does NOT — it's `kotlin.collections.ArrayDeque`, implicit; never import the java.util one.
 
 ## Complexity answers to have ready
 

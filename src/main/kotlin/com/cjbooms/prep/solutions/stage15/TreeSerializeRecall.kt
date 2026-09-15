@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage15
 /**
  * Stage 15.3 — Cold-recall rebuild: serialize / deserialize a binary tree.
  *
- * MongoDB framing: durable storage of plan/explain tree nodes — round-trip a
+ * Real-world framing: durable storage of plan/explain tree nodes — round-trip a
  * tree through a string without losing shape (null children must survive).
  *
  * Design choices (pick one and defend):

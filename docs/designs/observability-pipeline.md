@@ -1,10 +1,10 @@
 # Design: Distributed Observability for a Database Platform
 
-VERIFIED Senior Staff prompt (Oct 2025): "low overhead, scalable, OpenTelemetry
-integration." This is the Atlas control plane's eyes.
+Senior Staff prompt: "low overhead, scalable, OpenTelemetry integration."
+This is the control plane's eyes.
 
 ## Requirements
-- Collect metrics/logs/traces from ~100k mongod/mongos hosts across AWS/GCP/Azure
+- Collect metrics/logs/traces from ~100k database hosts across AWS/GCP/Azure
 - LOW OVERHEAD: the observer must not hurt the observed (CPU/heap on db hosts
   is the customer's money)
 - OTel-compatible ingestion (customer-facing requirement, not internal choice)
@@ -15,12 +15,12 @@ integration." This is the Atlas control plane's eyes.
 **API**: ingest (OTLP gRPC/HTTP), query (PromQL-ish), alert rules CRUD.
 
 **Data model**: metrics = time series (name, labels, ts, value) → purpose-built
-TSDB, NOT MongoDB itself for the hot path (say why: write-amplification,
-compression, downsampling are TSDB-native — and "we don't dogfood the
-transactional store for telemetry" is a fine opinion to defend). Traces/logs
-→ columnar object storage.
+TSDB, NOT the transactional database itself for the hot path (say why:
+write-amplification, compression, downsampling are TSDB-native — and "we don't
+dogfood the transactional store for telemetry" is a fine opinion to defend).
+Traces/logs → columnar object storage.
 
-**Collection**: agent per host (DaemonSet-style), scraping local mongod
+**Collection**: agent per host (DaemonSet-style), scraping local database
 metrics + reading logs. LOW OVERHEAD answers: pull model with local
 buffering, sampling for traces (head-based at agent, tail-based at
 collector tier), batch + compress before egress, hard CPU/heap caps on the
@@ -44,6 +44,6 @@ must degrade to heartbeat-watchdog ("no data IS an alert").
 compression/downsampling.
 
 ## Narration notes
-- The "why not write concerns here" question: telemetry is not the
+- The "why not write-acknowledgment durability here" question: telemetry is not the
   transactional path — loss tolerance is explicit and bounded; that's the
   difference between observability data and customer data.

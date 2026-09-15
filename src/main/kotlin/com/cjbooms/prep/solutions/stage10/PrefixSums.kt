@@ -3,8 +3,8 @@ package com.cjbooms.prep.solutions.stage10
 /**
  * Stage 10.4 — Prefix Sums.
  *
- * MongoDB relevance: range-sum acceleration in aggregation pipelines
- * ($densify, custom map-reduce, time-windowed metrics) and shard-balancing
+ * Why this matters: range-sum acceleration in aggregation pipelines
+ * (streaming map-reduce, time-windowed metrics) and shard-balancing
  * scoring all precompute partial sums to turn an O(n) range query into O(1).
  *
  * Structure-selection ritual: when does a prefix-sum table win?

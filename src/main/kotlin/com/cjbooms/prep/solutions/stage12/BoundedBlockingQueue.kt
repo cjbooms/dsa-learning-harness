@@ -7,9 +7,9 @@ import kotlin.concurrent.withLock
  * Stage 12.1 — Producer/consumer bounded blocking queue.
  * Time budget: 20 min.
  *
- * MongoDB context: bounded queues sit at the heart of MongoDB's executor
+ * Why this matters: bounded queues sit at the heart of database executor
  * pools (e.g. the network thread pool feeding the operation scheduler,
- * or the WiredTiger cache eviction queue). When the queue is full the
+ * or the storage engine cache eviction queue). When the queue is full the
  * producer must block, not drop — that's the bound. When it's empty
  * the consumer must block, not spin — that's the savings vs. polling.
  *

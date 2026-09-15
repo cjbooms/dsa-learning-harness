@@ -5,7 +5,7 @@ import java.util.Random
 /**
  * Stage 13.5 — Randomized set: insert, remove, getRandom in O(1) (20 min).
  *
- * Why this matters for MongoDB: random sampling from a dynamic set of replica
+ * Why this matters: random sampling from a dynamic set of replica
  * nodes, random query-plan hints, A/B test bucket assignment, and reservoir-style
  * estimators all need uniform random access that survives insert/remove.
  *

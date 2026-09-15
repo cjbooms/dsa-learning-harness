@@ -5,7 +5,7 @@
 ## The meta-skill
 
 These are the "implement a data structure" questions that map directly to
-MongoDB internals: query caches, metrics windows, shard routing. The structure
+database internals: query caches, metrics windows, shard routing. The structure
 ritual is the whole question — the interviewer is listening for the map
 direction, the eviction hook, and the cost of each operation.
 
@@ -30,7 +30,7 @@ direction, the eviction hook, and the cost of each operation.
 - [ ] TreeMap ring + virtual nodes (replicasPerNode hashes per real node)
 - [ ] Inverse map (node -> virtual hashes) so removal is O(replicas), not O(ring)
 - [ ] Lookup: hash key, ceilingEntry, wrap to first — O(log N)
-- [ ] Aloud: why MongoDB sharding cares (minimal remapping on node add/remove)
+- [ ] Aloud: why distributed sharding cares (minimal remapping on node add/remove)
 
 ### 13.4 LFU cache (30 min)
 `get(key)` / `put(key, value)` in `LfuCache.kt`

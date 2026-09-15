@@ -3,7 +3,7 @@ package com.cjbooms.prep.dsa
 import java.util.TreeMap
 
 /**
- * Reported MongoDB interview question (2026, SWE round 1).
+ * Classic system-adjacent DSA question.
  *
  * A versioned document store:
  *  - put(docId, contents, timestamp): record a version; puts may arrive OUT OF ORDER.

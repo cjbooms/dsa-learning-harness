@@ -3,7 +3,7 @@ package com.cjbooms.prep.solutions.stage9
 /**
  * Stage 9.2 — Lowest common ancestor of two nodes.
  *
- * MongoDB relevance: hierarchical data (org chart, taxonomy, document
+ * Why this matters: hierarchical data (org chart, taxonomy, document
  * revision history) and any tree-shaped index (B+ tree, $graphLookup
  * traversal). "Find the nearest shared ancestor" is the same shape as
  * "find the nearest shard key prefix shared by two documents".
