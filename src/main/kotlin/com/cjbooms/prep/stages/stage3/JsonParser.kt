@@ -1,7 +1,7 @@
 package com.cjbooms.prep.stages.stage3
 
 /**
- * Stage 3.3 — JSON parser (VERIFIED Senior Staff question, Nov 2025).
+ * Stage 3.3 — JSON parser (advanced exercise).
  *
  * Recursive descent with a shared cursor: one function per grammar rule,
  * each consuming exactly what it parses by advancing pos. No substring

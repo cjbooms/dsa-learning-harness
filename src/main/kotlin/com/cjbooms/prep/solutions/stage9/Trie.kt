@@ -19,7 +19,7 @@ package com.cjbooms.prep.solutions.stage9
  *     terminate strings with a sentinel child — that conflates "word
  *     ends here" with "branch ends here".
  *
- * Time budget: 20 min.
+ * Estimated time: 20 min.
  */
 
 private class TrieNode {

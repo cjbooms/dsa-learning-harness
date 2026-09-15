@@ -19,7 +19,7 @@ import java.util.ArrayDeque
  *     Seed the queue with all rotten cells, then process level by level. Each
  *     level is one elapsed minute.
  *
- * Time budget: 40 min. Defend aloud: why multi-source BFS for spreading-state
+ * Estimated time: 40 min. Defend aloud: why multi-source BFS for spreading-state
  * problems but single-source BFS for point-to-point shortest path?
  */
 fun countIslands(grid: Array<CharArray>): Int {

@@ -1,12 +1,11 @@
 # Stage 0 — Rate Limiter Retrospective + Escalation Ladder
 
-**Time budget: 30 min** · Package: `stages/stage0` · Verified target: "concurrent expiring queue" (Glassdoor, Oct 2025)
+**Estimated time: 30 min** · Package: `stages/stage0` · classic exercise: "concurrent expiring queue" 
 
 ## Why this stage
 
-Your screen solution was a sliding-window rate limiter (deque + map, O(1) `allow`).
-Interviewers escalate this exact question. Each rung below is a real reported
-follow-up pattern. Rebuild from memory first — cold recall is the training.
+A common initial solution was a sliding-window rate limiter (deque + map, O(1) `allow`).
+Instructors often extend this exact question. Each rung below is a common follow-up pattern. Rebuild from memory first — cold recall is the training.
 
 ## Exercises
 
@@ -14,12 +13,12 @@ follow-up pattern. Rebuild from memory first — cold recall is the training.
 - [ ] Implement `RateLimiter(maxRequests: Int, perMillis: Long)` with
   `fun allow(requestId: String, nowMillis: Long): Boolean` in `RateLimiter.kt`
 - [ ] Sliding-window log: drop expired entries from the front, reject when full
-- [ ] Target: O(1) amortized per call. Say why aloud (each request enters/leaves once)
+- [ ] Target: O(1) amortized per call. Explain why (each request enters/leaves once)
 - [ ] Make `RateLimiterTest` pass (skeleton provided)
 
 ### 0.2 Rung 1 — thread-safe (5 min)
 - [ ] Multiple threads call `allow` concurrently. Fix it. Which tool and why?
-  (Lock vs semaphore vs atomic — narrate the choice)
+  (Lock vs semaphore vs atomic — explain the choice)
 
 ### 0.3 Rung 2 — per-user limits (5 min)
 - [ ] `allow(userId, requestId, nowMillis)` — each user gets their own window
@@ -31,13 +30,13 @@ follow-up pattern. Rebuild from memory first — cold recall is the training.
 
 ### 0.5 Rung 4 — token bucket variant + distributed discussion (5 min)
 - [ ] Sketch `TokenBucketRateLimiter` (no code needed — API + refill math in comments)
-- [ ] Aloud: sliding log vs token bucket — space, burst behavior, precision
-- [ ] Aloud: "now 10 app servers share the limit" — what moves where?
+- [ ] Explain: sliding log vs token bucket — space, burst behavior, precision
+- [ ] Explain: "now 10 app servers share the limit" — what moves where?
   (This is the mini-system-design; 3 sentences is enough)
 
-## Done when
+## Check your understanding
 - [ ] All tests green, each rung committed separately
-- [ ] You can narrate the full ladder in under 3 minutes without notes
+- [ ] You can explain the full ladder in under 3 minutes without notes
 
-## Commit points
+## Suggested checkpoints
 After 0.1, after 0.3, after 0.5.

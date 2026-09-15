@@ -1,35 +1,24 @@
 # Data Structures and Algorithms Learning Harness
 
-Kotlin practice workspace for DSA, system design, code review, and concurrency drills.
-
-## The panel
-
-1. **Programming** — CoderPad, DS selection, complexity, mid-round mutations *(in progress — current focus)*
-2. **System Design** ✅ done — whiteboard via CoderPad
-3. **Code Review** ✅ done — junior PR, planted issues, depth > breadth
-4. **Experience Deep Dive** ✅ done — architecture scope, production impact
+Kotlin practice workspace for DSA and system-adjacent drills.
 
 ## How this repo works
 
-16 stages. Each stage has a doc in `docs/stages/` (goals,
-exercises, time budget, homework, done-when checklist) and a matching package
-in `src/main/kotlin/com/cjbooms/prep/stages/` with skeletons — **signatures +
-KDoc only, no solutions in stages/** (homework rule: you write the code, tests
-tell you when it's right). Solved reference implementations live in
-`src/main/kotlin/com/cjbooms/prep/solutions/` for post-exercise comparison —
-don't peek before solving.
+13 stages. Each stage has a doc in `docs/stages/` (goals, exercises, and
+notes) and a matching package in `src/main/kotlin/com/cjbooms/prep/stages/`
+with skeletons — **signatures + KDoc only, no solutions in stages/**. You
+implement the exercises and JUnit5 tests provide feedback. Solved reference
+implementations live in `src/main/kotlin/com/cjbooms/prep/solutions/` for
+post-exercise comparison — don't peek before solving.
 
-| Stage | Content | Budget |
+| Stage | Content | Est. time |
 |---|---|---|
-| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder ✅ | 30m |
-| [1](docs/stages/01-dsa-structures.md) ⭐ | DSA set A: choosing the right structure | 90m |
-| [2](docs/stages/02-read-write-lock.md) | Read-Write Lock (verified onsite question) | 45m |
-| [3](docs/stages/03-iterators-parsers.md) ⭐ | DSA set B: iterators, JSON parser, inverted index | 90m |
-| [4](docs/stages/04-database-fluency.md) ⭐ | Database internals fluency | 75m |
-| [5](docs/stages/05-code-review.md) ✅ done | Code review: protocol + planted-bug PR | 60m |
-| [6](docs/stages/06-system-design.md) ✅ done | System design (light, flex stage) | 45m |
-| [7](docs/stages/07-deep-dive-gauntlet.md) ✅ done | Deep-dive checklist + final gauntlet | 30m |
-| [8](docs/stages/08-graph-algorithms.md) ⭐ | Graph algorithms: topo sort, cycle detect, shortest path, union-find, grid flood-fill / rotting oranges, clone graph (+8.5 practice) | 185m |
+| [0](docs/stages/00-rate-limiter-ladder.md) | Rate-limiter retrospective + escalation ladder | 30m |
+| [1](docs/stages/01-dsa-structures.md) | DSA set A: choosing the right structure | 90m |
+| [2](docs/stages/02-read-write-lock.md) | Read-Write Lock | 45m |
+| [3](docs/stages/03-iterators-parsers.md) | DSA set B: iterators, JSON parser, inverted index | 90m |
+| [4](docs/stages/04-database-fluency.md) | Database internals fluency | 75m |
+| [8](docs/stages/08-graph-algorithms.md) | Graph algorithms: topo sort, cycle detect, shortest path, union-find, grid flood-fill / rotting oranges, clone graph (+8.5 practice) | 185m |
 | [9](docs/stages/09-tree-algorithms.md) | Tree algorithms: BST validate, LCA, Trie, BST serialize | 60m |
 | [10](docs/stages/10-array-string-patterns.md) | Array/string: two pointers, sliding window, binary search, prefix sums, text justification | 75m |
 | [11](docs/stages/11-heap-priority-queue.md) | Heap: kth largest, merge k lists, task scheduler, median stream, sliding window max | 100m |
@@ -42,10 +31,9 @@ don't peek before solving.
 
 Each active stage below lists its stub files in `src/main/kotlin/com/cjbooms/prep/stages/`,
 matching tests in `src/test/kotlin/com/cjbooms/prep/stages/`, and reference solutions in
-`src/main/kotlin/com/cjbooms/prep/solutions/`. Stages 5-7 are already complete; Stage 0 is a
-retrospective.
+`src/main/kotlin/com/cjbooms/prep/solutions/`.
 
-### Stage 0 — Rate Limiter Retrospective ✅ (30m)
+### Stage 0 — Rate Limiter Retrospective + Escalation Ladder (30m)
 - `RateLimiter.kt` — `allow(requestId, nowMillis)`
 - `PerUserRateLimiterConventional.kt` — escalation rungs (thread-safe, per-user, memory-bound, token bucket)
 
@@ -132,11 +120,8 @@ retrospective.
 
 - `docs/cheat-sheet.md` — DS/algorithms/concurrency flash cards
 - `docs/database-internals.md` — internals primer (Stage 4 reading)
-- `docs/review-protocol.md` — code review narration protocol (Stage 5)
-- `docs/reading-go.md` — Go primer in case the review sample is Go
-- `docs/design-skeleton.md` + `docs/designs/` — system design spine + 2 designs
-- `docs/exercise-prompts.md`, `docs/coderpad-drills.md` — screen-prep drills
-  (still useful for warm-ups)
+- `docs/implementation-recipes.md` — skeletons for common patterns
+- `docs/exercise-prompts.md` — exercise prompts in plain English
 
 ## Commands
 
@@ -145,7 +130,7 @@ retrospective.
 ./gradlew test --tests '*stages.stage1*'       # one stage's tests
 ```
 
-## From the screen prep (still valid)
+## Warm-up exercises
 
 `dsa/`, `concurrency/`, `realworld/` packages with solved, commented exercises
 (VersionedKVStore, BoundedBlockingQueue, ReplicationLagAlerter...) — reference

@@ -5,7 +5,7 @@ import kotlin.concurrent.thread
 
 /**
  * Stage 12.3 — Lock-free counter using compare-and-set.
- * Time budget: 10 min.
+ * Estimated time: 10 min.
  *
  * Why this matters: hot counters are everywhere in a database engine —
  * operations executed, documents inserted, conflicts resolved, page faults
@@ -23,7 +23,7 @@ import kotlin.concurrent.thread
  *                      updateAndGet on the JDK is implemented as exactly this
  *                      loop, so we get the same semantics inline.
  *   3. ABA risk     -> none for a monotonically increasing counter; mention
- *                      it explicitly because interviewers will ask.
+ *                      it explicitly because reviewers will ask.
  *   4. Why not synchronized? -> uncontested CAS is ~1ns; uncontested monitor
  *      enter is ~20ns. Under contention CAS wins by orders of magnitude
  *      because no thread ever blocks.

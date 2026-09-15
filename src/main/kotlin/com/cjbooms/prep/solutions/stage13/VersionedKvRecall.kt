@@ -19,7 +19,7 @@ import java.util.TreeMap
  *   - `floorEntry(timestamp)` returns the newest version whose timestamp is <=
  *     the requested one — exactly "as of" semantics.
  *
- * Time budget: 15 min. Do not peek at the reference until after you attempt it.
+ * Estimated time: 15 min. Do not peek at the reference until after you attempt it.
  */
 class VersionedKvRecall {
 

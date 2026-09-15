@@ -15,7 +15,7 @@ package com.cjbooms.prep.solutions.stage10
  * If the array is unsorted and order is not invariant, fall back to hashmap
  * (single-pair sum) or sort first (k-sum).
  *
- * Time budget: 15 minutes. Three exercises, ~5 min each.
+ * Estimated time: 15 minutes. Three exercises, ~5 min each.
  */
 
 /**

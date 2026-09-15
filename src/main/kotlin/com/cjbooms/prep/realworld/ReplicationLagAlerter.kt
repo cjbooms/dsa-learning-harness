@@ -31,7 +31,7 @@ import kotlin.concurrent.withLock
  * to remove from one index while poll() reads the other mid-update.
  * Composite invariant -> single lock around every method.
  *
- * Messy-event handling (interviewers always probe this):
+ * Messy-event handling (always probe this):
  *   - Arrival for a record we never saw leave: ignored (returns null).
  *   - Events out of order: pairing is by recordId, not arrival sequence.
  *   - Duplicate alert prevention: `alerted` remembers every recordId ever
@@ -47,7 +47,7 @@ class ReplicationLagAlerter(private val maxLagSeconds: Long) {
 
     // Same records, keyed by leave time so range queries by age are direct.
     // (Assumes distinct leave timestamps; if two records can share a timestamp,
-    //  make the value a set of recordIds — say this caveat aloud in the interview.)
+    //  make the value a set of recordIds — say this caveat aloud.)
     private val recordIdByLeaveTime = TreeMap<Long, String>()
 
     // Records we've already raised an alert for — exactly-once alerting.

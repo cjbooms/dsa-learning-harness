@@ -4,7 +4,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Stage 2 — Implement a read-write lock (classic concurrency interview question).
+ * Stage 2 — Implement a read-write lock (classic concurrency exercise).
  *
  * Rules:
  *   - readLock(): many threads may hold the read lock simultaneously
@@ -13,10 +13,10 @@ import kotlin.concurrent.withLock
  *     ReentrantReadWriteLock (that's the whole point of the exercise)
  *
  * State you'll need: active reader count, active writer flag, waiting writer
- * count. Decide: ONE condition or TWO? Defend aloud.
+ * count. Decide: ONE condition or TWO? Defend your choice out loud.
  *
  * Policy (2.2 in the stage doc): when a writer is WAITING, should new readers
- * be admitted? Implement writer-preference. Then say aloud what each policy
+ * be admitted? Implement writer-preference. Then explain what each policy
  * costs: writer-preference -> reader throughput; reader-preference -> writer
  * starvation.
  */

@@ -1,11 +1,11 @@
-# Interview Cheat Sheet — Kotlin/JVM Flash Cards
+# DSA Cheat Sheet — Kotlin/JVM Flash Cards
 
-**This is the read-BEFORE doc — morning-of, then close it.** Concepts, traps,
-and the *why*. (Keep `implementation-recipes.md` open during the interview for
+**This is the read-BEFORE doc — review before a practice session, then close it.** Concepts, traps,
+and the *why*. (Keep `implementation-recipes.md` open during practice for
 copy-paste skeletons.)
 
 Kotlin standard library first, then `java.util` / `java.util.concurrent`
-(what CoderPad Kotlin actually runs on).
+(what Kotlin/JVM actually runs on).
 
 ---
 
@@ -21,7 +21,7 @@ Kotlin standard library first, then `java.util` / `java.util.concurrent`
 | `ArrayList` | Random access, two-pointer walks | `list[i]`, amortized O(1) append |
 | `IntArray`/`BooleanArray` | Dynamic programming tables, letter counts — primitives, no boxing | `IntArray(26)`, `BooleanArray(n+1)` |
 
-### Choosing between the maps (the interview question behind the question)
+### Choosing between the maps (the design question behind the question)
 
 - **HashMap — hash table.** Key → bucket via hashCode. O(1) average get/put, O(n)
   worst (hash collisions). No order at all. Reach for it by DEFAULT.
@@ -45,7 +45,7 @@ min/max in O(1) peek — but no search, no ranges, no floor.
 
 **The pattern that keeps recurring:** sorted map + binary-search-to-a-neighborhood
 + linear scan within it. floorEntry/ceilingEntry/headMap — versioned reads,
-streaming interval merge, lag alerter. Recognize the shape, name it aloud.
+streaming interval merge, lag alerter. Recognize the shape, name it out loud.
 
 **Complexity anchors:** HashMap O(1) · TreeMap O(log n) · heap push/pop O(log n) ·
 deque ends O(1) · binary search O(log n) · sort O(n log n).
@@ -150,7 +150,7 @@ fun backtrack(currentChoices: MutableList<T>) {
 
 ### Dynamic programming
 
-*Overlapping subproblems. Say the recurrence OUT LOUD before coding:*
+*Overlapping subproblems. Say the recurrence out loud before coding:*
 
 1. **State** — what does `dp[i]` mean, in one sentence?
 2. **Base case** — usually the empty/single-element input.
@@ -231,7 +231,7 @@ lock.withLock {
 }
 ```
 
-### Old idiom (know it, they ask)
+### Old idiom (know it — exercises often ask)
 
 ```kotlin
 @Synchronized fun put(item: T) {
@@ -291,7 +291,7 @@ pool.shutdown(); pool.awaitTermination(10, SECONDS)
 |---|---|
 | `ConcurrentHashMap` | shared map, no full lock. `computeIfAbsent`, `merge`, `putIfAbsent` are atomic |
 | `CopyOnWriteArrayList` | read-heavy listener lists; writes copy the array |
-| `LinkedBlockingQueue` | ready-made blocking queue (but interviews want YOU to build one) |
+| `LinkedBlockingQueue` | ready-made blocking queue (but exercises often ask you to build one) |
 
 **ConcurrentHashMap trap:** `get` + `put` as two calls is NOT atomic — use `compute`/`merge`.
 
@@ -327,12 +327,12 @@ STALE WRITE-BEFORE-READ: overwriting a record without cleaning up its old
                        before overwrite.
 ```
 
-## Kotlin notes for CoderPad
+## Kotlin notes for coding platforms
 
 - `list.sorted()`, `list.groupBy{}` are fine, but **say the complexity** — and know
   the manual loop version.
 - `?.let`, `?: return null`, `withLock {}` are idiomatic and read well aloud.
-- Avoid bleeding-edge syntax; CoderPad's Kotlin version lags.
+- Avoid bleeding-edge syntax; platform Kotlin versions may lag.
 - `PriorityQueue`, `TreeMap` need `import java.util.*`. `ArrayDeque` does NOT — it's `kotlin.collections.ArrayDeque`, implicit; never import the java.util one.
 
 ## Complexity answers to have ready

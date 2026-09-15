@@ -1,6 +1,6 @@
 # Stage 4 — Database Internals Fluency
 
-**Time budget: 75 min** ⭐ · Package: `stages/stage4` · Evidence: study how modern
+**Estimated time: 75 min** · Package: `stages/stage4` · Evidence: study how modern
 DBs work in depth.
 
 ## Why this stage
@@ -13,7 +13,7 @@ talking points in every other round.
 ## Part A — Active reading (25 min)
 
 Read `docs/database-internals.md`. Don't skim — for each section:
-- [ ] Write one question an interviewer might ask about it
+- [ ] Write one question an reviewers might ask about it
 - [ ] Write the 1-sentence answer you'd give
 (Annotate directly in a scratch file or the margins)
 
@@ -27,7 +27,7 @@ to that system's terminology.
 - [ ] For your chosen DB, what does "primary acknowledged" vs "majority acknowledged"
       look like?
 - [ ] What latency difference do you expect?
-- [ ] Aloud: what does majority actually guarantee? (survives failover)
+- [ ] Explain: what does majority actually guarantee? (survives failover)
 
 ### Lab 2 — change streams / CDC (15 min)
 - [ ] How do you tail the replication log in your chosen DB?
@@ -40,13 +40,13 @@ to that system's terminology.
 - [ ] Did any acknowledged writes disappear? (rollback of un-replicated writes)
 - [ ] THIS is the failover-orchestrator design question, reasoned firsthand
 
-## Homework (not in budget)
+## Extensions
 - [ ] Sketch an indexed vs unindexed query plan: full scan vs index seek
 
-## Done when
+## Check your understanding
 - [ ] lab-notes.md has: your chosen DB's terminology map, majority-vs-primary
       latency story, one change-event sketch, one failover walkthrough
 - [ ] You can explain replication log vs WAL vs change stream without notes
 
-## Commit points
+## Suggested checkpoints
 After lab-notes.md is complete.

@@ -19,7 +19,7 @@ import java.util.TreeMap
  *
  *   put: O(log v), get: O(log v)   where v = number of versions of that doc.
  *
- * Interview note: if they push on "what if there are billions of docs", the shape
+ * Note: if they push on "what if there are billions of docs", the shape
  * doesn't change — the TreeMap is per-doc, so its size is versions-of-one-doc,
  * not total docs.
  */

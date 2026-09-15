@@ -14,7 +14,7 @@ package com.cjbooms.prep.solutions.stage10
  *   - You want O(1) per range query after an O(n) build.
  * If the array mutates, prefer a Fenwick tree (BIT) or segment tree.
  *
- * Time budget: 10 minutes.
+ * Estimated time: 10 minutes.
  */
 
 /**

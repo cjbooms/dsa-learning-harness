@@ -18,7 +18,7 @@ package com.cjbooms.prep.solutions.stage15
  *   2. Pick one and say WHY in one sentence.
  *   3. THEN code.
  *
- * Time budget: 8 minutes cold.
+ * Estimated time: 8 minutes cold.
  */
 class RateLimiterRecall(private val maxRequests: Int, private val perMillis: Long) {
 

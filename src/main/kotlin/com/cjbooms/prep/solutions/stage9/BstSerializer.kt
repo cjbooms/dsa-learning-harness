@@ -19,7 +19,7 @@ package com.cjbooms.prep.solutions.stage9
  *   - Empty tree: pick a sentinel string ("null", or an empty string) and
  *     document it. Null root is a common edge case in tests.
  *
- * Time budget: 10 min.
+ * Estimated time: 10 min.
  */
 
 data class BstNode(val value: Int, var left: BstNode? = null, var right: BstNode? = null)

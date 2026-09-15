@@ -1,15 +1,15 @@
-# Exercise Prompts — What the Interviewer Gives You
+# Exercise Prompts
 
 Each prompt below is written the way it would actually arrive: a short verbal
-framing plus a starter signature in CoderPad. **Do not read the solution files in
+framing plus a starter signature in your editor. **Do not read the solution files in
 `src/main/kotlin/` until after you've attempted the drill.**
 
-The "Follow-ups" section is what the interviewer springs on you *after* your first
+The "Follow-ups" section is what appears after your first
 solution works — expect at least one per round.
 
 ---
 
-## DSA-1: Versioned Document Store ⭐
+## DSA-1: Versioned Document Store
 
 > "We're building a document database. Every document has an ID, and we keep every
 > version of it with a timestamp. I need two operations: write a version of a
@@ -24,7 +24,7 @@ class VersionedKVStore {
 }
 ```
 
-**Examples they'd walk through:**
+**Examples to walk through:**
 ```
 put("doc1", "v1", ts=1); put("doc1", "v2", ts=5)
 get("doc1", 5)  -> "v2"
@@ -93,7 +93,7 @@ O(n) — how?
 
 ---
 
-## CONC-1: Bounded Blocking Queue ⭐
+## CONC-1: Bounded Blocking Queue
 
 > "Implement a bounded queue. `put` blocks when it's full, `take` blocks when it's
 > empty. Multiple producer and consumer threads will use it. Don't use
@@ -106,7 +106,7 @@ class BoundedBlockingQueue<T>(private val capacity: Int) {
 }
 ```
 
-**What they're really testing:** `while` loops around `await()` (not `if`), which
+**What this really tests:** `while` loops around `await()` (not `if`), which
 condition(s) you signal, whether you can explain *why*.
 
 **Follow-ups:** add `offer(item, timeoutMs)` · "now the queue feeds a thread pool —
@@ -129,7 +129,7 @@ class ThreadSafeLruCache<K, V>(private val maxSize: Int) {
 ```
 
 **The trap to mention unprompted:** `get` mutates recency order, so a read-write
-lock doesn't let `get` take the *read* lock. Say this before they ask.
+lock doesn't let `get` take the *read* lock. Say this before being asked.
 
 **Follow-ups:** why not just `ConcurrentHashMap`? · lock striping for throughput ·
 add per-entry TTL · make it a loading cache (compute-on-miss, single-flight).
@@ -138,7 +138,7 @@ add per-entry TTL · make it a loading cache (compute-on-miss, single-flight).
 
 ## CONC-3: Find and Fix the Race
 
-> *(They paste broken code into the pad.)* "This counter/account is misbehaving in
+> (Broken code is provided.) "This counter/account is misbehaving in
 > production. What's wrong, and how do you fix it?"
 
 ```kotlin
@@ -156,7 +156,7 @@ class BankAccount(var balance: Long) {
 }
 ```
 
-**What they're testing:** can you name the exact interleaving that breaks it (draw
+**What this tests:** can you name the exact interleaving that breaks it (draw
 the two-thread timeline), atomicity vs visibility, and when you'd pick
 `AtomicInteger` vs a lock.
 
@@ -165,7 +165,7 @@ synchronization? · where else in this codebase pattern would this bug hide?
 
 ---
 
-## REAL-1: Replication Lag Alerter ⭐
+## REAL-1: Replication Lag Alerter
 
 > "We're migrating data from a primary database to a secondary. An event fires when
 > a record leaves the primary, and another when it arrives at the secondary. If any
@@ -186,10 +186,10 @@ event is lost entirely?
 
 ---
 
-## How interviewers score these (Staff+ bar)
+## How exercises are scored
 
 - Clarify before coding — restate, pin down edge cases, agree on the signature.
-- Narrate the plan and complexity *before* implementing.
+- Narrate the plan and complexity before implementing.
 - Working, readable code beats clever code.
 - Walk through their examples, then your own edge cases, unprompted.
-- Take hints gracefully — collaboration is explicitly part of the evaluation.
+- Take hints gracefully — collaboration is part of learning.

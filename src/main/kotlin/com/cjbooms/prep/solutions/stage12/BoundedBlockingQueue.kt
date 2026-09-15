@@ -5,7 +5,7 @@ import kotlin.concurrent.withLock
 
 /**
  * Stage 12.1 — Producer/consumer bounded blocking queue.
- * Time budget: 20 min.
+ * Estimated time: 20 min.
  *
  * Why this matters: bounded queues sit at the heart of database executor
  * pools (e.g. the network thread pool feeding the operation scheduler,
@@ -28,7 +28,7 @@ import kotlin.concurrent.withLock
  *                      and on condition mismatch — re-check every wakeup.
  *
  * Why not BlockingQueue from the JDK? The exercise IS to build it. Saying
- * "I'd just use ArrayBlockingQueue" is the wrong answer for a Staff round.
+ * "I'd just use ArrayBlockingQueue" is the wrong answer for an advanced exercise.
  *
  * Follow-ups to practice:
  *   - "Add offer(item, timeoutMs)"     -> notFull.awaitNanos(remainingNanos)

@@ -20,7 +20,7 @@ import java.util.PriorityQueue
  *
  * The invariant IS the answer — say it before coding.
  *
- * Time budget: 30 min.
+ * Estimated time: 30 min.
  */
 class MedianFinder {
 

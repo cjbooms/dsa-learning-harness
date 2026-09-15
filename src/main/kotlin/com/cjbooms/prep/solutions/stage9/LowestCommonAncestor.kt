@@ -4,9 +4,8 @@ package com.cjbooms.prep.solutions.stage9
  * Stage 9.2 — Lowest common ancestor of two nodes.
  *
  * Why this matters: hierarchical data (org chart, taxonomy, document
- * revision history) and any tree-shaped index (B+ tree, $graphLookup
- * traversal). "Find the nearest shared ancestor" is the same shape as
- * "find the nearest shard key prefix shared by two documents".
+ * revision history) and any tree-shaped index (B+ tree, graph traversal). "Find the nearest shared ancestor" is the same shape as
+ * "find the nearest partition key prefix shared by two records".
  *
  * Structure-selection ritual:
  *   - BST version: leverage ordering — if both first and second are < current, LCA
@@ -15,10 +14,10 @@ package com.cjbooms.prep.solutions.stage9
  *   - Generic binary tree: cannot use ordering. Either recurse and let
  *     the first node that sees BOTH children as descendants be the LCA
  *     (post-order, O(n)), or parent-pointer map for O(h) with O(n) extra.
- *   - Decide: which variant is the question asking for? In an interview,
- *     narrate which structure property you are exploiting.
+ *   - Decide: which variant is the question asking for? State which structure
+ *     property you are exploiting.
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 
 data class LcaNode(val value: Int, var left: LcaNode? = null, var right: LcaNode? = null)

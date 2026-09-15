@@ -16,7 +16,7 @@ package com.cjbooms.prep.solutions.stage14
  *   - O(n^3) is expected; say it aloud before they ask. Greedy
  *     fails here — that is the whole point of interval DP.
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 
 /**

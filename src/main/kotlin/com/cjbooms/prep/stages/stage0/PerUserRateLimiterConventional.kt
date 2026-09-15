@@ -4,8 +4,8 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Conventional per-user sliding-window limiter — the shape an interviewer
- * expects to see, for benchmarking against PerUserRateLimiter.
+ * Conventional per-user sliding-window limiter — the shape commonly
+ * expected, for benchmarking against PerUserRateLimiter.
  *
  * Design: ONE structure per user, no global index.
  *   windows: HashMap<userId, ArrayDeque<timestampMillis>>
@@ -24,7 +24,7 @@ import kotlin.concurrent.withLock
  *
  * Memory bounding (rung 0.4) is deliberately NOT on the hot path here:
  * evictIdleUsers() is a separate sweep the caller runs periodically
- * (scheduled task). Alternative discussed in interview: a
+ * (scheduled task). Alternative discussed: a
  * TreeMap<lastActivity, userId> secondary index for O(log n) eviction —
  * at the cost of maintaining two structures in sync on every call.
  */

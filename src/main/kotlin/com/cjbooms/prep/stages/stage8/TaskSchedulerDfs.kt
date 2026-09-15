@@ -8,7 +8,7 @@ package com.cjbooms.prep.stages.stage8
  * return any valid order in which all tasks can be completed. If the
  * dependencies contain a cycle, return an empty list.
  *
- * Time budget: 20 min.
+ * Estimated time: 20 min.
  */
 
 fun main() {

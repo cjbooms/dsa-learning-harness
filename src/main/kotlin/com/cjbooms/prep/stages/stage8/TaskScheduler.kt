@@ -8,7 +8,7 @@ import kotlin.collections.ArrayDeque
  * Why this matters: dependency-ordered background tasks — index
  * build jobs, migration steps, operation log appliers, event stream consumer chains.
  * "Build the document for me but only after its prerequisites land" is exactly
- * the question that defeated the previous interview.
+ * the question that previously caused trouble.
  *
  * Structure-selection ritual:
  *   - State: adjacency list (task -> tasks that depend on it) + in-degree
@@ -18,7 +18,7 @@ import kotlin.collections.ArrayDeque
  *   - Cycle detector: if output.size < tasks.size, the graph had a cycle and
  *     no valid schedule exists.
  *
- * Time budget: 25 min. If you go over, you skipped a beat: the moment a node's
+ * Estimated time: 25 min. If you go over, you skipped a beat: the moment a node's
  * in-degree hits 0 is the moment it joins the queue. Don't rescan.
  */
 fun scheduleTasksKahn(

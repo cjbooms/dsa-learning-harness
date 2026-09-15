@@ -14,7 +14,7 @@ package com.cjbooms.prep.dsa
  * Time:  O(n^2) split checks, each doing an O(k) substring build (k = word length)
  * Space: O(n) for the dp array.
  *
- * Interview tip: say the recurrence out loud BEFORE coding — half the credit
+ * Tip: say the recurrence out loud BEFORE coding — half the credit
  * for a DP question is stating the subproblem clearly.
  */
 fun wordBreak(s: String, wordDict: List<String>): Boolean {

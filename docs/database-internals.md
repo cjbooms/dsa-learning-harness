@@ -1,7 +1,7 @@
-# Database Internals — Interview Primer
+# Database Internals — Primer
 
-One paragraph per concept + "why it matters in an interview answer." Read
-actively in Stage 4: annotate each section with a question you might be asked.
+One paragraph per concept + "why it matters in a design discussion." Read
+actively in Stage 4: annotate each section with a question you might ask yourself.
 
 ## Storage engine — B-trees and caching
 
@@ -25,7 +25,7 @@ last checkpoint.
 
 ## The replication log
 
-A **logical operation log** (oplog, binlog, WAL, etc.) on each replica records
+A **logical operation log** (operation log, binlog, WAL, etc.) on each replica records
 every data-modifying operation. Secondaries replicate by **tailing the primary's
 log** and applying entries in order. Log retention size = your replication-lag
 tolerance window: if a secondary falls further behind than the log retains, it
@@ -92,7 +92,7 @@ for maintenance — ties to zero-downtime ops.
 The supported API for **tailing the replication log**: `watch()` emits ordered
 change events (insert/update/delete/replace) with resume tokens for
 exactly-once-ish consumption (resume after failure = at-least-once + idempotent
-consumer). Works on replica sets and sharded clusters (router tier merges
+consumer). Works on replication groups and sharded clusters (router tier merges
 per-shard streams with a total order guarantee where possible).
 
 **Why it matters:** the real CDC mechanism. Your ReplicationLagAlerter and

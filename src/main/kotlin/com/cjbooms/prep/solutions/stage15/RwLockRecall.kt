@@ -8,7 +8,7 @@ import kotlin.concurrent.withLock
  *
  * Real-world framing: storage engine shared-buffer access — many readers scan
  * pages concurrently, writers flush dirty pages exclusively. Same shape as
- * the Verified Stage 2 onsite question (Aug 2025).
+ * the Stage 2 read-write lock exercise.
  *
  * Rules:
  *   - readLock()    : many threads may hold concurrently
@@ -25,7 +25,7 @@ import kotlin.concurrent.withLock
  *   2. The wait predicate for readers (when to block)? For writers?
  *   3. Why writer preference here — what's the cost?
  *
- * Time budget: 8 minutes cold.
+ * Estimated time: 8 minutes cold.
  */
 class RwLockRecall {
 

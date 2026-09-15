@@ -7,7 +7,7 @@ import kotlin.math.min
 
 
 /**
- * Stage 0.1 — Rebuild your screen solution from memory.
+ * Stage 0.1 — Rebuild the solution from memory.
  *
  * Fixed sliding-window rate limiter: at most [maxRequests] requests allowed
  * in any trailing window of [perMillis] milliseconds.
@@ -18,8 +18,8 @@ import kotlin.math.min
  *   - nowMillis is non-decreasing within a single limiter instance
  *   - target: O(1) amortized per call
  *
- * Ritual before coding: name 2 candidate structures, defeand your pick aloud.
- * (You solved this with a deque + map in the screen — can you rebuild it cold?)
+ * Ritual before coding: name 2 candidate structures, defend your pick out loud.
+ * (You solved this with a deque + map in the initial exercise — can you rebuild it cold?)
  *
  * Rung follow-ups (same file, new classes — see stage doc 00):
  *   0.2 thread-safe      -> ConcurrentRateLimiter

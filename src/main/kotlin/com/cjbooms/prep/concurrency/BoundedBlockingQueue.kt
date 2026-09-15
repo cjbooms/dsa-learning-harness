@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 /**
- * Canonical concurrency interview question: producer/consumer bounded buffer.
+ * Canonical concurrency exercise: producer/consumer bounded buffer.
  *
  * put() blocks while the queue is full; take() blocks while it is empty.
  *
@@ -13,7 +13,7 @@ import kotlin.concurrent.withLock
  *   - notFull:  producers wait here while buffer.size == capacity
  *   - notEmpty: consumers wait here while buffer.isEmpty()
  *
- * The three things interviewers are listening for:
+ * The three things reviewers are listening for:
  *
  *  1. WHY `while` and not `if` around await(): await() can return without the
  *     condition being true (spurious wakeup, or another thread grabbed the slot
@@ -29,7 +29,7 @@ import kotlin.concurrent.withLock
  *     and each state change (one slot freed / one item added) can satisfy
  *     exactly one waiter.
  *
- * Follow-up mutations to practice (interviewers DO change the rules mid-round):
+ * Follow-up mutations to practice (reviewers often change the rules mid-round):
  *   - "add offer(item, timeoutMs)"                 -> notFull.awaitNanos(...)
  *   - "use this to bound an ExecutorService queue,
  *      so submit() blocks when full"               -> wrap take/put around the pool
@@ -88,7 +88,7 @@ class BoundedBlockingQueue<T>(private val capacity: Int) {
 /**
  * Same semantics with the older synchronized/wait/notify idiom.
  *
- * Practice this version too — interviewers ask "how would you do it without
+ * Practice this version too — reviewers ask "how would you do it without
  * j.u.c.locks?", and the answer has a deliberate trap:
  *
  *   There is only ONE wait-set per monitor, shared by blocked producers AND
@@ -134,7 +134,7 @@ class SynchronizedBoundedBlockingQueue<T>(private val capacity: Int) {
 
 /**
  * Third variant: two semaphores + a lock. Offer this after the lock/condition
- * version — comparing them aloud is exactly the Staff+ move.
+ * version — comparing them aloud is exactly the advanced move.
  *
  * How it works:
  *   slotsAvailable starts at `capacity`  -> producers acquire before putting

@@ -18,7 +18,7 @@ package com.cjbooms.prep.solutions.stage15
  *      with a null marker?
  *   2. Where is the state kept during deserialize? (Hint: index pointer vs queue.)
  *
- * Time budget: 6 minutes cold.
+ * Estimated time: 6 minutes cold.
  */
 data class RecallTreeNode(val value: Int, var left: RecallTreeNode? = null, var right: RecallTreeNode? = null)
 

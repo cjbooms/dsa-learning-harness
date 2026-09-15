@@ -23,7 +23,7 @@ import kotlin.math.max
  *   2. Streaming: which map gives O(log n) floor lookup? Walk the absorbed
  *      neighbors in one direction or both?
  *
- * Time budget: 6 minutes cold.
+ * Estimated time: 6 minutes cold.
  */
 fun mergeIntervals(intervals: List<IntRange>): List<IntRange> {
     if (intervals.isEmpty()) return emptyList()

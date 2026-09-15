@@ -19,7 +19,7 @@ package com.cjbooms.prep.solutions.stage11
  * Pop the back while the incoming value is larger; pop the front when it falls
  * out of the window.
  *
- * Time budget: 25 min.
+ * Estimated time: 25 min.
  */
 fun maxSlidingWindow(nums: IntArray, windowSize: Int): IntArray {
     if (windowSize <= 0) return intArrayOf()

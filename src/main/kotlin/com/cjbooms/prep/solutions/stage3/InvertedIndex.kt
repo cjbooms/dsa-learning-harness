@@ -1,7 +1,7 @@
 package com.cjbooms.prep.solutions.stage3
 
 /**
- * Stage 3.4 — Inverted index (REPORTED, Blind 2025 — full-text search team).
+ * Stage 3.4 — Inverted index (common full-text search exercise).
  *
  * Why this matters: full-text search is built on top of an inverted index under
  * the hood; this exercise is the in-memory version of "term -> docs".
@@ -23,7 +23,7 @@ class InvertedIndex {
     val termsByDoc = hashMapOf<String, MutableSet<String>>()
 
     fun insert(docId: String, text: String) {
-        // Simple whitespace/lowercase tokenization; say this aloud in interview.
+        // Simple whitespace/lowercase tokenization; note this aloud.
         val rawTerms = text.split(Regex("\\s+"))
         val terms = hashSetOf<String>()
         for (raw in rawTerms) {

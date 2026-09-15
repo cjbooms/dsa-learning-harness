@@ -1,6 +1,6 @@
 # Stage 9 — Tree Algorithms
 
-**Time budget: 60 min** · Package: `stages/stage9`
+**Estimated time: 60 min** · Package: `stages/stage9`
 
 ## The meta-skill
 
@@ -14,7 +14,7 @@ contract aloud before coding — half the bugs are contract bugs, not pointer bu
 `isValidBst(root)` / `isValidBstInOrder(root)` in `BstValidator.kt`
 - [ ] Recursive with (lower, upper) bounds — not "compare with parent"
 - [ ] In-order alternative: strictly increasing sequence check
-- [ ] Aloud: why the naive left<root<right check fails (deep violations)
+- [ ] Explain: why the naive left<root<right check fails (deep violations)
 
 ### 9.2 Lowest common ancestor (15 min)
 `lowestCommonAncestorBst(root, p, q)` / `lowestCommonAncestor(root, p, q)` in `LowestCommonAncestor.kt`
@@ -32,11 +32,11 @@ contract aloud before coding — half the bugs are contract bugs, not pointer bu
 `serializeBst(root)` / `deserializeBst(data)` in `BstSerializer.kt`
 - [ ] Pre-order only, NO null markers — the BST invariant disambiguates
 - [ ] Deserialize with bounded recursion (upper bound from parent)
-- [ ] Aloud: why a plain binary tree needs nulls but a BST doesn't
+- [ ] Explain: why a plain binary tree needs nulls but a BST doesn't
 
-## Done when
+## Check your understanding
 - [ ] Tests green (`./gradlew test --tests '*stages.stage9*'`); each exercise committed separately
 - [ ] You can state each recursion's return contract in one sentence
 
-## Commit points
+## Suggested checkpoints
 After 9.2, after 9.4.

@@ -3,8 +3,8 @@ package com.cjbooms.prep.dsa
 /**
  * Group Anagrams (LC 49): group words that are anagrams of each other.
  *
- * Two approaches below. In an interview, lead with the sorted-key one (simpler),
- * then mention the count-key one when they probe complexity — and be ready to
+ * Two approaches below. Lead with the sorted-key one (simpler),
+ * then mention the count-key one when probed on complexity — and be ready to
  * implement it as a follow-up.
  */
 

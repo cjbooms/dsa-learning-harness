@@ -17,7 +17,7 @@ import java.util.ArrayDeque
  *     return empty list.
  *   - Multiple valid orderings are fine — any topological sort is acceptable.
  *
- * Time budget: 15 min. Defend aloud: would DFS be cleaner here? (It would,
+ * Estimated time: 15 min. Defend aloud: would DFS be cleaner here? (It would,
  * but Kahn produces the ordering in arrival order without an extra reverse
  * step, and the "impossible schedule" check is a single length comparison.)
  */

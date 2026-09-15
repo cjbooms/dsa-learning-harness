@@ -2,7 +2,7 @@ package com.cjbooms.prep.solutions.stage12
 
 /**
  * Stage 12.2 — Semaphore-based connection pool.
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  *
  * Why this matters: the driver opens a bounded pool of TCP sockets to each
  * server (driver maxPoolSize / maxConnections). The pool
@@ -26,7 +26,7 @@ package com.cjbooms.prep.solutions.stage12
  * The lease()/release() pair is the testable contract. Pool warm-up,
  * health checks, and max-idle-time are all follow-ups.
  *
- * Interview follow-ups:
+ * Follow-ups:
  *   - "What happens if release() is called twice for the same lease?"
  *     -> Semaphore.release() is unconditional; double-release grows permits
  *        past the bound. Track outstanding leases explicitly if you need

@@ -1,1 +1,1 @@
-rootProject.name = "interview-prep"
+rootProject.name = "dsa-learning-harness"

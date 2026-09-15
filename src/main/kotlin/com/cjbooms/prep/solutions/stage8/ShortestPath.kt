@@ -7,7 +7,7 @@ import java.util.ArrayDeque
  *
  * Why this matters: query planning intuition (every hop in a join
  * graph is a cost), geospatial shortest-path reasoning on GeoJSON data,
- * latency reasoning across replica hops. The grid form is a frequent interview
+ * latency reasoning across replica hops. The grid form is a frequent exercise
  * shape — "0/1 matrix, find shortest path from top-left to bottom-right".
  *
  * Structure-selection ritual:
@@ -18,7 +18,7 @@ import java.util.ArrayDeque
  *   - Track distance per cell and the predecessor for path reconstruction.
  *   - Return -1 (or empty list) for unreachable.
  *
- * Time budget: 15 min. Defend aloud: why BFS not DFS for shortest path?
+ * Estimated time: 15 min. Defend your choice: why BFS not DFS for shortest path?
  * (DFS explores depth-first and may find a non-shortest route first; BFS
  * expands by distance layers.)
  */

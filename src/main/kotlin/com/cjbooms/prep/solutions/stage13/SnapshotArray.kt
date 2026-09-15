@@ -17,7 +17,7 @@ package com.cjbooms.prep.solutions.stage13
  *     and simpler: the index *is* not the snapId, but the list position gives
  *     the floor in O(log versions) with less overhead than a red-black tree.
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 class SnapshotArray(length: Int) {
 

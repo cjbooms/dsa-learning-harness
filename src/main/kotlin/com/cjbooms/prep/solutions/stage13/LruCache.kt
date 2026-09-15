@@ -17,7 +17,7 @@ package com.cjbooms.prep.solutions.stage13
  *   4. COMBINE: HashMap<key, Node> + doubly-linked list of nodes (head = LRU,
  *      tail = MRU). Map gives the node handle, list gives O(1) re-link.
  *
- * Time budget: 25 minutes (implement + 3 tests). See stage doc 13.
+ * Estimated time: 25 minutes (implement + 3 tests). See stage doc 13.
  *
  * Implementation notes (this stage is deliberately non-thread-safe — see
  * concurrency/ThreadSafeLruCache.kt for the synchronized variant):

@@ -11,13 +11,13 @@ package com.cjbooms.prep.stages.stage9
  * Structure-selection ritual:
  *   - Do we trust the in-order traversal to be sorted? Then a single pass
  *     tracking the previous emitted value gives O(n) time, O(h) stack
- *     (or O(1) extra via Morris, but don't bother for the interview).
+ *     (or O(1) extra via Morris, but don't bother for the exercise).
  *   - Do we want local reasoning at each node without holding state? Then
  *     recurse with (minBound, maxBound) and tighten the bound on each side.
  *   - Empty tree and single-node tree are always valid — make sure your
  *     base case doesn't reject them.
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 
 data class TreeNode(val value: Int, var left: TreeNode? = null, var right: TreeNode? = null)

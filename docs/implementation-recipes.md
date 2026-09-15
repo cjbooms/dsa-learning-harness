@@ -1,6 +1,6 @@
-# Implementation Recipes — DSA Skeletons for CoderPad
+# Implementation Recipes — DSA Skeletons
 
-**GLANCE-AT doc — open during the interview.** Skeletons only, no prose.
+**GLANCE-AT doc — open during practice.** Skeletons only, no prose.
 Read `cheat-sheet.md` beforehand for the why.
 
 ## Imports (paste, delete unused)

@@ -1,6 +1,6 @@
 # Stage 10 — Array/String Patterns
 
-**Time budget: 75 min** · Package: `stages/stage10`
+**Estimated time: 75 min** · Package: `stages/stage10`
 
 ## The meta-skill
 
@@ -13,7 +13,7 @@ The ritual: name the pattern BEFORE coding and say what makes it applicable.
 
 ### 10.1 Two pointers (15 min)
 `pairSumSorted` / `maxArea` / `removeDuplicatesSorted` in `TwoPointers.kt`
-- [ ] Sorted pair sum: converge from both ends — say why each move is safe
+- [ ] Sorted pair sum: converge from both ends — Explain why each move is safe
 - [ ] Container with most water: move the SHORTER wall — defend why
 - [ ] Remove duplicates in place: slow/fast pointers, return new length
 
@@ -31,18 +31,18 @@ The ritual: name the pattern BEFORE coding and say what makes it applicable.
 ### 10.4 Prefix sums (10 min)
 `ImmutableArraySum.sumRange` / `subarraySumEqualsK` in `PrefixSums.kt`
 - [ ] prefix[i] = sum of nums[0..<i]; range query = difference
-- [ ] Sum-equals-k: prefix-sum frequency map — say why the map works
+- [ ] Sum-equals-k: prefix-sum frequency map — Explain why the map works
 
 ### 10.5 Text justification (15 min)
 `textJustify(words, maxWidth)` in `TextJustification.kt`
 - [ ] Greedy line packing: pack as many words as fit, then distribute spaces
 - [ ] Last line and single-word lines are left-justified
-- [ ] Aloud: why this is greedy, not DP
+- [ ] Explain: why this is greedy, not DP
 
-## Done when
+## Check your understanding
 - [ ] Tests green (`./gradlew test --tests '*stages.stage10*'`); each exercise committed separately
 - [ ] For each exercise you can name the pattern and the monotonicity/invariant that powers it
 - [ ] You can explain why text justification is greedy and why sliding-window questions are not
 
-## Commit points
+## Suggested checkpoints
 After 10.2, after 10.4, after 10.5.

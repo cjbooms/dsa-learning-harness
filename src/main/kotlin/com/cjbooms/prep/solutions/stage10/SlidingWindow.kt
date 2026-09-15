@@ -17,7 +17,7 @@ package com.cjbooms.prep.solutions.stage10
  * If the window size varies, you typically need two pointers with a
  * validity check and a "shrink until valid" inner loop.
  *
- * Time budget: 20 minutes. Two exercises.
+ * Estimated time: 20 minutes. Two exercises.
  */
 
 /**

@@ -27,7 +27,7 @@ import kotlin.concurrent.withLock
  *     inFlight == 0" exit predicate, mirroring the BoundedBlockingQueue idiom
  *     (`while` around `await()`, `signal()` on each new URL).
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 class WebCrawler(
     private val fetcher: (String) -> List<String>,

@@ -1,6 +1,6 @@
 # Stage 8 — Graph Algorithms Deep Dive
 
-**Time budget: 185 min** ⭐ top priority · Package: `stages/stage8`
+**Estimated time: 185 min** · Package: `stages/stage8`
 
 ## The meta-skill
 
@@ -23,7 +23,7 @@ defend the pick.
 `scheduleTasksDfs(tasks, dependencies): List<String>` in `TaskSchedulerDfs.kt`
 - [ ] WHITE/GRAY/BLACK coloring; emit on finish, reverse at the end
 - [ ] Cycle = back edge to a GRAY node
-- [ ] Aloud: when is DFS better than Kahn's? (no explicit in-degree tracking)
+- [ ] Explain: when is DFS better than Kahn's? (no explicit in-degree tracking)
 
 ### 8.3 Cycle detection with the cycle itself (15 min)
 `hasCycle(...)` / `findCycle(...)` in `CycleDetector.kt`
@@ -40,7 +40,7 @@ defend the pick.
 ### 8.5 Union-Find deep dive (15 min)
 `find` / `union` / `connected` / `componentCount` in `UnionFind.kt`
 - [ ] Path compression + union by rank
-- [ ] Aloud: when union-find beats DFS/BFS (dynamic connectivity, offline queries)
+- [ ] Explain: when union-find beats DFS/BFS (dynamic connectivity, offline queries)
 
 ## Stage 8.5 — Practice (30 min, same package)
 
@@ -59,20 +59,20 @@ defend the pick.
 - [ ] Flood-fill DFS/BFS for islands; sink visited cells in place
 - [ ] Multi-source BFS for oranges: seed the queue with ALL initially rotten cells
 - [ ] Return minutes elapsed or -1 if any fresh orange is unreachable
-- [ ] Aloud: why multi-source BFS, not single-source, for spreading-state problems?
+- [ ] Explain: why multi-source BFS, not single-source, for spreading-state problems?
 
 ### 8.9 Clone graph (25 min)
 `cloneGraph(node)` in `CloneGraph.kt`
 - [ ] HashMap<original Node, copied Node> is both memo and cycle guard
 - [ ] DFS creates the copy before recursing into neighbors
 - [ ] Undirected edges appear twice; the map collapses them into the same cloned node
-- [ ] Aloud: what breaks if you use a boolean visited set instead of a map?
+- [ ] Explain: what breaks if you use a boolean visited set instead of a map?
 
-## Done when
+## Check your understanding
 - [ ] Tests green (`./gradlew test --tests '*stages.stage8*'`); each exercise committed separately
-- [ ] You can do Kahn's cold in under 10 minutes, narrating the frontier invariant
+- [ ] You can do Kahn's cold in under 10 minutes, explaining the frontier invariant
 - [ ] You can state when DFS-topo beats Kahn's and when union-find beats both
 - [ ] You can explain why multi-source BFS fits rotting oranges but single-source BFS fits point-to-point shortest path
 
-## Commit points
+## Suggested checkpoints
 After 8.1, after 8.3, after 8.5, after 8.7, after 8.8, after 8.9.

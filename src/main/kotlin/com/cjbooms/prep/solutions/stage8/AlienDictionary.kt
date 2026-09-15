@@ -21,7 +21,7 @@ import java.util.ArrayDeque
  *         long as no cycle exists.
  *   - Return empty string ("") for invalid / cyclic dictionaries.
  *
- * Time budget: 15 min. Defend aloud: why topological sort, not just pairwise
+ * Estimated time: 15 min. Defend aloud: why topological sort, not just pairwise
  * comparisons? (Pairwise only gives local info; the graph captures global
  * ordering and exposes cycles.)
  */

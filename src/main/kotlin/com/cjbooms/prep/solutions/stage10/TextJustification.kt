@@ -13,7 +13,7 @@ package com.cjbooms.prep.solutions.stage10
  *   - Last line and single-word lines are special-cased (left-justified).
  *   - O(n) total: each word is placed exactly once.
  *
- * Time budget: 15 min.
+ * Estimated time: 15 min.
  */
 
 fun textJustify(words: Array<String>, maxWidth: Int): List<String> {

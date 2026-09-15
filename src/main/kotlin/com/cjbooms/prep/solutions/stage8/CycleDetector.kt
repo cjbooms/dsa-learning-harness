@@ -5,7 +5,7 @@ package com.cjbooms.prep.solutions.stage8
  * cycle itself.
  *
  * Why this matters: deadlock detection between transactions,
- * circular migrations in sharded clusters, import pipelines that loop on each
+ * circular migrations in distributed databases, import pipelines that loop on each
  * other. Boolean is rarely enough — the cycle is the actionable artefact.
  *
  * Structure-selection ritual:
@@ -15,9 +15,9 @@ package com.cjbooms.prep.solutions.stage8
  *   - No cycle => return empty list (the no-cycle answer for both
  *     `findCycle` and the boolean `hasCycle` convenience).
  *
- * Time budget: 15 min. Defend aloud: why not Kahn's for cycle detection too?
+ * Estimated time: 15 min. Defend your choice: why not Kahn's for cycle detection too?
  * (Kahn can — nodes that never reach in-degree 0 — but DFS exposes the cycle
- * edges, which is usually what the interviewer is probing for.)
+ * edges, which is usually what the reviewer is probing for.)
  */
 fun hasCycle(nodeCount: Int, edges: List<Pair<Int, Int>>): Boolean =
     findCycle(nodeCount, edges).isNotEmpty()

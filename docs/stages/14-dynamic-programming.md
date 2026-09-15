@@ -1,6 +1,6 @@
 # Stage 14 — Dynamic Programming
 
-**Time budget: 45 min** · Package: `stages/stage14`
+**Estimated time: 45 min** · Package: `stages/stage14`
 
 ## The meta-skill
 
@@ -15,7 +15,7 @@ if a local choice is provably safe, don't reach for the table.
 `climbStairs(n)` / `houseRobber(nums)` in `BasicDp.kt`
 - [ ] Stairs: dp[i] = dp[i-1] + dp[i-2] — Fibonacci; roll two variables, O(1) space
 - [ ] Robber: dp[i] = max(dp[i-1], dp[i-2] + nums[i]) — skip or take
-- [ ] Aloud: memoization vs tabulation — same recurrence, different direction
+- [ ] Explain: memoization vs tabulation — same recurrence, different direction
 
 ### 14.2 String DP (15 min)
 `longestCommonSubsequence(a, b)` / `editDistance(a, b)` in `StringDp.kt`
@@ -29,11 +29,11 @@ if a local choice is provably safe, don't reach for the table.
 - [ ] dp[i] over prefixes of s: can s[0..i) be segmented?
 - [ ] For each i, check every j < i where dp[j] is true and s[j..i) is in the dictionary
 - [ ] Word Break II: same DP shape, but each cell stores the valid sentences
-- [ ] Aloud: why brute-force backtracking is O(2^n) and where the DP memo saves it
+- [ ] Explain: why brute-force backtracking is O(2^n) and where the DP memo saves it
 
-## Done when
+## Check your understanding
 - [ ] Tests green (`./gradlew test --tests '*stages.stage14*'`); each exercise committed separately
 - [ ] For each problem you can state dp[i] (or dp[i][j]) in one sentence before coding
 
-## Commit points
+## Suggested checkpoints
 After 14.1, after 14.3.

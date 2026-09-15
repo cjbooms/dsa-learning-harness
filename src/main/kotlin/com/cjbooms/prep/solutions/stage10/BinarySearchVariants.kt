@@ -14,7 +14,7 @@ package com.cjbooms.prep.solutions.stage10
  *   - You want O(log n) instead of O(n) linear scan.
  * Variants below stress the boundary checks — those are where bugs live.
  *
- * Time budget: 15 minutes.
+ * Estimated time: 15 minutes.
  */
 
 /**
