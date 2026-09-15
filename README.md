@@ -1,7 +1,6 @@
-1: @ours
+# Data Structures and Algorithms Learning Harness
 
-Kotlin practice workspace for **engineering interviews** — DSA, system design,
-code review, and concurrency drills.
+Kotlin practice workspace for DSA, system design, code review, and concurrency drills.
 
 ## The panel
 
