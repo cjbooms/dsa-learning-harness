@@ -1,4 +1,4 @@
-# MongoDB Staff+ Interview Prep — Atlas Clusters Onsite
+# Data Structures and Aglorithms Learning Harness
 
 Kotlin practice workspace for the **onsite panel** (screen passed ✅: rate
 limiter, sliding-window deque + map, O(1) allow).
